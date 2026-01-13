@@ -1,0 +1,112 @@
+li{
+    /* // quitar los puntos de la lista  */
+    list-style: none;
+}
+
+h1{
+    color: #D91E0D;
+    margin: auto;
+}
+
+a{
+    text-decoration: none;
+    margin: auto;
+    color: inherit;
+}
+
+/* .datosDelPerfil{
+    border: 2px solid black;
+    width: 50%;
+    margin: auto;
+    padding: 2%;
+    border-radius: 10px;
+} */
+
+.student-information-container{
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: solid 2px black;
+    width: 60%;
+    padding: 1%;
+    border-radius: 10px;
+    background-color: white;
+}
+
+.attendant-information-container{
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: solid 2px black;
+    width: 60%;
+    padding: 1%;
+    border-radius: 10px;
+    background-color: white;
+
+}
+
+.teaching-information-container{
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: solid 2px black;
+    width: 60%;
+    padding: 1%;
+    border-radius: 10px;
+    background-color: white;
+
+}
+
+ section li{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    padding: 20px 20px;
+    border-bottom: solid 2px gray;
+    border-radius: 5px;
+
+}
+
+section li:hover{
+    transform: translateX(6px);
+    box-shadow: 0 4px 10px black;
+}
+
+
+.btn-container{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    width: 60%;
+    margin-left: 20%;
+    gap: 10px;
+}
+
+/* boton de cerrar sesion */
+#cerrarSesion{
+   padding-top: 10px;
+   height: 50px;
+   width: 150px;
+   background-color: gray;
+   text-align: center;
+   border-radius: 5px;
+
+}
+
+#eliminarCuenta{
+   padding-top: 10px;
+   width: 150px;
+   height: 50px;
+   background-color: red;
+   text-align: center; 
+   border-radius: 5px;
+
+}
+
+#eliminarCuenta:hover{
+    background-color: #b5756f;
+}
+
+#cerrarSesion:hover{
+    background-color: rgb(53, 49, 49);
+}
