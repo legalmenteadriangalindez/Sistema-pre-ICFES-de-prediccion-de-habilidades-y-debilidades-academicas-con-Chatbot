@@ -1,0 +1,65 @@
+{% extends "./home.html" %}
+{% load static %}
+{% block title %} registro {% endblock %} 
+    
+{% block extra_head %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">  <!-- referencia a estilos  --> 
+    <link rel="stylesheet" href="{% static 'css/registros.css' %}">  <!-- referencia a estilos  -->      
+{% endblock %}
+
+{% block content %}  
+
+
+<h1>Registro</h1> 
+
+<div class="registro">
+    <form method="post" action="{% url 'inicioDeSesion' %}">
+        {% csrf_token %}
+        <label for="nombreDeUsuario">Nombre de usuario:</label>
+        <input type="text" id="nombreDeUsuario" name="nombreDeUsuario" required><br><br>
+        
+        <label for="email">Correo electrónico:</label>
+        <input type="email" id="email" name="email" required><br><br>
+
+<!-- ===============================CONTRASEÑA============================= -->
+        <label for="contraseña">Contraseña:</label>
+        <input type="password" id="contraseña" name="contraseña" required><br><br>
+
+        <label for="confirmarContraseña">Confirmar contraseña:</label>
+        <input type="password" id="confirmarContraseña" name="confirmarContraseña" required><br><br>
+<!-- ============================================================   -->
+
+        <label for="edad">Edad:</label>
+        <input type="date" min="1990-01-01" max="2024-12-31" id="edad" name="edad" required><br><br>
+
+        <label for="grado">Grado:</label>
+        <input type="number" min="6" max="12" id="grado" name="grado" required><br><br>
+
+<!-- ===========================SEXO============================ -->
+        <label for="sexo">Sexo:</label><br><br>
+        <label for="">hombre</label>
+        <input type="radio" id="hombre" name="sexo" required><br><br>
+        <label for="">mujer</label>
+        <input type="radio" id="mujer" name="sexo" required><br><br>
+        <label for="">no binario</label>
+        <input type="radio" id="noBinario" name="sexo" required><br><br>
+
+<!-- ============================================================ -->
+ 
+        <label for="direccion">Dirección:</label>
+        <input type="text" id="direccion" name="direccion" required><br><br>
+
+        <label for="telefono">Teléfono:</label>
+        <input type="text" id="telefono" name="telefono" required><br><br>
+
+        <label for="nesecidadesEducativasEspecificas">Necesidades Educativas Específicas:</label>
+        <input type="text" id="nesecidadesEducativasEspecificas" name="nesecidadesEducativasEspecificas" required><br><br>
+       
+        <label for="comentario">¿cual?:</label>
+        <textarea name="comentario" id="comentario"></textarea>
+        <button type="submit">Registrarse</button>
+
+    </form>
+</div>
+{% endblock %}

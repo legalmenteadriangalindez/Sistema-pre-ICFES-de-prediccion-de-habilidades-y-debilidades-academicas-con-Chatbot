@@ -1,0 +1,1882 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Vocación - ProyectoGrado</title>
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ====================== VARIABLES Y RESET ====================== */
+        :root {
+            --primary-color: #D91E0D;
+            --secondary-color: #A68B6A;
+            --light-bg: #F2F2F2;
+            --dark-bg: #1A1A1A;
+            --dark-nav: #333333;
+            --dark-chat: #4d4a4a;
+            --text-light: #FFFFFF;
+            --text-dark: #000000;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --correct-color: #28a745;
+            --incorrect-color: #dc3545;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            transition: var(--transition);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin: 20px 0;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        /* ====================== NAVBAR MEJORADA ====================== */
+        .navbar-custom {
+            background-color: var(--secondary-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            transition: var(--transition);
+        }
+
+        .navbar-brand-custom {
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--text-dark) !important;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .navbar-brand-custom i {
+            font-size: 1.5rem;
+        }
+
+        .nav-link-custom {
+            color: var(--text-dark) !important;
+            font-weight: 500;
+            padding: 8px 16px !important;
+            border-radius: 8px;
+            transition: var(--transition);
+            margin: 0 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link-custom:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn-login {
+            background-color: transparent;
+            border: 2px solid var(--text-dark);
+            color: var(--text-dark);
+            font-weight: 600;
+            padding: 8px 20px;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .btn-register {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            font-weight: 600;
+            padding: 8px 20px;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .btn-login:hover, .btn-register:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--box-shadow);
+        }
+
+        .btn-register:hover {
+            background-color: #b8180a;
+        }
+
+        /* ====================== MODO OSCURO TOGGLE ====================== */
+        .dark-mode-toggle {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            padding: 12px 18px;
+            border-radius: 30px;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+
+        .dark-mode-toggle.dark {
+            background-color: #333;
+            color: white;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* ====================== SECCIÓN DE MATERIAS ====================== */
+        .materias-section {
+            margin: 30px auto;
+            max-width: 900px;
+        }
+
+        .materias-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 2.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .materias-title i {
+            font-size: 2rem;
+        }
+
+        .materias-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .boton-materia {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 20px 15px;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            text-align: center;
+            height: 100%;
+        }
+
+        .boton-materia:hover {
+            background-color: #b8180a;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(217, 30, 13, 0.2);
+        }
+
+        .boton-materia i {
+            font-size: 2rem;
+        }
+
+        /* ====================== SECCIÓN DEL TEST ====================== */
+        .test-section {
+            margin: 40px auto;
+            max-width: 900px;
+        }
+
+        .test-container {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+
+        .test-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .test-title {
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--primary-color);
+        }
+
+        .test-progress {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .progress-bar-container {
+            width: 200px;
+            height: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary-color);
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+
+        .pregunta-container {
+            margin-bottom: 30px;
+            padding: 25px;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .pregunta-contexto {
+            font-style: italic;
+            color: #666;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #ddd;
+        }
+
+        .pregunta-texto {
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .opciones-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .opcion {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background-color: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .opcion:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(217, 30, 13, 0.05);
+        }
+
+        .opcion.selected {
+            border-color: var(--primary-color);
+            background-color: rgba(217, 30, 13, 0.1);
+        }
+
+        .opcion.correct {
+            border-color: var(--correct-color);
+            background-color: rgba(40, 167, 69, 0.1);
+        }
+
+        .opcion.incorrect {
+            border-color: var(--incorrect-color);
+            background-color: rgba(220, 53, 69, 0.1);
+        }
+
+        .opcion input[type="radio"] {
+            margin-right: 15px;
+            transform: scale(1.3);
+        }
+
+        .opcion-label {
+            font-weight: 700;
+            margin-right: 10px;
+            min-width: 30px;
+            color: var(--primary-color);
+        }
+
+        .opcion-texto {
+            flex: 1;
+            font-size: 1rem;
+        }
+
+        .respuesta-correcta {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: rgba(40, 167, 69, 0.1);
+            border: 2px solid var(--correct-color);
+            border-radius: 8px;
+            display: none;
+        }
+
+        .respuesta-correcta.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .respuesta-correcta-title {
+            font-weight: 700;
+            color: var(--correct-color);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* ====================== BOTONES DEL TEST ====================== */
+        .test-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 20px;
+        }
+
+        .test-button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .test-button.verificar {
+            background-color: var(--primary-color);
+            color: white;
+            flex: 2;
+        }
+
+        .test-button.siguiente {
+            background-color: var(--secondary-color);
+            color: white;
+            flex: 1;
+        }
+
+        .test-button.anterior {
+            background-color: #6c757d;
+            color: white;
+            flex: 1;
+        }
+
+        .test-button:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--box-shadow);
+        }
+
+        .test-button.verificar:hover {
+            background-color: #b8180a;
+        }
+
+        .test-button.siguiente:hover {
+            background-color: #8a7459;
+        }
+
+        .test-button.anterior:hover {
+            background-color: #5a6268;
+        }
+
+        /* ====================== CHAT IA ====================== */
+        .chat-section {
+            margin: 40px auto;
+            max-width: 900px;
+        }
+
+        .chat-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 2.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .chat-title i {
+            font-size: 2rem;
+        }
+
+        .chat-container {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+
+        .chat-input-area {
+            margin-bottom: 20px;
+        }
+
+        .chat-label {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #555;
+            display: block;
+        }
+
+        .chat-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            resize: vertical;
+            transition: var(--transition);
+        }
+
+        .chat-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(217, 30, 13, 0.2);
+        }
+
+        .chat-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .chat-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .chat-button:hover {
+            background-color: #b8180a;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(217, 30, 13, 0.3);
+        }
+
+        /* ====================== RESPUESTA IA ====================== */
+        .respuesta-section {
+            margin: 40px auto;
+            max-width: 900px;
+        }
+
+        .respuesta-container {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+
+        .respuesta-header {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .respuesta-content {
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary-color);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .historial-container {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .historial-item {
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            background-color: white;
+            border-left: 4px solid var(--secondary-color);
+        }
+
+        .historial-item.usuario {
+            border-left-color: var(--primary-color);
+        }
+
+        .historial-sender {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .historial-item.usuario .historial-sender {
+            color: var(--secondary-color);
+        }
+
+        /* ====================== MATERIALES RECOMENDADOS ====================== */
+        .materiales-section {
+            margin: 40px auto;
+            max-width: 900px;
+        }
+
+        .materiales-container {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+
+        .materiales-title {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .materiales-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .materiales-list li {
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid var(--secondary-color);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .materiales-list li:hover {
+            background-color: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .materiales-list li i {
+            color: var(--primary-color);
+        }
+
+        /* ====================== FOOTER ====================== */
+        .footer-custom {
+            background-color: var(--secondary-color);
+            padding: 50px 0 30px;
+            margin-top: auto;
+            transition: var(--transition);
+        }
+
+        .footer-title {
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+
+        .footer-links {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+            transform: translateX(5px);
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        /* ====================== MODO OSCURO ESTILOS ====================== */
+        body.dark-mode {
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+        }
+
+        body.dark-mode .navbar-custom {
+            background-color: var(--dark-nav);
+        }
+
+        body.dark-mode .nav-link-custom {
+            color: var(--text-light) !important;
+        }
+
+        body.dark-mode .navbar-brand-custom {
+            color: var(--text-light) !important;
+        }
+
+        body.dark-mode .btn-login {
+            border-color: var(--text-light);
+            color: var(--text-light);
+        }
+
+        body.dark-mode .dark-mode-toggle {
+            background-color: #333;
+            color: white;
+        }
+
+        body.dark-mode .test-container,
+        body.dark-mode .chat-container,
+        body.dark-mode .respuesta-container,
+        body.dark-mode .materiales-container {
+            background-color: var(--dark-chat);
+            color: var(--text-light);
+        }
+
+        body.dark-mode .test-title,
+        body.dark-mode .chat-title,
+        body.dark-mode .respuesta-header,
+        body.dark-mode .materiales-title {
+            color: var(--text-light);
+        }
+
+        body.dark-mode .pregunta-container {
+            background-color: #333;
+            color: var(--text-light);
+        }
+
+        body.dark-mode .pregunta-texto {
+            color: #eee;
+        }
+
+        body.dark-mode .opcion {
+            background-color: #444;
+            color: var(--text-light);
+            border-color: #555;
+        }
+
+        body.dark-mode .chat-textarea {
+            background-color: #333;
+            color: var(--text-light);
+            border-color: #555;
+        }
+
+        body.dark-mode .respuesta-content,
+        body.dark-mode .historial-container {
+            background-color: #333;
+            color: var(--text-light);
+        }
+
+        body.dark-mode .historial-item {
+            background-color: #444;
+            color: var(--text-light);
+        }
+
+        body.dark-mode .materiales-list li {
+            background-color: #333;
+            color: var(--text-light);
+        }
+
+        body.dark-mode .footer-custom {
+            background-color: var(--dark-nav);
+        }
+
+        body.dark-mode .footer-title,
+        body.dark-mode .footer-links a,
+        body.dark-mode .copyright {
+            color: var(--text-light);
+        }
+
+        /* ====================== ANIMACIONES ====================== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse-animation {
+            animation: pulse 0.5s ease;
+        }
+
+        /* ====================== RESPONSIVE ====================== */
+        @media (max-width: 992px) {
+            .materias-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            }
+            
+            .test-container, 
+            .chat-container, 
+            .respuesta-container,
+            .materiales-container {
+                padding: 20px;
+            }
+            
+            .test-buttons {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar-brand-custom span {
+                display: none;
+            }
+            
+            .dark-mode-toggle {
+                position: static;
+                margin: 20px auto;
+                width: fit-content;
+            }
+            
+            .materias-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+            
+            .test-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .progress-bar-container {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .materias-title,
+            .chat-title {
+                font-size: 1.8rem;
+            }
+            
+            .materias-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .pregunta-container {
+                padding: 15px;
+            }
+            
+            .opcion {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ====================== NAVBAR ====================== -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand navbar-brand-custom" href="#">
+                <i class="fas fa-graduation-cap"></i>
+                <span>ProyectoGrado</span>
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom" href="#">
+                            <i class="fas fa-home"></i>
+                            Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom active" href="#">
+                            <i class="fas fa-pencil-alt"></i>
+                            Test de Vocación
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom" href="#">
+                            <i class="fas fa-robot"></i>
+                            Recomendaciones IA
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom" href="#">
+                            <i class="fas fa-user-graduate"></i>
+                            Carreras
+                        </a>
+                    </li>
+                </ul>
+                
+                <div class="d-flex align-items-center gap-3">
+                    <a href="#" class="btn btn-login">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Iniciar Sesión
+                    </a>
+                    <a href="#" class="btn btn-register">
+                        <i class="fas fa-user-plus"></i>
+                        Registrarse
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ====================== MODO OSCURO TOGGLE ====================== -->
+    <div class="dark-mode-toggle" id="darkModeToggle">
+        <span><i class="fas fa-moon"></i> Modo Oscuro</span>
+        <label class="toggle-switch">
+            <input type="checkbox" id="darkModeSwitch">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <main class="container">
+        <!-- ====================== SECCIÓN DE MATERIAS ====================== -->
+        <section class="materias-section">
+            <h1 class="materias-title">
+                <i class="fas fa-book-open"></i>
+                Test de Vocación
+            </h1>
+            
+            <div class="materias-grid" id="materiasGrid">
+                <button class="boton-materia" data-materia="lectura-critica">
+                    <i class="fas fa-book-reader"></i>
+                    Lectura Crítica
+                </button>
+                <button class="boton-materia" data-materia="matematicas">
+                    <i class="fas fa-calculator"></i>
+                    Matemáticas
+                </button>
+                <button class="boton-materia" data-materia="sociales">
+                    <i class="fas fa-globe-americas"></i>
+                    Sociales y Ciudadanas
+                </button>
+                <button class="boton-materia" data-materia="ciencias">
+                    <i class="fas fa-flask"></i>
+                    Ciencias Naturales
+                </button>
+                <button class="boton-materia" data-materia="ingles">
+                    <i class="fas fa-language"></i>
+                    Inglés
+                </button>
+            </div>
+        </section>
+
+        <!-- ====================== SECCIÓN DEL TEST ====================== -->
+        <section class="test-section">
+            <div class="test-container">
+                <div class="test-header">
+                    <div class="test-title" id="testTitle">Selecciona una materia para comenzar</div>
+                    <div class="test-progress" id="testProgress" style="display: none;">
+                        <span id="progressText">Pregunta 0 de 0</span>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="preguntasContainer">
+                    <!-- Las preguntas se cargarán aquí dinámicamente -->
+                    <div class="text-center py-5">
+                        <i class="fas fa-clipboard-list fa-4x text-secondary mb-4"></i>
+                        <h3 class="text-muted">Selecciona una materia para ver las preguntas</h3>
+                        <p class="text-muted">Elige una de las materias arriba para comenzar el test</p>
+                    </div>
+                </div>
+                
+                <div class="test-buttons" id="testButtons" style="display: none;">
+                    <button class="test-button anterior" id="btnAnterior">
+                        <i class="fas fa-arrow-left"></i>
+                        Anterior
+                    </button>
+                    <button class="test-button verificar" id="btnVerificar">
+                        <i class="fas fa-check-circle"></i>
+                        Verificar Respuesta
+                    </button>
+                    <button class="test-button siguiente" id="btnSiguiente">
+                        Siguiente
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====================== MATERIALES RECOMENDADOS ====================== -->
+        <section class="materiales-section" id="materialesSection" style="display: none;">
+            <div class="materiales-container">
+                <h2 class="materiales-title">
+                    <i class="fas fa-lightbulb"></i>
+                    Materiales Recomendados
+                </h2>
+                <ul class="materiales-list" id="materialesList">
+                    <!-- Los materiales recomendados se cargarán aquí -->
+                </ul>
+            </div>
+        </section>
+
+        <!-- ====================== CHAT IA ====================== -->
+        <section class="chat-section">
+            <h2 class="chat-title">
+                <i class="fas fa-robot"></i>
+                Genera respuestas con IA
+            </h2>
+            
+            <div class="chat-container">
+                <div class="chat-input-area">
+                    <label class="chat-label" for="prompt">Pregunta a la IA sobre el test:</label>
+                    <textarea class="chat-textarea" id="prompt" placeholder="Escribe tu pregunta aquí..."></textarea>
+                </div>
+                
+                <div class="chat-controls">
+                    <button class="chat-button" id="generarRespuesta">
+                        <i class="fas fa-bolt"></i>
+                        Generar Respuesta
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====================== RESPUESTA IA ====================== -->
+        <section class="respuesta-section" id="respuestaSection" style="display: none;">
+            <div class="respuesta-container">
+                <h2 class="respuesta-header">
+                    <i class="fas fa-comment-dots"></i>
+                    Respuesta Generada por la IA
+                </h2>
+                
+                <div class="historial-container" id="historialContainer">
+                    <!-- El historial del chat se mostrará aquí -->
+                </div>
+                
+                <div class="respuesta-content" id="respuestaContent">
+                    <!-- La respuesta de la IA se mostrará aquí -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ====================== FOOTER ====================== -->
+    <footer class="footer-custom">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 mb-4">
+                    <div class="footer-title">ProyectoGrado</div>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-info-circle"></i> Acerca del proyecto</a></li>
+                        <li><a href="#"><i class="fas fa-question-circle"></i> Preguntas frecuentes</a></li>
+                        <li><a href="#"><i class="fas fa-newspaper"></i> Blog y noticias</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-md-3 mb-4">
+                    <div class="footer-title">Contacto</div>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-envelope"></i> soporte@proyectogrado.com</a></li>
+                        <li><a href="#"><i class="fas fa-phone"></i> +57 123 456 7890</a></li>
+                        <li><a href="#"><i class="fas fa-map-marker-alt"></i> Bogotá, Colombia</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-md-3 mb-4">
+                    <div class="footer-title">Sobre nosotros</div>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-users"></i> Nuestro equipo</a></li>
+                        <li><a href="#"><i class="fas fa-handshake"></i> Socios y aliados</a></li>
+                        <li><a href="#"><i class="fas fa-bullseye"></i> Misión y visión</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-md-3 mb-4">
+                    <div class="footer-title">Desarrollado Por</div>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-code"></i> Equipo de desarrollo</a></li>
+                        <li><a href="#"><i class="fas fa-heart"></i> Contribuidores</a></li>
+                        <li><a href="#"><i class="fab fa-github"></i> Repositorio GitHub</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                © 2023 ProyectoGrado. Todos los derechos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <!-- ====================== SCRIPTS ====================== -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // ====================== DATOS DE PRUEBA ======================
+        const preguntasData = {
+            "lectura-critica": [
+                {
+                    id: 1,
+                    contexto: "Texto: 'La inteligencia artificial ha revolucionado la forma en que interactuamos con la tecnología. Desde asistentes virtuales hasta sistemas de recomendación, la IA está presente en muchos aspectos de nuestra vida diaria.'",
+                    pregunta: "¿Cuál es la idea principal del texto?",
+                    opciones: {
+                        A: "La inteligencia artificial es peligrosa para la sociedad",
+                        B: "La IA está presente en muchos aspectos de nuestra vida diaria",
+                        C: "Los asistentes virtuales son la única aplicación de la IA",
+                        D: "La tecnología ha revolucionado la inteligencia artificial"
+                    },
+                    respuesta_correcta: "B",
+                    explicacion: "La idea principal del texto es que la IA está presente en muchos aspectos de nuestra vida diaria, como se menciona explícitamente en el último enunciado."
+                },
+                {
+                    id: 2,
+                    contexto: "En el cuento 'El Aleph' de Jorge Luis Borges, el personaje descubre un punto en el espacio que contiene todos los puntos del universo.",
+                    pregunta: "¿Qué representa el Aleph en el cuento?",
+                    opciones: {
+                        A: "Un objeto mágico que concede deseos",
+                        B: "Un punto que contiene todo el universo",
+                        C: "Un símbolo de la inmortalidad",
+                        D: "Un portal a otra dimensión"
+                    },
+                    respuesta_correcta: "B",
+                    explicacion: "El Aleph es descrito como un punto que contiene todos los puntos del universo, permitiendo ver todo simultáneamente."
+                },
+                {
+                    id: 3,
+                    contexto: "'La metamorfosis' de Franz Kafka narra la transformación de Gregorio Samsa en un insecto gigante.",
+                    pregunta: "¿Qué simboliza la transformación en la obra?",
+                    opciones: {
+                        A: "La evolución humana",
+                        B: "La alienación y el aislamiento en la sociedad moderna",
+                        C: "La magia y lo sobrenatural",
+                        D: "La enfermedad mental"
+                    },
+                    respuesta_correcta: "B",
+                    explicacion: "La transformación simboliza la alienación y el aislamiento del individuo en la sociedad moderna, así como la incapacidad de comunicación."
+                }
+            ],
+            "matematicas": [
+                {
+                    id: 4,
+                    contexto: "Un triángulo rectángulo tiene catetos de 3 cm y 4 cm.",
+                    pregunta: "¿Cuánto mide la hipotenusa?",
+                    opciones: {
+                        A: "5 cm",
+                        B: "6 cm",
+                        C: "7 cm",
+                        D: "8 cm"
+                    },
+                    respuesta_correcta: "A",
+                    explicacion: "Aplicando el teorema de Pitágoras: h² = 3² + 4² = 9 + 16 = 25, entonces h = √25 = 5 cm."
+                },
+                {
+                    id: 5,
+                    contexto: "Resuelve la ecuación: 2x + 5 = 13",
+                    pregunta: "¿Cuál es el valor de x?",
+                    opciones: {
+                        A: "3",
+                        B: "4",
+                        C: "5",
+                        D: "6"
+                    },
+                    respuesta_correcta: "B",
+                    explicacion: "2x + 5 = 13 → 2x = 13 - 5 → 2x = 8 → x = 8/2 = 4"
+                },
+                {
+                    id: 6,
+                    contexto: "Un círculo tiene un radio de 7 cm.",
+                    pregunta: "¿Cuál es su área? (Usa π = 22/7)",
+                    opciones: {
+                        A: "44 cm²",
+                        B: "88 cm²",
+                        C: "154 cm²",
+                        D: "308 cm²"
+                    },
+                    respuesta_correcta: "C",
+                    explicacion: "Área = π × r² = (22/7) × 7² = (22/7) × 49 = 22 × 7 = 154 cm²"
+                }
+            ],
+            "sociales": [
+                {
+                    id: 7,
+                    contexto: "La Revolución Industrial comenzó en Inglaterra a finales del siglo XVIII.",
+                    pregunta: "¿Cuál fue una de las principales consecuencias sociales de la Revolución Industrial?",
+                    opciones: {
+                        A: "El aumento de la población rural",
+                        B: "La formación de la clase obrera urbana",
+                        C: "La disminución de la producción",
+                        D: "El fin del capitalismo"
+                    },
+                    respuesta_correcta: "B",
+                    explicacion: "La Revolución Industrial provocó la migración del campo a la ciudad y la formación de una nueva clase social: el proletariado o clase obrera urbana."
+                },
+                {
+                    id: 8,
+                    contexto: "La Constitución Política de Colombia de 1991 establece un Estado social de derecho.",
+                    pregunta: "¿Cuál de los siguientes es un derecho fundamental según la Constitución colombiana?",
+                    opciones: {
+                        A: "Derecho a la vida",
+                        B: "Derecho a la propiedad privada",
+                        C: "Derecho al trabajo",
+                        D: "Todas las anteriores"
+                    },
+                    respuesta_correcta: "D",
+                    explicacion: "Todos son derechos fundamentales reconocidos en la Constitución Colombiana de 1991."
+                },
+                {
+                    id: 9,
+                    contexto: "La globalización es un proceso de interconexión mundial en lo económico, político y cultural.",
+                    pregunta: "¿Cuál es una característica de la globalización?",
+                    opciones: {
+                        A: "Aumento de las barreras comerciales",
+                        B: "Fortalecimiento de las economías aisladas",
+                        C: "Intercambio cultural acelerado",
+                        D: "Disminución de la comunicación"
+                    },
+                    respuesta_correcta: "C",
+                    explicacion: "La globalización se caracteriza por el intercambio cultural acelerado gracias a los medios de comunicación y transporte."
+                }
+            ],
+            "ciencias": [
+                {
+                    id: 10,
+                    contexto: "La fotosíntesis es el proceso por el cual las plantas transforman la energía lumínica en energía química.",
+                    pregunta: "¿Qué gas absorben las plantas durante la fotosíntesis?",
+                    opciones: {
+                        A: "Oxígeno",
+                        B: "Nitrógeno",
+                        C: "Dióxido de carbono",
+                        D: "Hidrógeno"
+                    },
+                    respuesta_correcta: "C",
+                    explicacion: "Las plantas absorben dióxido de carbono (CO₂) durante la fotosíntesis y liberan oxígeno (O₂) como subproducto."
+                },
+                {
+                    id: 11,
+                    contexto: "Las células son la unidad básica de la vida.",
+                    pregunta: "¿Qué organelo es conocido como la 'central energética' de la célula?",
+                    opciones: {
+                        A: "Núcleo",
+                        B: "Mitocondria",
+                        C: "Retículo endoplásmico",
+                        D: "Aparato de Golgi"
+                    },
+                    respuesta_correcta: "B",
+                    explicacion: "Las mitocondrias son conocidas como la central energética de la célula porque producen ATP, la molécula energética celular."
+                },
+                {
+                    id: 12,
+                    contexto: "La tabla periódica organiza los elementos químicos según su número atómico.",
+                    pregunta: "¿Qué grupo de elementos son conocidos como gases nobles?",
+                    opciones: {
+                        A: "Grupo 1",
+                        B: "Grupo 17",
+                        C: "Grupo 18",
+                        D: "Grupo 2"
+                    },
+                    respuesta_correcta: "C",
+                    explicacion: "Los gases nobles se encuentran en el grupo 18 de la tabla periódica y se caracterizan por su baja reactividad."
+                }
+            ],
+            "ingles": [
+                {
+                    id: 13,
+                    contexto: "Read the following sentence: 'If I had studied more, I would have passed the exam.'",
+                    pregunta: "What tense is used in this conditional sentence?",
+                    opciones: {
+                        A: "Zero conditional",
+                        B: "First conditional",
+                        C: "Second conditional",
+                        D: "Third conditional"
+                    },
+                    respuesta_correcta: "D",
+                    explicacion: "This is a third conditional sentence, used to talk about hypothetical situations in the past (if + past perfect, would have + past participle)."
+                },
+                {
+                    id: 14,
+                    contexto: "Choose the correct option to complete the sentence: 'She _____ to the cinema every weekend.'",
+                    pregunta: "Which verb form is correct?",
+                    opciones: {
+                        A: "go",
+                        B: "goes",
+                        C: "going",
+                        D: "went"
+                    },
+                    respuesta_correcta: "B",
+                    explicacion: "For third person singular (she/he/it) in present simple, we add -s to the verb: She goes."
+                },
+                {
+                    id: 15,
+                    contexto: "Identify the synonym of 'happy' from the options below.",
+                    pregunta: "Which word means the same as 'happy'?",
+                    opciones: {
+                        A: "Sad",
+                        B: "Angry",
+                        C: "Joyful",
+                        D: "Tired"
+                    },
+                    respuesta_correcta: "C",
+                    explicacion: "'Joyful' is a synonym of 'happy', both expressing positive emotions."
+                }
+            ]
+        };
+
+        const materialesRecomendados = {
+            "lectura-critica": [
+                "Guía de comprensión lectora avanzada",
+                "Libro: 'Cómo leer un libro' de Mortimer Adler",
+                "Ejercicios de inferencia y deducción",
+                "Análisis de textos literarios clásicos"
+            ],
+            "matematicas": [
+                "Formulario de álgebra y geometría",
+                "Problemas resueltos de matemáticas básicas",
+                "Guía de funciones y gráficas",
+                "Ejercicios de lógica matemática"
+            ],
+            "sociales": [
+                "Atlas histórico mundial",
+                "Guía de la Constitución Colombiana",
+                "Linea del tiempo de eventos históricos",
+                "Mapas políticos y económicos"
+            ],
+            "ciencias": [
+                "Tabla periódica interactiva",
+                "Guía de procesos biológicos",
+                "Experimentos científicos simples",
+                "Diagramas del cuerpo humano"
+            ],
+            "ingles": [
+                "Lista de verbos irregulares",
+                "Guía de tiempos verbales en inglés",
+                "Ejercicios de listening y speaking",
+                "Vocabulario por categorías"
+            ]
+        };
+
+        // ====================== VARIABLES GLOBALES ======================
+        let currentMateria = null;
+        let currentPreguntaIndex = 0;
+        let respuestasUsuario = {};
+        let modoOscuro = localStorage.getItem('darkMode') === 'enabled';
+
+        // ====================== MODO OSCURO ======================
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const darkModeSwitch = document.getElementById('darkModeSwitch');
+        const body = document.body;
+
+        // Inicializar modo oscuro
+        if (modoOscuro) {
+            enableDarkMode();
+        }
+
+        // Alternar modo oscuro
+        darkModeSwitch.addEventListener('change', function() {
+            if (this.checked) {
+                enableDarkMode();
+            } else {
+                disableDarkMode();
+            }
+        });
+
+        function enableDarkMode() {
+            body.classList.add('dark-mode');
+            darkModeToggle.classList.add('dark');
+            darkModeSwitch.checked = true;
+            localStorage.setItem('darkMode', 'enabled');
+            modoOscuro = true;
+        }
+
+        function disableDarkMode() {
+            body.classList.remove('dark-mode');
+            darkModeToggle.classList.remove('dark');
+            darkModeSwitch.checked = false;
+            localStorage.setItem('darkMode', 'disabled');
+            modoOscuro = false;
+        }
+
+        // ====================== SELECCIÓN DE MATERIAS ======================
+        const materiasButtons = document.querySelectorAll('.boton-materia');
+        const testTitle = document.getElementById('testTitle');
+        const testProgress = document.getElementById('testProgress');
+        const progressText = document.getElementById('progressText');
+        const progressBar = document.getElementById('progressBar');
+        const preguntasContainer = document.getElementById('preguntasContainer');
+        const testButtons = document.getElementById('testButtons');
+        const materialesSection = document.getElementById('materialesSection');
+        const materialesList = document.getElementById('materialesList');
+
+        materiasButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const materia = this.getAttribute('data-materia');
+                iniciarTest(materia);
+            });
+        });
+
+        function iniciarTest(materia) {
+            currentMateria = materia;
+            currentPreguntaIndex = 0;
+            respuestasUsuario = {};
+            
+            // Actualizar título
+            const materiaNombre = getMateriaNombre(materia);
+            testTitle.textContent = `Test de ${materiaNombre}`;
+            
+            // Mostrar progreso
+            testProgress.style.display = 'flex';
+            actualizarProgreso();
+            
+            // Mostrar botones del test
+            testButtons.style.display = 'flex';
+            
+            // Mostrar primera pregunta
+            mostrarPregunta(currentPreguntaIndex);
+            
+            // Mostrar materiales recomendados
+            mostrarMaterialesRecomendados(materia);
+            
+            // Scroll a la sección del test
+            document.querySelector('.test-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function getMateriaNombre(materiaKey) {
+            const nombres = {
+                'lectura-critica': 'Lectura Crítica',
+                'matematicas': 'Matemáticas',
+                'sociales': 'Sociales y Ciudadanas',
+                'ciencias': 'Ciencias Naturales',
+                'ingles': 'Inglés'
+            };
+            return nombres[materiaKey] || materiaKey;
+        }
+
+        function mostrarPregunta(index) {
+            if (!currentMateria || !preguntasData[currentMateria]) return;
+            
+            const preguntas = preguntasData[currentMateria];
+            
+            if (index >= preguntas.length) {
+                // Fin del test
+                mostrarResultados();
+                return;
+            }
+            
+            const pregunta = preguntas[index];
+            
+            // Crear HTML de la pregunta
+            let html = `
+                <div class="pregunta-container" data-pregunta-id="${pregunta.id}">
+            `;
+            
+            if (pregunta.contexto) {
+                html += `<div class="pregunta-contexto">${pregunta.contexto}</div>`;
+            }
+            
+            html += `
+                    <div class="pregunta-texto">${pregunta.pregunta}</div>
+                    <div class="opciones-container">
+            `;
+            
+            // Opciones A, B, C, D
+            for (const opcion of ['A', 'B', 'C', 'D']) {
+                const opcionTexto = pregunta.opciones[opcion];
+                const respuestaGuardada = respuestasUsuario[pregunta.id];
+                const isSelected = respuestaGuardada === opcion;
+                const isCorrect = pregunta.respuesta_correcta === opcion;
+                const isIncorrect = respuestaGuardada && respuestaGuardada !== pregunta.respuesta_correcta && isSelected;
+                
+                let claseOpcion = 'opcion';
+                if (isSelected) claseOpcion += ' selected';
+                if (respuestaGuardada && isCorrect) claseOpcion += ' correct';
+                if (isIncorrect) claseOpcion += ' incorrect';
+                
+                html += `
+                    <div class="${claseOpcion}" data-opcion="${opcion}">
+                        <input type="radio" name="respuesta_${pregunta.id}" value="${opcion}" id="opcion_${pregunta.id}_${opcion}" ${isSelected ? 'checked' : ''}>
+                        <label class="opcion-label" for="opcion_${pregunta.id}_${opcion}">${opcion}</label>
+                        <div class="opcion-texto">${opcionTexto}</div>
+                    </div>
+                `;
+            }
+            
+            html += `</div>`;
+            
+            // Respuesta correcta (inicialmente oculta)
+            if (respuestasUsuario[pregunta.id]) {
+                html += `
+                    <div class="respuesta-correcta show">
+                        <div class="respuesta-correcta-title">
+                            <i class="fas fa-check-circle"></i>
+                            Explicación:
+                        </div>
+                        ${pregunta.explicacion}
+                    </div>
+                `;
+            }
+            
+            html += `</div>`;
+            
+            preguntasContainer.innerHTML = html;
+            
+            // Añadir event listeners a las opciones
+            document.querySelectorAll('.opcion').forEach(opcionEl => {
+                opcionEl.addEventListener('click', function() {
+                    if (respuestasUsuario[pregunta.id]) return; // No permitir cambiar respuesta después de verificar
+                    
+                    const opcion = this.getAttribute('data-opcion');
+                    seleccionarRespuesta(pregunta.id, opcion);
+                });
+            });
+            
+            // Actualizar progreso
+            actualizarProgreso();
+            
+            // Actualizar estado de botones
+            actualizarBotones();
+        }
+
+        function seleccionarRespuesta(preguntaId, opcion) {
+            respuestasUsuario[preguntaId] = opcion;
+            
+            // Remover selección anterior
+            document.querySelectorAll('.opcion').forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            // Marcar opción seleccionada
+            const opcionSeleccionada = document.querySelector(`.opcion[data-opcion="${opcion}"]`);
+            if (opcionSeleccionada) {
+                opcionSeleccionada.classList.add('selected');
+                opcionSeleccionada.querySelector('input[type="radio"]').checked = true;
+            }
+            
+            // Habilitar botón de verificar
+            document.getElementById('btnVerificar').disabled = false;
+        }
+
+        function actualizarProgreso() {
+            if (!currentMateria) return;
+            
+            const preguntas = preguntasData[currentMateria];
+            const total = preguntas.length;
+            const actual = currentPreguntaIndex + 1;
+            const porcentaje = (actual / total) * 100;
+            
+            progressText.textContent = `Pregunta ${actual} de ${total}`;
+            progressBar.style.width = `${porcentaje}%`;
+        }
+
+        function actualizarBotones() {
+            const btnAnterior = document.getElementById('btnAnterior');
+            const btnVerificar = document.getElementById('btnVerificar');
+            const btnSiguiente = document.getElementById('btnSiguiente');
+            
+            // Botón anterior
+            btnAnterior.disabled = currentPreguntaIndex === 0;
+            
+            // Botón verificar
+            const preguntaActualId = preguntasData[currentMateria][currentPreguntaIndex].id;
+            btnVerificar.disabled = !respuestasUsuario[preguntaActualId];
+            
+            // Botón siguiente
+            const hayRespuesta = !!respuestasUsuario[preguntaActualId];
+            btnSiguiente.disabled = !hayRespuesta;
+            
+            // Cambiar texto del botón verificar si ya se verificó
+            if (hayRespuesta) {
+                btnVerificar.innerHTML = '<i class="fas fa-eye"></i> Ver Explicación';
+            } else {
+                btnVerificar.innerHTML = '<i class="fas fa-check-circle"></i> Verificar Respuesta';
+            }
+            
+            // Cambiar texto del botón siguiente si es la última pregunta
+            const totalPreguntas = preguntasData[currentMateria].length;
+            if (currentPreguntaIndex === totalPreguntas - 1) {
+                btnSiguiente.innerHTML = 'Ver Resultados <i class="fas fa-chart-bar"></i>';
+            } else {
+                btnSiguiente.innerHTML = 'Siguiente <i class="fas fa-arrow-right"></i>';
+            }
+        }
+
+        // ====================== BOTONES DEL TEST ======================
+        document.getElementById('btnAnterior').addEventListener('click', function() {
+            if (currentPreguntaIndex > 0) {
+                currentPreguntaIndex--;
+                mostrarPregunta(currentPreguntaIndex);
+            }
+        });
+
+        document.getElementById('btnVerificar').addEventListener('click', function() {
+            const pregunta = preguntasData[currentMateria][currentPreguntaIndex];
+            const respuestaUsuario = respuestasUsuario[pregunta.id];
+            
+            if (!respuestaUsuario) {
+                showNotification('Por favor selecciona una respuesta primero', 'error');
+                return;
+            }
+            
+            // Mostrar explicación
+            const respuestaCorrectaEl = document.querySelector('.respuesta-correcta');
+            if (respuestaCorrectaEl) {
+                respuestaCorrectaEl.classList.add('show');
+                
+                // Resaltar opciones correctas e incorrectas
+                document.querySelectorAll('.opcion').forEach(opcionEl => {
+                    const opcion = opcionEl.getAttribute('data-opcion');
+                    
+                    if (opcion === pregunta.respuesta_correcta) {
+                        opcionEl.classList.add('correct');
+                    } else if (opcion === respuestaUsuario && opcion !== pregunta.respuesta_correcta) {
+                        opcionEl.classList.add('incorrect');
+                    }
+                });
+                
+                // Deshabilitar opciones
+                document.querySelectorAll('.opcion').forEach(opcionEl => {
+                    opcionEl.style.pointerEvents = 'none';
+                });
+                
+                // Actualizar botones
+                actualizarBotones();
+                
+                // Mostrar notificación
+                const esCorrecta = respuestaUsuario === pregunta.respuesta_correcta;
+                showNotification(
+                    esCorrecta ? '¡Respuesta correcta!' : 'Respuesta incorrecta. Revisa la explicación.',
+                    esCorrecta ? 'success' : 'error'
+                );
+            }
+        });
+
+        document.getElementById('btnSiguiente').addEventListener('click', function() {
+            const totalPreguntas = preguntasData[currentMateria].length;
+            
+            if (currentPreguntaIndex < totalPreguntas - 1) {
+                currentPreguntaIndex++;
+                mostrarPregunta(currentPreguntaIndex);
+            } else {
+                mostrarResultados();
+            }
+        });
+
+        function mostrarResultados() {
+            const preguntas = preguntasData[currentMateria];
+            let correctas = 0;
+            
+            preguntas.forEach(pregunta => {
+                if (respuestasUsuario[pregunta.id] === pregunta.respuesta_correcta) {
+                    correctas++;
+                }
+            });
+            
+            const porcentaje = Math.round((correctas / preguntas.length) * 100);
+            
+            let resultadoHTML = `
+                <div class="text-center py-5">
+                    <h2 class="mb-4" style="color: ${porcentaje >= 70 ? 'var(--correct-color)' : 'var(--incorrect-color)'}">
+                        <i class="fas fa-${porcentaje >= 70 ? 'trophy' : 'redo-alt'} fa-3x mb-3"></i><br>
+                        Resultado del Test
+                    </h2>
+                    <div class="display-1 fw-bold mb-3" style="color: ${porcentaje >= 70 ? 'var(--correct-color)' : 'var(--incorrect-color)'}">
+                        ${porcentaje}%
+                    </div>
+                    <p class="fs-4 mb-4">
+                        <span class="fw-bold">${correctas}</span> de <span class="fw-bold">${preguntas.length}</span> respuestas correctas
+                    </p>
+                    <div class="progress mb-4" style="height: 20px;">
+                        <div class="progress-bar ${porcentaje >= 70 ? 'bg-success' : 'bg-danger'}" 
+                             style="width: ${porcentaje}%">
+                        </div>
+                    </div>
+                    <p class="fs-5">
+                        ${porcentaje >= 70 
+                            ? '¡Excelente trabajo! Tienes un buen dominio de esta materia.' 
+                            : 'Necesitas repasar más esta materia. Revisa los materiales recomendados.'}
+                    </p>
+                    <button class="btn btn-primary btn-lg mt-3" onclick="reiniciarTest()">
+                        <i class="fas fa-redo"></i> Reintentar Test
+                    </button>
+                </div>
+            `;
+            
+            preguntasContainer.innerHTML = resultadoHTML;
+            testButtons.style.display = 'none';
+            
+            // Scroll a los resultados
+            preguntasContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function reiniciarTest() {
+            if (currentMateria) {
+                iniciarTest(currentMateria);
+            }
+        }
+
+        function mostrarMaterialesRecomendados(materia) {
+            const materiales = materialesRecomendados[materia] || [];
+            
+            if (materiales.length > 0) {
+                materialesSection.style.display = 'block';
+                materialesList.innerHTML = '';
+                
+                materiales.forEach(material => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<i class="fas fa-book"></i> ${material}`;
+                    materialesList.appendChild(li);
+                });
+            } else {
+                materialesSection.style.display = 'none';
+            }
+        }
+
+        // ====================== CHAT IA ======================
+        const generarRespuestaBtn = document.getElementById('generarRespuesta');
+        const promptTextarea = document.getElementById('prompt');
+        const respuestaSection = document.getElementById('respuestaSection');
+        const respuestaContent = document.getElementById('respuestaContent');
+        const historialContainer = document.getElementById('historialContainer');
+
+        generarRespuestaBtn.addEventListener('click', function() {
+            const prompt = promptTextarea.value.trim();
+            
+            if (!prompt) {
+                showNotification('Por favor escribe una pregunta', 'error');
+                return;
+            }
+            
+            // Mostrar sección de respuesta
+            respuestaSection.style.display = 'block';
+            
+            // Agregar pregunta al historial
+            agregarAlHistorial('Usuario', prompt);
+            
+            // Mostrar indicador de carga
+            const generarBtnOriginal = generarRespuestaBtn.innerHTML;
+            generarRespuestaBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generando...';
+            generarRespuestaBtn.disabled = true;
+            
+            // Simular respuesta de la IA después de un retraso
+            setTimeout(() => {
+                // Generar respuesta según el prompt
+                const response = generarRespuestaIA(prompt);
+                
+                // Agregar respuesta al historial
+                agregarAlHistorial('Asistente IA', response);
+                
+                // Actualizar el área de respuesta
+                respuestaContent.textContent = response;
+                
+                // Restaurar botón
+                generarRespuestaBtn.innerHTML = generarBtnOriginal;
+                generarRespuestaBtn.disabled = false;
+                
+                // Limpiar el área de texto
+                promptTextarea.value = '';
+                
+                showNotification('Respuesta generada con éxito', 'success');
+                
+                // Hacer scroll a la respuesta
+                respuestaSection.scrollIntoView({ behavior: 'smooth' });
+            }, 1500);
+        });
+
+        function agregarAlHistorial(sender, message) {
+            const historialItem = document.createElement('div');
+            historialItem.className = `historial-item ${sender === 'Usuario' ? 'usuario' : ''}`;
+            
+            const now = new Date();
+            const timeString = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+            
+            historialItem.innerHTML = `
+                <div class="historial-sender">${sender}</div>
+                <div>${message}</div>
+                <small class="text-muted d-block mt-2">${timeString}</small>
+            `;
+            
+            historialContainer.appendChild(historialItem);
+            
+            // Hacer scroll al último mensaje
+            historialContainer.scrollTop = historialContainer.scrollHeight;
+        }
+
+        function generarRespuestaIA(prompt) {
+            const lowerPrompt = prompt.toLowerCase();
+            
+            // Respuestas relacionadas con el test
+            if (lowerPrompt.includes('lectura crítica') || lowerPrompt.includes('comprensión lectora')) {
+                return "Para mejorar en lectura crítica te recomiendo: 1) Leer activamente, subrayando ideas principales, 2) Identificar la tesis del autor, 3) Analizar la estructura del texto, 4) Reconocer recursos retóricos, 5) Practicar con textos de diferentes géneros. La lectura crítica no solo es entender lo que dice el texto, sino también cómo lo dice y con qué intención.";
+            } else if (lowerPrompt.includes('matemática') || lowerPrompt.includes('álgebra') || lowerPrompt.includes('geometría')) {
+                return "En matemáticas es fundamental: 1) Comprender los conceptos básicos, 2) Practicar regularmente con ejercicios variados, 3) Aprender a identificar el tipo de problema, 4) Desarrollar pensamiento lógico, 5) Revisar errores para no repetirlos. Te sugiero comenzar con ejercicios de nivel básico e ir aumentando la dificultad gradualmente.";
+            } else if (lowerPrompt.includes('sociales') || lowerPrompt.includes('historia') || lowerPrompt.includes('ciudadanía')) {
+                return "Para estudiar ciencias sociales: 1) Relaciona eventos históricos con el presente, 2) Utiliza líneas de tiempo para visualizar la cronología, 3) Analiza causas y consecuencias de los eventos, 4) Estudia mapas para entender aspectos geográficos, 5) Relaciona conceptos políticos, económicos y sociales. La interdisciplinariedad es clave en esta área.";
+            } else if (lowerPrompt.includes('ciencia') || lowerPrompt.includes('biología') || lowerPrompt.includes('química') || lowerPrompt.includes('física')) {
+                return "En ciencias naturales es importante: 1) Comprender el método científico, 2) Relacionar teoría con experimentación, 3) Memorizar conceptos clave (como la tabla periódica en química), 4) Utilizar diagramas y esquemas para procesos biológicos, 5) Resolver problemas aplicando fórmulas. La práctica constante es esencial para dominar estos temas.";
+            } else if (lowerPrompt.includes('inglés') || lowerPrompt.includes('idioma')) {
+                return "Para mejorar en inglés: 1) Practica las cuatro habilidades (reading, writing, listening, speaking), 2) Aprende vocabulario en contexto, 3) Domina los tiempos verbales, 4) Escucha música y mira películas en inglés, 5) Habla aunque cometas errores. La inmersión en el idioma es la forma más efectiva de aprender.";
+            } else if (lowerPrompt.includes('consejo') || lowerPrompt.includes('mejorar') || lowerPrompt.includes('estudiar')) {
+                return "Consejos generales para el test: 1) Administra bien tu tiempo, 2) Lee cuidadosamente cada pregunta, 3) Elimina opciones obviamente incorrectas, 4) No dejes preguntas sin responder, 5) Revisa tus respuestas si tienes tiempo. La práctica constante con tests similares te ayudará a familiarizarte con el formato.";
+            } else {
+                return "Como asistente especializado en preparación para tests, puedo ayudarte con estrategias de estudio, explicaciones de conceptos difíciles, recomendaciones de materiales y técnicas para mejorar tu rendimiento en pruebas. ¿Hay alguna materia o tipo de pregunta específica sobre la que te gustaría consultar?";
+            }
+        }
+
+        // ====================== FUNCIONES AUXILIARES ======================
+        function showNotification(message, type) {
+            // Crear elemento de notificación
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            
+            // Estilos para la notificación
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 25px;
+                border-radius: 8px;
+                color: white;
+                font-weight: 500;
+                z-index: 9999;
+                animation: slideIn 0.3s ease-out;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+            
+            // Colores según el tipo
+            if (type === 'success') {
+                notification.style.backgroundColor = '#28a745';
+            } else if (type === 'error') {
+                notification.style.backgroundColor = '#dc3545';
+            } else if (type === 'info') {
+                notification.style.backgroundColor = '#17a2b8';
+            }
+            
+            // Agregar al body
+            document.body.appendChild(notification);
+            
+            // Remover después de 3 segundos
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+            
+            // Agregar estilos de animación si no existen
+            if (!document.getElementById('notificationStyles')) {
+                const style = document.createElement('style');
+                style.id = 'notificationStyles';
+                style.textContent = `
+                    @keyframes slideIn {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                    @keyframes slideOut {
+                        from { transform: translateX(0); opacity: 1; }
+                        to { transform: translateX(100%); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+    </script>
+</body>
+</html>

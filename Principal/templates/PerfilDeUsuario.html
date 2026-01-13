@@ -1,0 +1,85 @@
+{% extends "./home.html" %}
+{% load static %}
+{% block tittle %} perfil {% endblock %} 
+
+{% block extra_head %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">  <!-- referencia a estilos  --> 
+    <link rel="stylesheet" href="{% static 'css/perfile.css' %}">  <!-- referencia a estilos  -->      
+{% endblock %}
+
+{% block content %}  
+<br><br>
+<h1><i class="fas fa-user-circle"></i> Perfil de usuario 👤</h1> 
+<section>
+<div class="student-information-container">
+<h1><i class="fas fa-user-graduate"></i> Informacion del estudiante</h1>
+<!-- <div class="datosDelPerfil"> -->
+<!-- ==============================INFORMACION DEL ESTUDIANTE=================================== -->
+<ul>
+    <li> <i class="fas fa-user"></i> <b> Nombre :</b></li>
+    <li> <i class="fas fa-user"></i> <b> Apellido :</b></li>
+    <li> <i class="fas fa-id-card"></i> <b>Numero de documento :</b></li>
+    <li> <i class="fas fa-birthday-cake"></i> <b>Fecha de Nacimiento :</b></li>
+    <li> <i class="fas fa-venus-mars"></i> <b>Sexo :</b></li>
+    <li> <i class="fas fa-envelope"></i> <b>Correo Electrónico :</b></li>
+    <li> <i class="fas fa-map-marker-alt"></i> <b>Direccion :</b></li>
+    <li> <i class="fas fa-phone"></i> <b>Telefono :</b></li>
+    <li> <i class="fas fa-graduation-cap"></i> <b>Grado :</b></li>
+    <li> <i class="fas fa-chart-line"></i><b>Promedio :</b></li>
+    <li> <i class="fas fa-wheelchair"></i> <b>Nesecidades Educativas Especiales :</b></li>
+    <li> <i class="fas fa-edit"></i> <a href="#"><b>Editar ✍️</b></a></li>
+</ul>
+<!-- ============================================================================================== -->
+</div>
+
+<!-- ========================================INFORMACION DE EL ACUDIENTE============================== -->
+
+<div class="attendant-information-container">
+<h1><i class="fas fa-user-friends"></i> Informacion del acudiente</h1>
+<ul>
+    <li> <i class="fas fa-user"></i> <b> Nombre :</b></li>
+    <li> <i class="fas fa-user"></i> <b> Apellido :</b></li>
+    <li> <i class="fas fa-id-card"></i><b>Numero de documento :</b></li>
+    <li> <b>Fecha de Nacimiento :</b></li>
+    <li> <i class="fas fa-venus-mars"></i> <b>Sexo :</b></li>
+    <li> <i class="fas fa-envelope"></i> <b>Correo Electrónico :</b></li>
+    <li> <i class="fas fa-map-marker-alt"></i> <b>Direccion :</b></li>
+    <li> <i class="fas fa-phone"></i> <b>Telefono :</b></li>
+    <li> <i class="fas fa-heart"></i> <b>Relacion con el estudiante :</b></li>
+    <li> <i class="fas fa-edit"></i> <a href="#"><b>Editar ✍️</b></a></li>
+</ul>
+</div>
+<!-- ======================================================================================== -->
+
+
+<!-- =========================================INFORMACION DEL DOCENTE============================== --> 
+
+<div class="teaching-information-container">
+<h1><i class="fas fa-chalkboard-teacher"></i> Informacion del Docente</h1>
+<ul>
+    <li> <i class="fas fa-user"></i> <b> Nombre :</b></li>
+    <li> <i class="fas fa-user"></i> <b> Apellido :</b></li>
+    <li> <i class="fas fa-id-card"></i> <b>Numero de documento :</b></li>
+    <li> <i class="fas fa-birthday-cake"></i> <b>Fecha de Nacimiento :</b></li>
+    <li> <i class="fas fa-venus-mars"></i> <b>Sexo :</b></li>
+    <li> <i class="fas fa-envelope"></i> <b>Correo Electrónico :</b></li>
+    <li> <i class="fas fa-map-marker-alt"></i> <b>Direccion :</b></li>
+    <li> <i class="fas fa-phone"></i> <b>Telefono :</b></li>
+    <li> <i class="fas fa-edit"></i> <a href="#"><b>Editar ✍️</b></a></li>
+</ul>
+</div>
+<!-- ================================================================== -->
+
+<div class="btn-container">
+    <!-- =======================================ELIMINAR CUENTA ================================================= -->
+         <div id="eliminarCuenta"> <a href="#"><b><i class="fas fa-trash-alt"></i> Eliminar cuenta</b></a></div>
+    <!-- ======================================================================================== -->
+    
+    <!-- =====================================CERRAR SESION =================================================== -->
+         <div id="cerrarSesion"> <a href="#"><b><i class="fas fa-sign-out-alt"></i> Cerrar sesion</b></a></div>
+    <!-- ======================================================================================== -->
+</div>
+</section>
+{% endblock %}

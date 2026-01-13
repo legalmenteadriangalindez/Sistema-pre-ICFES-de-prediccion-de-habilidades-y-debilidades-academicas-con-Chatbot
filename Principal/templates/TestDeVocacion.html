@@ -1,0 +1,238 @@
+{% extends "./home.html" %}
+{% block tittle %} test de vocacion {% endblock %} 
+{% load static %}
+{% block extra_head %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">  <!-- referencia a estilos  --> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/testss.css' %}">  <!-- referencia a estilos  -->
+
+{% endblock %}
+
+{% block content %}  
+<br>
+<br>
+<!-- ==================================================CHAT================================================= -->
+
+<h1>Genera Tu respuesta con IA 🤖 ⛓️‍💥</h1>
+
+<div id="chatContainer" class="chat chat-container">
+
+  <div class="chat-header">
+    <div>
+      <form action="{% url 'home' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="chat_id" value="{{ chat_id }}">
+        <button type="submit" name="nuevo_chat" class="new-chat-btn">
+          <i class="fas fa-plus"></i> Nuevo Chat
+        </button>
+      </form>
+    </div>
+
+    <div class="chat-title">
+      Asistente de IA para Orientacion academica
+    </div>
+  </div>
+
+  <form method="post" action="{% url 'home' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="hidden" name="chat_id" value="{{ chat_id }}">
+
+    <div class="chat-input-area">
+      <div id="areaDeTexto" class="chat-input-area">
+        <label class="chat-label">Preguntar a la IA :</label><br>
+        <textarea name="prompt" class="chat-textarea"
+          placeholder="Escribe tu pregunta aqui...">{{ audio_usuario }}</textarea>
+      </div>
+
+
+    </div>
+
+    <div class="chat-controls">
+      <div class="file-upload-btn">
+        <i class="fas fa-file-upload"></i>
+        Subir archivo
+        <input type="file"
+          accept="application/pdf,.doc,.docx,.xls,.xlsx,.txt"
+          name="archivo">
+      </div>
+
+      <div class="voice-controls">
+        <input type="file" name="audio" id="audioInput" hidden>
+        <button type="button" id="grabar" class=" voice-btn-record">🎙️Grabar</button>
+        <button type="button" id="detener" disabled class="voice-btn-stop">⏹️ Detener</button>
+      </div>
+          <button id="generar" type="submit" class="generate-btn">
+          <i class="fas fa-bolt"></i> Generar respuesta
+          </button>
+    </div>
+
+  </form>
+</div>
+
+
+
+
+
+<br>
+<!-- **************************************CHAT***************************************************** -->
+ 
+<!-- ==============================RESPUESTA===================================-->
+
+<div id="respuesta" class="chat-history">
+
+    <div class="history-header">
+      <div class="container-btn-clear"> 
+            <div class="history-title">Historial de conversaciones</div>
+            <form action="{% url 'home' %}" method="post">
+            {% csrf_token %} 
+            
+            <input type="hidden" name="chat_id" value="{{ chat_id }}">
+            <button class="clear-history-btn" id="borrarHistorial" type="submit" name="borrarHistorial"><i class=" fas fa-trash-alt"></i> Borrar historial</button>
+        
+            </form>
+      </div>
+    </div>
+    <div class="history-container">
+        <div class="mensages message user">
+            {% for turn  in historial %}
+            <div class="message-header">
+                <div class="mensage {{message.tipo}} message-sender">
+                     <strong>User :</strong> {{ turn.usuario }} <br>     
+                </div>
+                <div class="message-time">
+                   Hace 5 min
+                </div>
+                
+            </div>
+            <div class="message-content">
+                <strong>Respuesta generada por IA :</strong><br>{{turn.respuesta }}
+            </div>
+            {% empty %}
+                  <p>no hay historial</p>
+            {% endfor %}
+        </div>
+
+        <section class="response-section">
+          <div class="response-container">
+            <div class="response-header">
+               <i class="fas fa-comment-dots"></i><h2>Respuesta generada por la IA:</h2>
+            </div>
+            <div class="response-content">
+               {{ response }}
+            </div>
+          </div>   
+        </section>
+
+    </div>
+</div> 
+
+<!-- ********************************RESPUESTA*********************************** -->
+
+
+
+<br>
+<div class="materias">
+   <form action="{% url 'test' %}" method="POST">
+    {% csrf_token %}
+   <button type="submit" class="boton_Materias"  name="materia" value="Lectura Critica"><i class="fa fa-book-reader"></i> Lectura Critica</button>
+   <button type="submit" class="boton_Materias"  name="materia" value="Matematicas"><i class="fa fa-calculator"></i> Matematicas</button>
+   <button type="submit" class="boton_Materias"  name="materia" value="Sociales y ciudadanas"><i class="fa fa-globe-americas"></i> Sociales y ciudadanas</button>
+   <button type="submit" class="boton_Materias"  name="materia" value="Ciencias Naturales"><i class="fa fa-flask"></i> Ciencias Naturales</button>
+   <button type="submit" class="boton_Materias"  name="materia" value="Ingles"><i class="fa fa-language"></i> Ingles</button>
+   </form>
+</div>
+<!-- ========================================OPCIONES============================================ -->
+<h1>Selecciona la respuesta correcta:</h1>
+<div id="opciones_test">
+
+
+<!-- <h2>Pregunta : </h2> -->
+
+<form action="{% url 'test' %}" method="post" >
+{% csrf_token %} 
+
+{% for p in preguntas %}
+  <br>
+  <p>{{ p.contexto }}</p>
+  <br> 
+  
+  
+  <span>{{ p.pregunta }}</span>
+  <br>
+  <div class="opcion">
+  <label for="">A</label>
+  <input type="radio" name="respuesta_{{ p.id }}" value="A">
+  <span>{{ p.opciones.A }}</span>
+  <br>
+  </div>
+
+
+  <div class="opcion">
+  <label for="">B</label>
+  <input type="radio" name="respuesta_{{ p.id }}" value="B">
+  <span>{{ p.opciones.B }}</span>
+  <br>
+  </div>
+
+   
+  <div class="opcion">
+  <label for="">C</label>
+  <input type="radio" name="respuesta_{{ p.id }}" value="C">
+  <span>{{ p.opciones.C  }}</span>
+  <br>
+  </div>
+
+
+  <div class="opcion">
+  <label for="">D</label>
+  <input type="radio" name="respuesta_{{ p.id }}" value="D">
+
+  <span>{{ p.opciones.D  }}</span>
+  <br>
+  </div>
+  <div>
+    <!-- ocultar_respuesta -->
+    <div class="respuesta_correcta " data-respuesta="{{ p.respuesta_correcta}}">
+      <span>Respuesta correcta:</span>
+      {{ p.respuesta_correcta }}
+    </div>
+    
+  </div>
+  
+{% endfor %}
+
+    <div class="btn-verify-container">
+          <button type="submit" id="verificar" value="verificar"><i class="fas fa-bolt"></i> Verificar</button>  <!-- boton para verificar respuesta -->
+    </div>
+
+</form>
+      <div class="recommended-container">
+           {% if materiales_recomendados %}
+             <div class="recommended-header">
+                   <h2 class="recommended-title"><i class="fa fa-book-open"></i> Material Recomendado</h2>
+             </div>
+             <ul>
+               {% for tema in materiales_recomendados %}
+               <li>🔍 {{tema}}</li>
+               {% endfor %}
+             </ul>
+           {% endif %}      
+      </div>
+
+</div>
+<br>
+
+
+<!-- ============================================================================================= -->
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const totalDePreguntas = Number("{{ preguntas|length|default:0 }}");
+</script>
+    <script src="{% static 'js/script.js' %}"></script> <!-- referencia a js  -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="{% static 'js/tests.js' %}"></script>      
+{% endblock %}
