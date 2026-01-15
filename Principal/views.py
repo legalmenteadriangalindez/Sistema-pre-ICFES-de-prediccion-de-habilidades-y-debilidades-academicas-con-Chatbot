@@ -1,6 +1,6 @@
 # ================================IMPORTACIONES===============================================
 from itertools import chain
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import JsonResponse #, HttpResponse
 from Principal.services.files import guardar_PDFs
 from Principal.services.audio import procesar_audio
@@ -24,16 +24,27 @@ def home(request):
     chat_id = request.GET.get("chat_id","default")
     chatbot = chatbotManager.get_chatbot(user_id)
     raw_historial = chatbot.get_conversation_history(chat_id, limit=50)
+    chats = chatbot.memory_manager.get_user_chats()
     contexto = {
         "prompt": "",
         "ruta": None,
         "audio_usuario": None,
         "historial":  agrupar_historial_por_turnos(raw_historial),
         "response": None,
-        "chat_id": chat_id
+        "chat_id": chat_id,
+        "chats" : chats
     } 
 
     resultado = {"success": False, "response": None}
+    
+    if request.method == "POST" and "delete_chat" in request.POST:
+       chat_id_to_delete = request.POST.get("chat_id")
+       chatbot.memory_manager.delete_chat(chat_id_to_delete)
+
+       if chat_id_to_delete == chat_id:
+           return redirect("home")
+       
+       return redirect(f"{request.path}?chat_id={chat_id}")
 
     if request.method == "POST":
         # return render(request,"home.html",contexto) 
