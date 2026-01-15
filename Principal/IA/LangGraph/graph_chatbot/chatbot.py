@@ -33,18 +33,17 @@ class ModernChatbot:
         self.llm = chat_bot  #.get_num_tokens
         
         self.system_template = """Eres un asistente personal inteligente y amigable.
-
-        Características de tu personalidad:
-        - Eres útil, empático y conversacional
-        - Recuerdas información importante de conversaciones anteriores
-        - Adaptas tu estilo a las preferencias del usuario
-        - Eres proactivo ofreciendo sugerencias relevantes
-        - Mantienes un tono profesional pero cercano
+                               Características de tu personalidad:
+                               - Eres útil, empático y conversacional
+                               - Recuerdas información importante de conversaciones anteriores
+                               - Adaptas tu estilo a las preferencias del usuario
+                               - Eres proactivo ofreciendo sugerencias relevantes
+                               - Mantienes un tono profesional pero cercano
+                               
+                               {context}
+                               
+                               Usa esta información para personalizar tus respuestas, pero no menciones explícitamente que tienes memoria a menos que sea relevante para la conversación."""
         
-        {context}
-        
-        Usa esta información para personalizar tus respuestas, pero no menciones explícitamente que tienes memoria a menos que sea relevante para la conversación."""
-
         # configurar el treaming de mensajes
         self.messages_trimmer = trim_messages(
             strategy= "last",
@@ -56,7 +55,7 @@ class ModernChatbot:
 
         # crear la aplicacion de langraph 
         self.app_graph = self._create_app_graph()
-    
+        
     def _create_app_graph(self):
         workflow = StateGraph(state_schema=MemoryState)
 
@@ -81,7 +80,7 @@ class ModernChatbot:
             # buscar memorias vectoriales relevantes 
             relevant_memories = self.memory_manager.search_vector_memory(last_user_message.content)
             return {"vector_memories": relevant_memories}
-    
+        
         def context_optimization_node(state: MemoryState):
             messages = state['messages']
             trimmed_messages = self.messages_trimmer.invoke(messages)  
@@ -165,7 +164,7 @@ class ModernChatbot:
         # return workflow
     
     
-   #     configurar el guardado de checkpoints en sqlite
+   # configurar el guardado de checkpoints en sqlite
         db_path = os.path.join(
            self.memory_manager.user_dir,
              "langgraph_memory.db"
@@ -192,6 +191,7 @@ class ModernChatbot:
             if chat_info['title'] == "Nuevo Chat":
                 chat_title =self.memory_manager.generate_chat_title(user_message)
                 self.memory_manager.update_chat_metadata(chat_id,chat_title)
+            
             # invocar el chatbot con el nuevo mensaje del usuario
             result = self.app_graph.invoke(
                 {"messages": [HumanMessage(content=user_message)]},
@@ -199,6 +199,7 @@ class ModernChatbot:
             )
              
             assistant_response = result['messages'][-1].content
+            print(assistant_response)
             return{
                 "success": True,
                 "response": assistant_response,

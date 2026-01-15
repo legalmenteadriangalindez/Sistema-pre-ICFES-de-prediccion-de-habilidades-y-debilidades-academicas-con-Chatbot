@@ -48,7 +48,7 @@ class ModernMemoryManager:
         # sistema de extraccion inteligente de memoria transversal 
         self._init_extraction_system()
         
-        self.embedding_function = get_embedding("nomic-embed-text")
+        # self.embedding_function = get_embedding("nomic-embed-text") # 
         self._init_vector_db()   
 
         # ruta de la base de datos langraph_database (reservado para persistencia LangGraph)
@@ -59,7 +59,9 @@ class ModernMemoryManager:
         try:
             self.vectorstore = Chroma(
                 collection_name=f"memoria_{self.user_id}",
-                embedding_function= HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2"),                                     #embedding_function=self.embedding_function,
+                embedding_function= HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2",model_kwargs={"device": "cpu"},
+                                                          encode_kwargs={"normalize_embeddings": True}
+                                                         ), 
                 persist_directory=self.chroma_db_path
             )
             self.client = chromadb.PersistentClient(path=self.chroma_db_path)
@@ -79,23 +81,23 @@ class ModernMemoryManager:
             self.memory_parser = parser_extract_memory
             # self.extraction_template = get_extration_prompt(self.memory_parser)           
             self.extraction_template = PromptTemplate(
-                template="""Analiza el siguiente mensaje del usuario y determina si contiene información importante que deba recordarse.
-
-                Categorías disponibles:
-                - personal: Nombre, edad, ubicación, familia, etc.
-                - profesional: Trabajo, empresa, proyectos, habilidades
-                - preferencias: Gustos, disgustos, preferencias personales
-                - hechos_importantes: Información relevante que debe recordarse
-                
-                Mensaje del usuario: "{user_message}"
-                
-                Si el mensaje contiene información importante, extrae UNA memoria (la más importante).
-                Si no contiene información relevante para recordar, responde con categoría "none".
-                
-                {format_instructions}""",
-                                input_variables=["user_message"],
-                                partial_variables={"format_instructions": self.memory_parser.get_format_instructions()}
-                            )
+                template= """Analiza el siguiente mensaje del usuario y determina si contiene información importante que deba recordarse.
+                          Categorías disponibles:
+                          - personal: Nombre, edad, ubicación, familia, etc.
+                          - profesional: Trabajo, empresa, proyectos, habilidades
+                          - preferencias: Gustos, disgustos, preferencias personales
+                          - hechos_importantes: Información relevante que debe recordarse
+                          
+                          Mensaje del usuario: "{user_message}"
+                          
+                          Si el mensaje contiene información importante, extrae UNA memoria (la más importante).
+                          Si no contiene información relevante para recordar, responde con categoría "none".
+                          
+                          {format_instructions}""",
+                input_variables=["user_message"],
+                partial_variables={"format_instructions": self.memory_parser.get_format_instructions()}
+                )
+            
             self.extraction_chain = self.extraction_template | self.extraction_llm | self.memory_parser  
         except Exception as e:
             print(f"Error initializing extraction LLM: {e}")
@@ -131,6 +133,7 @@ class ModernMemoryManager:
         except Exception as e:
             print(f"Error saving chats meta: {e}")
     
+
     # crear un nuevo chat
     def create_new_chat(self, first: str=""):
         chat_id = str(uuid.uuid4())
@@ -208,18 +211,17 @@ class ModernMemoryManager:
             if not self.extraction_chain:
                 return first_message[:30] + "..." if len(first_message) > 30 else first_message 
             title_prompt = PromptTemplate(
-                template="""Genera un título corto (máximo 4-5 palabras) para una conversación que comienza con este mensaje:
-
-            "{message}"
-            
-            El título debe:
-            - Ser conciso y descriptivo
-            - Capturar el tema principal
-            - Ser apropiado para un historial de chat
-            - No incluir comillas
-            
-            Título:""",
-                            input_variables=["message"]
+                template="""Genera un título corto (máximo 4-5 palabras) para una conversación que comienza con este mensaje:              
+                          "{message}"
+                          
+                          El título debe:
+                          - Ser conciso y descriptivo
+                          - Capturar el tema principal
+                          - Ser apropiado para un historial de chat
+                          - No incluir comillas
+                          
+                          Título:""",
+            input_variables=["message"]
             ) 
             title_chain = title_prompt | self.extraction_llm      #get_chat_tittle_chain()
             response = title_chain.invoke({"message": first_message[:200]}) # verificar invoke y entrada de datos en la funcion en chains 
@@ -259,13 +261,12 @@ class ModernMemoryManager:
             print(f"Error saving memory to vector store: {e}")
             return ""
     
-    #busca informacion relevnate en la memoria vectorial   
+    #busca informacion relevanate en la memoria vectorial   
     def search_vector_memory(self, query: str, k: int = 5):
         if not self.collection:
             print("Vector store not initialized.")
             return []
         try:
-
             results = self.collection.query(
                 query_texts=[query],
                 n_results=k
