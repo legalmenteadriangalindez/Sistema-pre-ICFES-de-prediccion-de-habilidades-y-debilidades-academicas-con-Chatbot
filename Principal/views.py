@@ -1,4 +1,7 @@
 # ================================IMPORTACIONES===============================================
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
 from itertools import chain
 from django.shortcuts import render,redirect
 from django.http import JsonResponse #, HttpResponse
@@ -9,15 +12,22 @@ from Principal.services.gestion_view_test import generar_quizes,generar_material
 from Principal.services.gestion_historial import obtener_historial,eliminar_historial,guardar_ia,guardar_user,procesar_historial
 from Principal.services.gestion_prompts import get_chain_chatbot,extraer_texto_ai
 from Principal.IA.processor_PDF import prueba
-from Principal.IA.LangGraph.graph_chatbot.graph import chat,chat_memory_deslizante,chat_memory_vectorial
+# from Principal.IA.LangGraph.graph_chatbot.graph import chat,chat_memory_deslizante,chat_memory_vectorial
 from Principal.IA.LangGraph.graph_chatbot.chatbot import chatbotManager
+from .forms import UserRegisterForm,EstudianteForm
 
-from django.contrib.auth.decorators import login_required
 # ********************************IMPORTACIONES**************************************************
 
-# Create your views here.       
+
+
+# Create your views here. 
+#       
+def salir(request):
+    logout(request)
+    return redirect('/')
 
 # =================================HOME=======================================
+@login_required
 def home(request):
 
     user_id = "user_test"
@@ -32,7 +42,8 @@ def home(request):
         "historial":  agrupar_historial_por_turnos(raw_historial),
         "response": None,
         "chat_id": chat_id,
-        "chats" : chats
+        "chats" : chats,
+        "profile": chatbot.memory_manager.get_cognitive_profile()
     } 
 
     resultado = {"success": False, "response": None}
@@ -104,8 +115,7 @@ def home(request):
 
 
 # ==============================TEST===============================================
-
-# @login_required(login_url='/iniciarSesion/')
+@login_required
 def test(request):
     # ---------------------usuario de testeo----------------------
     user = request.user
@@ -134,6 +144,7 @@ def test(request):
 
 
 # =============================RECOMENDACIONES======================================
+@login_required
 def recomendaciones(request):
     return render(request,"Recomendaciones.html")     # view recomendacion de carreras con IA
 # ********************************RECOMENDACIONES**************************************************
@@ -141,6 +152,7 @@ def recomendaciones(request):
 
 
 # =============================CARRERAS======================================
+@login_required
 def carreras(request):
     return render(request,"Carreras.html")     # view Carreras Profesionales
 # # ********************************CARRERAS**************************************************
@@ -149,6 +161,7 @@ def carreras(request):
 
 
 # =============================COMPARADOR DE CARRERAS======================================
+@login_required
 def comparadorDeCarreras(request):
     return render(request,"ComparadorDeCarreras.html")     # view Comparador de carreras 
 # ********************************COPARADOR DE CARRERAS**************************************************
@@ -157,6 +170,7 @@ def comparadorDeCarreras(request):
 
 
 # =============================CONFIGURACIONES======================================
+@login_required
 def configuraciones(request):
     return render(request,"Configuraciones.html")     # view Cnfiguraciones
 # ********************************CONFIGURACIONES**************************************************
@@ -164,6 +178,7 @@ def configuraciones(request):
 
 
 # =============================PERFIL DE USUARIO======================================
+@login_required
 def perfil(request):
     return render(request,"PerfilDeUsuario.html")     # view Perfil de usuario
 # ********************************PERFIL DE USUARIO**************************************************
@@ -171,6 +186,7 @@ def perfil(request):
 
 
 # =============================INICIO DE SESION======================================
+
 def inicioDeSesion(request):
     return render(request,"InicioSesion.html")     # view iniciar secion 
 # ********************************INICIO DE SESION**************************************************
@@ -178,7 +194,25 @@ def inicioDeSesion(request):
 
 
 # =============================REGISTRO ======================================
+
 def registro(request):
-    return render(request,"Registro.html")     # view Registrarse
+    if request.method == "POST":
+        user_form = UserRegisterForm(request.POST)
+        student_form = EstudianteForm(request.POST)
+
+        if user_form.is_valid() and student_form.is_valid() :
+            user = user_form.save()
+            student = student_form.save(commit=False)
+            student.user = user
+            student.save()
+
+            inicioDeSesion(request, user)
+            return(redirect,'login')
+    else :
+        user_form = UserRegisterForm()
+        student_form = EstudianteForm()
+
+    return render(request,"Registro.html",{"user_form": user_form,"student_form": student_form})     # view Registrarse
+
 # ********************************REGISTRO**************************************************
 

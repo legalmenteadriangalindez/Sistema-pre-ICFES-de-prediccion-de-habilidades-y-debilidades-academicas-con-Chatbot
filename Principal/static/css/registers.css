@@ -1,0 +1,47 @@
+h1{
+    color: #D91E0D;
+    margin: auto;
+}
+
+h5{
+    color: #D91E0D;
+    margin: auto;
+}
+
+/* .container-register{
+
+    
+} */
+
+/* .input-continer{
+
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+
+} */
+
+.container-register input,
+.container-register select,
+.container-register textarea {
+    width: 100%;
+}
+
+
+.btn-primary{
+    margin-top: 40px;
+}
+
+.input-field{
+    background-color: yellowgreen;
+    height: 50px;
+    border-radius: 5px;
+    font-size: 120%;
+}
+
+
+
+.input-text-area-acudiente{
+    background-color: aqua;
+    margin-top: 45px;
+}

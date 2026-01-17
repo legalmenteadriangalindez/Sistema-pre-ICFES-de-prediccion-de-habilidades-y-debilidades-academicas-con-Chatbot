@@ -11,7 +11,6 @@ urlpatterns = [
   path('compararCarreras/',views.comparadorDeCarreras,name="comparadorDeCarreras"), # url comparar carreras
   path('configuraciones/',views.configuraciones,name="configuraciones"), # configuraciones
   path('perfil/',views.perfil,name="perfil"), # url perfil de usuario
-  path('iniciarSesion/',views.inicioDeSesion,name="inicioDeSesion"), # url inicio de sesion 
   path('registro/',views.registro,name="registro"), # url registro 
-
+  path('salir/', views.salir, name='salir') # url logout 
 ]

@@ -739,8 +739,26 @@ footer{
     transform: scale(1.2);
 }
 
+/* perfil de aprendizaje cognitivo del usuario  */
+.profile-cognitive-container{
+    margin-top: 1px;
+    margin-bottom: 10px;
+    border: solid 2px black;
+    margin-left: 20%;
+    background-color: white;
+    border-radius: 5px;
+    width: 60%;
+}
+
+.profile-fortalezas-header{
+    
+}
 
 
+.profile-fortalezas-container,.profile-weak-container,.profile-recommendations-container li{
+
+   list-style: none;
+}
 
 /* =================NAV RESPONSIVE ANDROID================== */
 @media(max-width: 600px){
