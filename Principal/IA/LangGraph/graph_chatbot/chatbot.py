@@ -117,6 +117,17 @@ class ModernChatbot:
                 response = AIMessage(content=str(response))
             return {"messages": response}
         
+        # nodo para construir el perfil de aprendizaje cognitivo del usuario
+        def cognitive_profile_node(state):
+            messages = state["messages"]
+            if not messages:
+                return {}
+            
+            profile = self.memory_manager.build_cognitive_profile(messages[:6])
+
+            if profile:
+               self.memory_manager.save_cognitive_profile(profile)
+
         # nodo que extrae y almacena nuevas memorias vectoriales
         def memory_extraction_node(state):
             messages = state['messages']
@@ -153,12 +164,16 @@ class ModernChatbot:
         workflow.add_node("context_optimization", context_optimization_node)
         workflow.add_node("response_generation", response_generation_node)
         workflow.add_node("memory_extraction", memory_extraction_node)
-    
+        workflow.add_node("profile_cognitive",cognitive_profile_node)
+
+
         # definir el flujo del grafo
         workflow.add_edge(START, "memory_retrieval")
         workflow.add_edge("memory_retrieval", "context_optimization")
         workflow.add_edge("context_optimization", "response_generation")
-        workflow.add_edge("response_generation", "memory_extraction")
+        workflow.add_edge("response_generation", "profile_cognitive")
+        workflow.add_edge("profile_cognitive","memory_extraction")
+        # workflow.add_edge("response_generation", "memory_extraction")
         workflow.add_edge("memory_extraction", END)
         
         # return workflow

@@ -23,6 +23,8 @@ class MemoryState(TypedDict):
     vector_memories: List[str]
     user_profile: Dict[str,Any]
     last_memory_extraction: Optional[str]
+    user_dir: str
+    chat_id: str
 
 
 class ExtractedMemory(BaseModel):

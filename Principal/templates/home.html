@@ -30,7 +30,7 @@
        </div>
        <a href="{% url 'configuraciones' %}"> <b>Configuraciones ⚙️</b></a>
        <a href="{% url 'perfil' %}"> <b>Perfil De Usuario 👤</b></a>
-       <a href="{% url 'inicioDeSesion' %}"><button id="iniciarSesion">Iniciar sesion</button></a>
+       <a href="{% url 'login' %}"><button id="iniciarSesion">Iniciar sesion</button></a>
        <a href="{% url 'registro' %}"><button id="registrarse" >Registrarse</button></a>
     </nav>
 <!-- ================================================================= -->
@@ -253,9 +253,58 @@
         </div>
       
     </div>
+
+    <div class="profile-cognitive-container">
+       <div class="profile-fortalezas-container">
+            <h3>Fortalezas</h3>
+          <ul>
+              {% for p in profile %}
+                  <div class="profile-fortalezas-header">
+                      <h3>Area : {{ p.area }} </h3>
+                  </div>
+                 
+                 {% for item in p.strong_area %}
+                      <li>{{ item }} </li>
+                  {% empty %}
+                      <li>No se identificaron fortalezas</li>
+                 {% endfor %}
+                 
+              {% endfor %}
+          </ul>
+       </div>
+
+       <div class="profile-weak-container">
+        <h3>Debilidades</h3>
+          <ul>
+              {% for p in profile %}
+              
+                 {% for item in p.weak_areas %}
+                      <li>{{ item }} </li>
+                  {% empty %}
+                      <li>No se identificaron debilidades</li>
+                 {% endfor %}
+                 
+              {% endfor %}
+          </ul>
+       </div>
+
+       <div class="profile-recommendations-container">
+        <h3>Progresos</h3>
+          <ul>
+              {% for p in profile %}
+              
+                 {% for item in p.progress %}
+                      <li>{{ item }} </li>
+                  {% empty %}
+                      <li>No se identificaron progresos</li>
+                 {% endfor %}
+                 
+              {% endfor %}
+          </ul>
+       </div>
+
+    </div>
   
-
-
     {% endblock %} 
     <br>
 <!-- ********************************RESPUESTA*********************************** -->

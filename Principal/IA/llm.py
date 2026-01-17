@@ -47,5 +47,53 @@ parser_Material=PydanticOutputParser(pydantic_object=Material_recomendado)
 
 # ==================================================================================================
 
+class Cognitive_profile(BaseModel):
+    area: Literal[
+        "matematicas",
+        "lectura_critica",
+        "ciencias_naturales",
+        "ciencias_sociales_y_ciudadanas",
+        "ingles"
+    ] = Field(description="Área principal evaluada")
 
+    general_level: Literal[
+        "basic",
+        "intermediate",
+        "advanced"
+    ] = Field(description="Nivel general del usuario en el área")
+
+    strong_areas: List[str] = Field(
+        default_factory=list,
+        description="Temas o habilidades que el usuario domina teniendo en cuenta la consulta que hizo"
+    )
+
+    weak_areas: List[str] = Field(
+        default_factory=list,
+        description="Temas que el usuario necesita reforzar para dominar el tema"
+    )
+
+    frequent_mistakes: List[str] = Field(
+        default_factory=list,
+        description="Errores recurrentes relacionados con la conversacion"
+    )
+
+    progress: List[str] = Field(
+        default_factory=list,
+        description="Temas donde se evidencia progreso"
+    )
+
+    score: int = Field(
+        ge=1,
+        le=5,
+        description="Puntaje general entre 1 y 5"
+    )
+
+    detected_error: bool = Field(
+        description="Indica si se detectaron errores conceptuales claros"
+    )
+
+
+parser_CognitiveProfile = PydanticOutputParser(
+    pydantic_object=Cognitive_profile
+)
 
