@@ -1,0 +1,39 @@
+h1{
+    color: #D91E0D;
+    margin: auto;
+}
+
+h5{
+    color: #D91E0D;
+    margin: auto;
+}
+
+
+.container-register input,
+.container-register select,
+.container-register textarea {
+    width: 100%;
+}
+
+
+.input-field{
+    height: 50px;
+    border-radius: 5px;
+    font-size: 120%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.input-field:hover{
+    transform:translateY(-0.5rem)
+}
+
+.input-text-area{
+    font-size: 120%;
+
+}
+
+.input-select{
+    height: 50px;
+
+}

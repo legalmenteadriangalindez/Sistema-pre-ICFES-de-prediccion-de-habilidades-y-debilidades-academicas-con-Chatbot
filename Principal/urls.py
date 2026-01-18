@@ -12,5 +12,7 @@ urlpatterns = [
   path('configuraciones/',views.configuraciones,name="configuraciones"), # configuraciones
   path('perfil/',views.perfil,name="perfil"), # url perfil de usuario
   path('registro/',views.registro,name="registro"), # url registro 
+  path('gestion_admin/',views.gestion_admin,name="gestion_admin"), # url gestion admin 
+  path('cordinador/',views.cordinador,name="cordinador"), # url cordinador 
   path('salir/', views.salir, name='salir') # url logout 
 ]
