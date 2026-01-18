@@ -14,7 +14,7 @@ from Principal.services.gestion_prompts import get_chain_chatbot,extraer_texto_a
 from Principal.IA.processor_PDF import prueba
 # from Principal.IA.LangGraph.graph_chatbot.graph import chat,chat_memory_deslizante,chat_memory_vectorial
 from Principal.IA.LangGraph.graph_chatbot.chatbot import chatbotManager
-from .forms import UserRegisterForm,EstudianteForm
+from .forms import UserRegisterForm, PersonaForm, EstudianteForm
 
 # ********************************IMPORTACIONES**************************************************
 
@@ -194,25 +194,28 @@ def inicioDeSesion(request):
 
 
 # =============================REGISTRO ======================================
-
 def registro(request):
     if request.method == "POST":
         user_form = UserRegisterForm(request.POST)
-        student_form = EstudianteForm(request.POST)
+        persona_form = PersonaForm(request.POST)
+        estudiante_form = EstudianteForm(request.POST)
 
-        if user_form.is_valid() and student_form.is_valid() :
+        if (user_form.is_valid()and persona_form.is_valid()and estudiante_form.is_valid()):
+            
             user = user_form.save()
-            student = student_form.save(commit=False)
-            student.user = user
-            student.save()
-
+            persona = persona_form.save(commit=False)
+            persona.user = user
+            persona.save()
+            estudiante = estudiante_form.save(commit=False)
+            estudiante.persona = persona
+            estudiante.save()
             inicioDeSesion(request, user)
-            return(redirect,'login')
-    else :
+            return redirect("login")  
+    else:
         user_form = UserRegisterForm()
-        student_form = EstudianteForm()
+        persona_form = PersonaForm()
+        estudiante_form = EstudianteForm()
 
-    return render(request,"Registro.html",{"user_form": user_form,"student_form": student_form})     # view Registrarse
-
+    return render(request,"Registro.html",{"user_form": user_form,"persona_form": persona_form,"estudiante_form": estudiante_form,},)  # view Registrarse
 # ********************************REGISTRO**************************************************
 

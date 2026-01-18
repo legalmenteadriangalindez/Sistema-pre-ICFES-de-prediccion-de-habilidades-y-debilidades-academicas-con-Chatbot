@@ -17,7 +17,7 @@
   <div class="row justify-content-center">
     <div class="col-md-6">
 
-      {% if user_form.errors or student_form.errors %}
+      {% if user_form.errors or persona_form.errors or estudiante_form.errors %}
         <div class="alert alert-danger">
           Revisa los datos ingresados.
         </div>
@@ -29,26 +29,28 @@
         <h5 class="mt-3 ">Datos de acceso</h5>
         <div>
              <div>Nombre de usuario: {{ user_form.username }}</div>
-             <div>contraseña: {{ user_form.password1 }}</div>
-             <div>Verifique su contraseña: {{ user_form.password2 }}</div>
+             <div class="col-md-6"><label class="form-label">Correo electrónico</label>{{ user_form.email }}</div>
+             <div><label class="form-label">contraseña:</label>{{ user_form.password1 }}</div>
+             <div><label for="" class="form-label">Verifique su contraseña:</label>{{ user_form.password2 }}</div>
         </div>
         <hr>
 
         <h5 class="mt-3">Datos personales</h5>
         <div class="input-continer row g-3">
-             <div class="input col-md-6"><label for="" class="form-label">Nombre:</label> {{ student_form.nombre }}</div>
-             <div class="input col-md-6"><label for="" class="form-label">Apellido:</label> {{ student_form.apellido}}</div>
-             <div class="input col-md-6"><label for="" class="form-label">Documento:</label> {{ student_form.documento}}</div>
-             <div class="input col-md-6"><label for="" class="form-label">Fecha de nacimiento: </label>{{ student_form.fecha_nacimiento}}</div>
-             <div class="input col-md-6"><label for="" class="form-label">Email:</label> {{ student_form.email}}</div>
-             <div class="input col-md-6"><label for="" class="form-label">Direccion:</label> {{ student_form.direccion}}</div>
-             <div class="input col-md-6"><label for="" class="form-label">Telefono:</label> {{ student_form.telefono}}</div>
-             <div class="input col-md-6"><label for="" class="form-label">Grado:</label> {{ student_form.grado}}</div>
-             <div class="input col-md-6"><label for="" class="form-label">Promedio actual:</label> {{ student_form.promedio}}</div>
-             <div class="input col-md-6"><label for="" class="form-label">Nesecidades especiales:</label> {{ student_form.necesidades_especiales}}</div>
-             <div class="input col-md-6"><label for="" class="form-label">Sexo:</label> {{ student_form.sexo}}</div>
-             <div class="input input-text-area-acudiente col-md-6"><label for="" class="form-label">Acudiente:</label> {{ student_form.acudiente}}</div>
-             <div class="input col-md-6"><label for="" class="form-label">Docente:</label> {{ student_form.docentes}}</div>
+             <div class="input col-md-6"><label for="" class="form-label">Nombre:</label> {{ persona_form.nombre }}</div>
+             <div class="input col-md-6"><label for="" class="form-label">Apellido:</label> {{ persona_form.apellido}}</div>
+             <div class="input col-md-6"><label for="" class="form-label">Documento:</label> {{ persona_form.documento}}</div>
+             <div class="input col-md-6"><label for="" class="form-label">Fecha de nacimiento: </label>{{ persona_form.fecha_nacimiento}}</div>
+             <div class="input col-md-6"><label for="" class="form-label">Sexo:</label> {{ persona_form.sexo}}</div>
+             <div class="input col-md-6"><label for="" class="form-label">Direccion:</label> {{ persona_form.direccion}}</div>
+             <div class="input col-md-6"><label for="" class="form-label">Telefono:</label> {{ persona_form.telefono}}</div>
+             
+             <h5 class="mt-3">Datos académicos</h5>
+             <div class="col-md-6"><label class="form-label">Curso</label>{{ estudiante_form.curso }}</div>
+             <div class="col-md-6"><label class="form-label">Acudiente</label>{{ estudiante_form.acudiente }}</div>
+             <div class="input col-md-6"><label for="" class="form-label">Nesecidades especiales:</label> {{ estudiante_form.necesidades_especiales}}</div>
+             
+             
         </div>
         <button type="submit" class="btn btn-primary w-100 mt-3">
           Registrarse
