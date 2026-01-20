@@ -302,6 +302,17 @@ def registro(request):
 
 
 
+#======================================ADMIN GESTION DB=====================================================================
+
+def gestion_db(request):
+    contexto = {
+        "DATO": "dato"
+    }
+    return render(request, "admin_gestion_db.html", contexto)
+#***************************************ADMIN GESTION DB********************************************************************
+
+
+
 #===================================GESTION ADMIN============================================================
 # @login_required
 # @user_passes_test(es_admin)
