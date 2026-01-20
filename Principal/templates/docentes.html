@@ -1,0 +1,75 @@
+
+
+{% extends "home.html" %}
+{% load static %}
+{% block title %} registro {% endblock %} 
+    
+{% block extra_head %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">  <!-- referencia a estilos  --> 
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">  <!-- referencia a estilos  -->      
+{% endblock %}
+
+{% block content %}  
+
+
+<h1>Docentes:</h1> 
+
+<div class="container mt-5">
+    <h2>Cursos Asignados</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID del usuario</th>
+                <th>Nombre del curso asignado </th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Id del usuario</td>
+                <td>elemento</td>
+                <td>elemento</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="container mt-5">
+    <h2>Estudiantes Asignados Asignados</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID del usuario</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Documento</th>
+                <th>Estado</th>
+                <th>Nota 1</th>
+                <th>Nota 2</th>
+                <th>Nota 3</th>
+                <th>Promedio</th>
+                <th>Observaciones</th>
+                <th>Acudiente</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Id del usuario</td>
+                <td>elemento</td>
+                <td>elemento</td>
+                <td>elemento</td>
+                <td>elemento</td>
+                <td>elemento</td>
+                <td>elemento</td>
+                <td>elemento</td>
+                <td>Elemento</td>
+                <td>Elemento</td>
+                <td>Elemento</td>
+            </tr>
+            <tr><td>Total de estudiantes</td><td>Elemento</td><td>Promedio General</td></tr>
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

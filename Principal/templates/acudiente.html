@@ -1,0 +1,38 @@
+
+
+{% extends "home.html" %}
+{% load static %}
+{% block title %} registro {% endblock %} 
+    
+{% block extra_head %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">  <!-- referencia a estilos  --> 
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">  <!-- referencia a estilos  -->      
+{% endblock %}
+
+{% block content %}  
+
+
+<h1>Gestión de usuarios:</h1> 
+
+
+<!-- Usuarios típicos: Padres o tutores.
+Objetivo: Supervisión académica de su(s) estudiante(s).
+
+Funcionalidades principales:
+
+Ver datos del estudiante asignado (Estudiante).
+
+Ver boletines (Boletin).
+
+Ver notas (Nota) y observaciones (Observacion).
+
+Consultar información general de curso y docente.
+
+Restricciones:
+
+No puede editar datos de estudiantes.
+
+No puede crear notas, boletines o asignaciones. -->
+
+{% endblock %}
