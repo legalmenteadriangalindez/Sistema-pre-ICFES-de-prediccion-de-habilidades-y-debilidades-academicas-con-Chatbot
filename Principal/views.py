@@ -2,7 +2,7 @@
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from itertools import chain
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.http import JsonResponse #, HttpResponse
 from Principal.services.files import guardar_PDFs
 from Principal.services.audio import procesar_audio
@@ -182,9 +182,88 @@ def configuraciones(request):
 # =============================PERFIL DE USUARIO======================================
 @login_required
 def perfil(request):
-    return render(request,"PerfilDeUsuario.html")     # view Perfil de usuario
+    
+    user = request.user
+    persona = getattr(user, "persona", None)
+    estudiante = None
+    docente = None
+    acudiente = None
+    if persona:
+       estudiante = getattr(persona, "estudiante", None) if persona else None
+       docente = getattr(persona, "docente", None) if persona else None
+       if estudiante:
+          acudiente = getattr(estudiante, "acudiente", None) if estudiante else None
+
+    contexto ={
+        "user": user,
+        "persona": persona,
+        "estudiante": estudiante,
+        "docente": docente,
+        "acudiente": acudiente,
+        }
+    
+    return render(request,"PerfilDeUsuario.html",contexto)     # view Perfil de usuario
+    
 # ********************************PERFIL DE USUARIO**************************************************
 
+@login_required
+def editarPerfil(request):
+    
+    user = request.user
+    try: 
+        persona = user.persona
+    except Exception as e:
+        persona = None 
+
+    try: 
+        estudiante = persona.estudiante
+    except Exception as e:
+        estudiante = None 
+    
+    try: 
+        acudiente = estudiante.acudiente
+    except Exception as e:
+        acudiente = None
+    
+    try: 
+        docente = persona.docente
+    except Exception as e :
+        docente = None
+
+    
+    if request.method == "POST":
+        user_form = UserRegisterForm(request.POST,instance= user)
+        persona_form = PersonaForm(request.POST, instance=persona)
+        estudiante_form = EstudianteForm(request.POST,instance=estudiante) if estudiante else None
+        
+        forms_validos = user_form.is_valid() and persona_form.is_valid()
+        if estudiante_form:
+            forms_validos = forms_validos and estudiante_form.is_valid()
+        
+        if forms_validos: 
+            user_form.save()
+            persona_form.save()
+            if estudiante_form:
+                estudiante_form.save()
+            return redirect('perfil')
+    else:
+        user_form= UserRegisterForm(instance=user) 
+        persona_form = PersonaForm(instance=persona)
+        estudiante_form = EstudianteForm(instance=estudiante) if estudiante else None
+    contexto ={
+        "user_form": user_form,
+        "persona_form": persona_form,
+        "estudiante_form": estudiante_form,
+        "estudiante": estudiante,
+        "acudiente": acudiente,
+        "docente": docente
+        }
+    return render(request,"PerfilDeUsuario.html",contexto)     # view Perfil de usuario
+
+#=====================================EDITAR PERFIL==============================================================
+
+
+#*************************************EDITAR PERFIL****************************************************************
 
 
 # =============================INICIO DE SESION======================================
@@ -227,6 +306,57 @@ def registro(request):
 # @login_required
 # @user_passes_test(es_admin)
 def gestion_admin(request):
+    accion = None
+    
+    if request.method == "POST":
+    
+        if "registrar_sexo" in request.POST:
+            accion = "sexo"
+            sexo_form = SexoForm(request.POST)
+            if sexo_form.is_valid():
+                sexo_form.save()
+
+        elif "registrar_relaciones" in request.POST:
+            accion = "relacion"
+            relacion_form = RelacionAcudienteForm(request.POST)
+            if relacion_form.is_valid():
+                relacion_form.save()
+
+        elif "registrar_grados" in request.POST:
+            accion = "grado"
+            grado_form = GradoForm(request.POST)
+            if grado_form.is_valid():
+                grado_form.save()
+
+        elif "registrar_jornadas" in request.POST:
+            accion = "jornada"
+            jornada_form = JornadaForm(request.POST)
+            if jornada_form.is_valid():
+                jornada_form.save()
+
+        elif "registrar_sedes" in request.POST:
+            accion = "sede"
+            sede_form = SedeForm(request.POST)
+            if sede_form.is_valid():
+                sede_form.save()
+
+        elif "registrar_anio_lectivo" in request.POST:
+            accion = "anio"
+            anio_form = AnioLectivoForm(request.POST)
+            if anio_form.is_valid():
+                anio_form.save()
+
+        elif "registrar_periodo" in request.POST:
+            accion = "periodo"
+            periodo_form = PeriodoAcademicoForm(request.POST)
+            if periodo_form.is_valid():
+                periodo_form.save()
+
+        elif "registrar_materias" in request.POST:
+            accion = "materia"
+            materia_form = MateriaForm(request.POST)
+            if materia_form.is_valid():
+                materia_form.save()
 
     if request.method == "POST":
         # Instanciamos todos los formularios con POST
@@ -266,6 +396,7 @@ def gestion_admin(request):
         materia_form = MateriaForm()
 
     context = {
+        "accion": accion,
         "sexo_form": sexo_form,
         "relacion_form": relacion_form,
         "grado_form": grado_form,
@@ -281,62 +412,108 @@ def gestion_admin(request):
 #***************************************GESTION ADMIN*********************************************************
 
 
-#=======================================CORDINADOR======================================================================
+# =======================================GESTION ACUDIENTES Y ESTUDIANTES======================================================================
 # @login_required
 # @user_passes_test(es_coordinador)
-def cordinador(request):
-    # Formulario para crear persona
-    if request.method == "POST":
-        persona_form = PersonaForm(request.POST)
-        acudiente_form = AcudienteForm(request.POST)  # relacion con acudiente
-        # Otras opciones seleccionadas
-        grado_id = request.POST.get("grado")
-        jornada_id = request.POST.get("jornada")
-        sede_id = request.POST.get("sede")
-        materia_id = request.POST.get("materia")
-        periodo_id = request.POST.get("periodo")
-        anio_id = request.POST.get("anio")
 
-        if persona_form.is_valid() and acudiente_form.is_valid():
+def gestion_acudientes_estudiantes(request):
+    accion = None
+
+    if request.method == "POST" and "registrar_acudiente" in request.POST:
+        accion = "acudiente"
+
+        persona_form = PersonaForm(request.POST)
+
+        if persona_form.is_valid():
+            
             persona = persona_form.save(commit=False)
-            persona.user = request.user
+            persona.sexo_id = request.POST.get("sexo")
             persona.save()
 
-            acudiente = acudiente_form.save(commit=False)
-            acudiente.persona = persona
-            acudiente.save()
+            
+            relacion_id = request.POST.get("relacion")
+            acudiente = Acudiente.objects.create(
+                persona=persona,
+                relacion_id=relacion_id
+            )
 
-            # Aquí podrías manejar los selects elegidos si los quieres usar
-            # ejemplo: grado = Grado.objects.get(id=grado_id)
+            
+            estudiante_id = request.POST.get("estudiante")
+            estudiante = get_object_or_404(Estudiante, id=estudiante_id)
 
-            return redirect("cordinador")
+            estudiante.acudiente = acudiente
+            estudiante.save()
+
+            return redirect("gestion_acudientes_estudiantes")
+
     else:
         persona_form = PersonaForm()
-        acudiente_form = AcudienteForm()
-
-    # Formularios solo como selects
-    grados = Grado.objects.filter(activo=True)
-    jornadas = Jornada.objects.filter(activo=True)
-    sedes = Sede.objects.filter(activo=True)
-    materias = Materia.objects.filter(activo=True)
-    periodos = PeriodoAcademico.objects.filter(activo=True)
-    anios = AnioLectivo.objects.filter(activo=True)
-    relacion_acudientes = RelacionAcudiente.objects.filter(activo=True)
-    sexos = Sexo.objects.filter(activo=True)
 
     contexto = {
+        "accion": accion,
         "persona_form": persona_form,
-        "acudiente_form": acudiente_form,
-        "grados": grados,
-        "jornadas": jornadas,
-        "sedes": sedes,
-        "materias": materias,
-        "periodos": periodos,
-        "anios": anios,
-        "relacion_acudientes": relacion_acudientes,
-        "sexos": sexos,
+        "sexos": Sexo.objects.filter(activo=True),
+        "relacion_acudientes": RelacionAcudiente.objects.filter(activo=True),
+        "estudiantes": Estudiante.objects.filter(acudiente__isnull=True)
+                                          .select_related("persona"),
     }
+    estudiantes = Estudiante.objects.filter(acudiente__isnull=True).select_related("persona")
+    print("Cantidad estudiantes disponibles:", estudiantes.count())
+    for e in estudiantes:
+        print(e.id, e.persona.nombre, e.persona.apellido)
+    return render(request, "gestion_estudiantes_acudientes.html", contexto)
 
-    return render(request, "cordinador.html", contexto)
+#************************************GESTION ESTUDIANTES Y ACUDIENTES******************************************************
 
-#************************************CORDINADOR******************************************************
+
+
+# =======================================ADMINISTRADOR GESTION USUARIOS======================================================================
+# @login_required
+# @user_passes_test(es_coordinador)
+
+def gestion_users(request):
+    contexto = {
+        "DATO": "dato"
+    }
+    return render(request, "admin_gestion_user.html", contexto)
+
+#************************************ADMINISTRADOR GESTION USUARIOS******************************************************
+
+
+# =======================================ACUDIENTE======================================================================
+# @login_required
+# @user_passes_test(es_coordinador)
+
+def acudiente(request):
+    contexto = {
+        "DATO": "dato"
+    }
+    return render(request, "acudiente.html", contexto)
+
+#************************************ACUDIENTE******************************************************
+
+
+# =======================================ADMIN GESTION ACADEMICA======================================================================
+# @login_required
+# @user_passes_test(es_coordinador)
+
+def gestion_academica(request):
+    contexto = {
+        "DATO": "dato"
+    }
+    return render(request, "admin_gestion_academica.html", contexto)
+
+#************************************ADMINISTRADOR GESTION ACADEMICA******************************************************
+
+
+# =======================================DOCENTES======================================================================
+# @login_required
+# @user_passes_test(es_coordinador)
+
+def docentes(request):
+    contexto = {
+        "DATO": "dato"
+    }
+    return render(request, "docentes.html", contexto)
+
+#************************************DOCENTES******************************************************

@@ -11,9 +11,8 @@ from .models import (
 class SexoForm(forms.ModelForm):
     class Meta:
         model = Sexo
-        fields = "__all__"
+        exclude = ['codigo']
         widgets = {
-            "codigo": forms.TextInput(attrs={"class": "input-field"}),
             "descripcion": forms.TextInput(attrs={"class": "input-field"}),
             "activo": forms.CheckboxInput(attrs={"class": "input-checkbox"}),
         }
@@ -22,9 +21,8 @@ class SexoForm(forms.ModelForm):
 class RelacionAcudienteForm(forms.ModelForm):
     class Meta:
         model = RelacionAcudiente
-        fields = "__all__"
+        exclude = ['codigo']
         widgets = {
-            "codigo": forms.TextInput(attrs={"class": "input-field"}),
             "descripcion": forms.TextInput(attrs={"class": "input-field"}),
             "activo": forms.CheckboxInput(attrs={"class": "input-checkbox"}),
         }
@@ -33,9 +31,8 @@ class RelacionAcudienteForm(forms.ModelForm):
 class GradoForm(forms.ModelForm):
     class Meta:
         model = Grado
-        fields = "__all__"
+        exclude = ['codigo']
         widgets = {
-            "codigo": forms.TextInput(attrs={"class": "input-field"}),
             "nombre": forms.TextInput(attrs={"class": "input-field"}),
             "activo": forms.CheckboxInput(attrs={"class": "input-checkbox"}),
         }
@@ -44,9 +41,8 @@ class GradoForm(forms.ModelForm):
 class JornadaForm(forms.ModelForm):
     class Meta:
         model = Jornada
-        fields = "__all__"
+        exclude = ['codigo']
         widgets = {
-            "codigo": forms.TextInput(attrs={"class": "input-field"}),
             "nombre": forms.TextInput(attrs={"class": "input-field"}),
             "activo": forms.CheckboxInput(attrs={"class": "input-checkbox"}),
         }
@@ -55,9 +51,8 @@ class JornadaForm(forms.ModelForm):
 class SedeForm(forms.ModelForm):
     class Meta:
         model = Sede
-        fields = "__all__"
+        exclude = ['codigo']
         widgets = {
-            "codigo": forms.TextInput(attrs={"class": "input-field"}),
             "nombre": forms.TextInput(attrs={"class": "input-field"}),
             "direccion": forms.TextInput(attrs={"class": "input-field"}),
             "telefono": forms.TextInput(attrs={"class": "input-field"}),
@@ -85,11 +80,29 @@ class AcudienteForm(forms.ModelForm):
     class Meta:
         model = Acudiente
         fields = ["persona", "relacion"]
+        persona = forms.ModelChoiceField(
+        queryset=Persona.objects.all(),
+        empty_label="Seleccione una persona"
+        )
         widgets = {
             "persona": forms.Select(attrs={"class": "input-select"}),
             "relacion": forms.Select(attrs={"class": "input-select"}),
         }
 
+class AsignarAcudienteForm(forms.Form):
+    estudiante = forms.ModelChoiceField(
+        queryset=Estudiante.objects.filter(acudiente__isnull=True),
+        label="Estudiante",
+        empty_label="Seleccione un estudiante",
+        widget=forms.Select(attrs={"class": "form-select"})
+    )
+
+    acudiente = forms.ModelChoiceField(
+        queryset=Acudiente.objects.all(),
+        label="Acudiente",
+        empty_label="Seleccione un acudiente",
+        widget=forms.Select(attrs={"class": "form-select"})
+    )
 
 class DocenteForm(forms.ModelForm):
     class Meta:
@@ -116,9 +129,8 @@ class CursoForm(forms.ModelForm):
 class MateriaForm(forms.ModelForm):
     class Meta:
         model = Materia
-        fields = "__all__"
+        exclude = ['codigo']
         widgets = {
-            "codigo": forms.TextInput(attrs={"class": "input-field"}),
             "nombre": forms.TextInput(attrs={"class": "input-field"}),
             "activo": forms.CheckboxInput(attrs={"class": "input-checkbox"}),
         }
@@ -203,7 +215,9 @@ class UserRegisterForm(UserCreationForm):
         required=True,
         widget=forms.EmailInput(attrs={"class": "input-field"})
     )
-    
+    username = forms.CharField(
+        widget=forms.TextInput(attrs={"class": "input-field"})
+    )
     password1 = forms.CharField(
         label="Contraseña",
         widget=forms.PasswordInput(attrs={
@@ -224,6 +238,8 @@ class UserRegisterForm(UserCreationForm):
         fields = ["username", "email", "password1", "password2"]
         widgets = {
             "username": forms.TextInput(attrs={"class": "input-field"}),
+            "email": forms.EmailInput(attrs={"class": "input-field"}),
+            "password1": forms.PasswordInput(attrs={"class": "input-field"})
         }
 
     def save(self, commit=True):
@@ -263,4 +279,5 @@ class EstudianteForm(forms.ModelForm):
                 attrs={"class": "input-text-area", "rows": 3}
             ),
         }
+
 

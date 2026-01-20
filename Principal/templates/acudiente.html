@@ -13,26 +13,88 @@
 {% block content %}  
 
 
-<h1>Gestión de usuarios:</h1> 
+<h1>Estudiante a Cargo</h1> 
 
+<div class="container mt-5">
+    <h2>Datos del estudiante</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID del usuario</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Documento</th>
+                <th>Fecha de nacimiento</th>
+                <th>Direccion</th>
+                <th>Telefono</th>
+                <th>Sexo</th>
+                <th>Grado</th>
+                <th>Promedio</th>
+                <th>Jornada</th>
+                <th>Estado</th>
+                <th>editar</th>
+                <th>Eliminar</th>
+                <th>Activar/Desactivar</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Id del usuario</td>
+                <td>elemento</td>
+                <td>elemento</td>
+                <td>elemento</td>
+                <td>elemento</td>
+                <td>elemento</td>
+                <td>elemento</td>
+                <td>elemento</td>
+                <td>elemento</td>
+                <td>elemento</td>
+                <td>elemento</td>
+                <td>elemento</td>
+                <td>Estado</td>
+                <td><button class="btn btn-sm btn-primary">Editar</button></td>
+                <td><button class="btn btn-sm btn-danger">Eliminar</button></td>
+                <td>
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="user1" checked>
+                    <label class="form-check-label" for="user1"></label>
+                  </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
-<!-- Usuarios típicos: Padres o tutores.
-Objetivo: Supervisión académica de su(s) estudiante(s).
-
-Funcionalidades principales:
-
-Ver datos del estudiante asignado (Estudiante).
-
-Ver boletines (Boletin).
-
-Ver notas (Nota) y observaciones (Observacion).
-
-Consultar información general de curso y docente.
-
-Restricciones:
-
-No puede editar datos de estudiantes.
-
-No puede crear notas, boletines o asignaciones. -->
+<div class="container mt-5">
+    <h2>Materias</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID del usuario</th>
+                <th>Nombre</th>
+                <th>Docente</th>
+                <th>Grado</th>
+                <th>Nota</th>
+                <th>Promedio</th>
+                <th>Observaciones</th>
+                <th>Jornada</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Id del usuario</td>
+                <td>elemento</td>
+                <td>elemento</td>
+                <td>elemento</td>
+                <td>elemento</td>
+                <td>elemento</td>
+                <td>elemento</td>
+                <td>elemento</td>
+                <td>elemento</td>               
+            </tr>
+        </tbody>
+    </table>
+</div>
 
 {% endblock %}
