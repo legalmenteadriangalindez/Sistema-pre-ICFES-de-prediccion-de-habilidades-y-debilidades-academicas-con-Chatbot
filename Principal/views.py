@@ -332,6 +332,18 @@ def gestion_db(request):
         "form_relaciones": form_rel
     }
     return render(request, "admin_gestion_db.html", contexto)
+
+def eliminar_admin_gestion_db(request,tipo,id):
+    if tipo == "rol":
+      rol = Rol.objects.get(id=id)
+      rol.delete()
+    if tipo == "sexo":
+        sexo = Sexo.objects.get(id=id)
+        sexo.delete()
+    if tipo == "relaciones":
+        relacion = RelacionAcudiente.objects.get(id=id)
+        relacion.delete()
+    return redirect('admin_gestion_db')
 #***************************************ADMIN GESTION DB********************************************************************
 
 
@@ -478,7 +490,6 @@ def gestion_acudientes_estudiantes(request):
 # =======================================ADMINISTRADOR GESTION USUARIOS======================================================================
 # @login_required
 # @user_passes_test(es_coordinador)
-
 def gestion_users(request):
     users = User.objects.all()
     personas = Persona.objects.all()
@@ -514,7 +525,6 @@ def acudiente(request):
         "estudiantes": None
     }
     return render(request, "acudiente.html", contexto)
-
 #************************************ACUDIENTE******************************************************
 
 
@@ -599,7 +609,6 @@ def docentes(request):
         "a_docentes": asignacion_docentes
     }
     return render(request, "docentes.html", contexto)
-
 #************************************DOCENTES******************************************************
 
 

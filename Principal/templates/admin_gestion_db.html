@@ -34,7 +34,7 @@
                 <td>{{r.descripcion}}</td>
                 <td>Estado</td>
                 <td><button class="btn btn-sm btn-primary">Editar</button></td>
-                <td><button class="btn btn-sm btn-danger">Eliminar</button></td>
+                <td><a href="{% url 'eliminar_admin_gestion_db' 'rol' r.id %}"><button  class="btn btn-sm btn-danger">Eliminar</button></a></td>
                 <td>
                   <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="user1" checked>
@@ -99,7 +99,7 @@
                 <td>{{s.descripcion}}</td>
                 <td>{{s.activo}}</td>
                 <td><button class="btn btn-sm btn-primary">Editar</button></td>
-                <td><button class="btn btn-sm btn-danger">Eliminar</button></td>
+                <td><a href="{% url 'eliminar_admin_gestion_db' 'sexo' s.id %}"><button  class="btn btn-sm btn-danger">Eliminar</button></a></td>
                 <td>
                   <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="user1" checked>
@@ -165,7 +165,7 @@
                 <td>{{rel.descripcion}}</td>
                 <td>{{rel.activo}}</td>
                 <td><button class="btn btn-sm btn-primary">Editar</button></td>
-                <td><button class="btn btn-sm btn-danger">Eliminar</button></td>
+                <td><a href="{% url 'eliminar_admin_gestion_db' 'relaciones' rel.id %}"><button  class="btn btn-sm btn-danger">Eliminar</button></a></td>
                 <td>
                   <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="user1" checked>

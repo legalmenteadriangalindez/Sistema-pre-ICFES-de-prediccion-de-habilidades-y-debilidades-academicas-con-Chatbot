@@ -19,5 +19,6 @@ urlpatterns = [
   path('admin_gestion_db/',views.gestion_db,name="admin_gestion_db"), # url gestion academica 
   path('docentes/',views.docentes,name="docentes"), # url docentes 
   path('acudiente/',views.acudiente,name="acudiente"), # url acudiente 
-  path('salir/', views.salir, name='salir') # url logout 
+  path('salir/', views.salir, name='salir'), # url logout 
+  path('eliminar_admin_gestion_db/<tipo>/<id>',views.eliminar_admin_gestion_db,name="eliminar_admin_gestion_db")
 ]
