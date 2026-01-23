@@ -1,4 +1,4 @@
-{% extends "home.html" %}
+{% extends "home_admin.html" %}
 {% load static %}
 {% block title %} registro {% endblock %} 
     
@@ -10,7 +10,6 @@
 
 {% block content %}  
 
-
 <h1>Gestion del administrador</h1> 
 
 <div class="container mt-5">
@@ -19,6 +18,7 @@
         <thead>
             <tr>
                 <th>ID del usuario</th>
+                <th>nombre</th>
                 <th>Descripcion</th>
                 <th>Estado</th>
                 <th>editar</th>
@@ -27,10 +27,12 @@
             </tr>
         </thead>
         <tbody>
+            {% for r in roles %}
             <tr>
-                <td>Id del usuario</td>
-                <td>elemento</td>
-                <td>elemento</td>
+                <td>{{r.id}}</td>
+                <td>{{r.nombre}}</td>
+                <td>{{r.descripcion}}</td>
+                <td>Estado</td>
                 <td><button class="btn btn-sm btn-primary">Editar</button></td>
                 <td><button class="btn btn-sm btn-danger">Eliminar</button></td>
                 <td>
@@ -40,9 +42,42 @@
                   </div>
                 </td>
             </tr>
+            {% endfor %}
+            <tr>
+                <td>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregar_rol">
+                      + Agregar Nuevo
+                    </button>
+                </td>
+            </tr>
         </tbody>
     </table>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="agregar_rol" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Nuevo Rol </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="" method="post">
+        {% csrf_token %}
+        {{form_roles }}
+        
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 
 <div class="container mt-5">
     <h2>Gestion de Sexos</h2>
@@ -58,10 +93,11 @@
             </tr>
         </thead>
         <tbody>
+            {% for s in sexos %}
             <tr>
-                <td>Id del usuario</td>
-                <td>elemento</td>
-                <td>elemento</td>
+                <td>{{s.id}}</td>
+                <td>{{s.descripcion}}</td>
+                <td>{{s.activo}}</td>
                 <td><button class="btn btn-sm btn-primary">Editar</button></td>
                 <td><button class="btn btn-sm btn-danger">Eliminar</button></td>
                 <td>
@@ -71,11 +107,43 @@
                   </div>
                 </td>
             </tr>
+            {% endfor %}
+            <tr>
+                <td>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregar_sexo">
+                      + Agregar Nuevo
+                    </button>
+                </td>
+            </tr>
         </tbody>
     </table>
 </div>
       
- 
+
+<!-- Modal -->
+<div class="modal fade" id="agregar_sexo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Nuevo Sexo </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="" method="post">
+        {% csrf_token %}
+        {{form_sexos }}
+        
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 
 <div class="container mt-5">
     <h2>Gestion de Relaciones</h2>
@@ -91,10 +159,11 @@
             </tr>
         </thead>
         <tbody>
+            {% for rel in Relacion_acudientes %}
             <tr>
-                <td>Id del usuario</td>
-                <td>elemento</td>
-                <td>elemento</td>
+                <td>{{rel.id}}</td>
+                <td>{{rel.descripcion}}</td>
+                <td>{{rel.activo}}</td>
                 <td><button class="btn btn-sm btn-primary">Editar</button></td>
                 <td><button class="btn btn-sm btn-danger">Eliminar</button></td>
                 <td>
@@ -104,12 +173,39 @@
                   </div>
                 </td>
             </tr>
+            {% endfor %}
+            <tr>
+                <td>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregar_relacion">
+                      + Agregar Nuevo
+                    </button>
+                </td>
+            </tr>
         </tbody>
     </table>
 </div>
 
 
-
-
+<!-- Modal -->
+<div class="modal fade" id="agregar_relacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Nueva Relacion </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="" method="post">
+        {% csrf_token %}
+        {{form_relaciones}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
 
 {% endblock %}

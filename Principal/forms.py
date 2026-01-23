@@ -5,7 +5,7 @@ from .models import (
     Sexo, RelacionAcudiente, Acudiente, Docente,
     Grado, Jornada, Curso, Sede, AnioLectivo,
     Materia, AsignacionDocente, PeriodoAcademico,
-    Nota, Boletin, Observacion,Persona,Estudiante 
+    Nota, Boletin, Observacion,Persona,Estudiante,Rol
 )
 
 class SexoForm(forms.ModelForm):
@@ -281,3 +281,12 @@ class EstudianteForm(forms.ModelForm):
         }
 
 
+class RolForm(forms.ModelForm):
+    class Meta:
+        model= Rol
+        fields = ["nombre","descripcion"]
+
+        widgets={
+            "nombre": forms.TextInput(attrs={"class": "input-field"}),
+            "descripcion": forms.TextInput(attrs={"class": "input-field"})
+        }

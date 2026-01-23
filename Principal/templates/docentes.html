@@ -21,16 +21,26 @@
         <thead>
             <tr>
                 <th>ID del usuario</th>
+                <th>Docente</th>
                 <th>Nombre del curso asignado </th>
+                <th>Materia</th>
+                <th>Año lectivo</th>
+                <th>Sede</th>
                 <th>Estado</th>
             </tr>
         </thead>
         <tbody>
+            {%for a in a_docentes%}
             <tr>
-                <td>Id del usuario</td>
-                <td>elemento</td>
-                <td>elemento</td>
+                <td>{{a.id}}</td>
+                <td>{{a.docente.persona.nombre}}</td>
+                <td>{{a.curso.nombre}}</td>
+                <td>{{a.materia.nombre}}</td>
+                <td>{{a.anio_lectivo.anio}}</td>
+                <td>{{a.sede.nombre}}</td>
+                <td>{{a.activo}}</td>
             </tr>
+            {%endfor%}
         </tbody>
     </table>
 </div>

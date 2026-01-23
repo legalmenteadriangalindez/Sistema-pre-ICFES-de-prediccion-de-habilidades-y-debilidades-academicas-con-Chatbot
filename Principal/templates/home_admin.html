@@ -1,0 +1,363 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> {% block title %} home  {% endblock %} </title>
+   
+<!-- ======================referencia a estilos  ========================-->         
+    {% block extra_head %}
+      <!-- <img src="{% static 'img/Background.jpg'%}" alt=""> -->
+       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+       <!-- En el <head> de tu documento -->
+       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">       
+       <link rel="stylesheet" href="{% static 'css/styles.css' %}">  <!-- referencia a estilos  --> 
+    {% endblock %}
+<!-- ===================================================================  -->
+ 
+</head>
+<body>
+      
+ <!-- =======================NAV BAR================================== -->
+    <nav> 
+       <div>
+           <a href="{% url 'home' %}" > <b>Inicio 🏠</b></a>
+           <a href="{% url 'test' %}"> <b>Administrador✍️</b></a>
+           <!-- <a href="{% url 'recomendaciones' %}"> <b>Recomendaciones de carreras con IA</b></a> -->
+           <!-- <a href="{% url 'carreras' %}"> <b>Carreras profesionales</b></a> -->
+           <!-- <a href="{% url 'comparadorDeCarreras' %}"> <b>Comparador de carreras 🆚</b></a> -->
+       </div>
+       <a href="{% url 'configuraciones' %}"> <b>Configuraciones ⚙️</b></a>
+       <a href="{% url 'perfil' %}"> <b>Perfil De Usuario 👤</b></a>
+       <!-- <a href="{% url 'login' %}"><button id="iniciarSesion">Iniciar sesion</button></a> -->
+       <a href="{% url 'registro' %}"><button id="registrarse" >Registrarse</button></a>
+    </nav>
+<!-- ================================================================= -->
+
+<!-- ==================================MODO OSCURO=========================================== -->
+
+     <div id="modoOscuroContainer" class="dark-mode-toggle">
+         <label for="modoOscuro"><b>Modo Oscuro 🌔</b></label>
+         <label for="" class="toggle-switch">
+             <input class="form-check-input mt-0" id="modoOscuro" type="checkbox" value="" onchange="toggleModoOscuro()" aria-label="Checkbox for following text input">
+             <span class="slider"></span>
+         </label>
+         <!-- <input type="checkbox" id="modoOscuro" name="modoOscuro" onchange="toggleModoOscuro()"> -->
+     </div>
+<!-- ======================================================================================== --> 
+
+<!-- =========================== SECTION ============================= -->
+
+    {% block content %}  <!-- contenido cambiante  -->
+
+<!-- ===============================================CARRUSEL================================================= -->
+<div id="carrusel" class="carousel slide ">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#carrusel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#carrusel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#carrusel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+  </div>
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="{% static 'img/quiz.jpg' %}" class="d-block w-100" alt="...">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>conoce tu nivel   actual</h5>
+        <p>Realiza un test rapido para conocer tu nivel actual</p>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img src="{% static 'img/grados.jpg' %}" class="d-block w-100" alt="...">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>Aplica para la carrera de tus sueños</h5>
+        <p>elige la mejor opción para ti</p>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img src="{% static 'img/ia.jpg' %}" class="d-block w-100" alt="...">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>Mejora tus resulados en las pruebas de estado ICFES usando IA</h5>
+        <p>Mejora tus resultados con inteligencia artificial</p>
+      </div>
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carrusel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carrusel" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+<!-- ================================================================================================================= -->
+
+
+
+<!-- ==================================================CHAT================================================= -->
+<br>
+<div id="chatContainer" class="chat chat-container">
+<h1>Genera Tu respuesta con IA 🤖 ⛓️‍💥</h1>
+  <div class="chat-header">
+    <div>
+      <form action="{% url 'home' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="chat_id" value="{{ chat_id }}">
+        <button type="submit" name="nuevo_chat" class="new-chat-btn">
+          <i class="fas fa-plus"></i> Nuevo Chat
+        </button>
+      </form>
+    </div>
+
+    <div class="chat-title">
+      Asistente de IA para Orientacion academica
+    </div>
+  </div>
+
+  <form method="post" action="{% url 'home' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="hidden" name="chat_id" value="{{ chat_id }}">
+
+    <div class="chat-input-area">
+      <div id="areaDeTexto" class="chat-input-area">
+        <!-- <label class="chat-label">Preguntar a la IA :</label><br> -->
+
+              <!-- ==============================RESPUESTA===================================-->
+              <div id="respuesta" class="chat-history">
+              
+                  <div class="history-container">
+                      <div class="mensages ">
+                          {% for turn  in historial %}
+              
+                          {% if turn.usuario != "None" %}
+                
+                      <div class="message user">
+                          <div class="message-header">
+                              <div class="message-sender">
+                                  <strong>User:</strong>
+                              </div>
+                              <div class="message-time">Hace 5 min</div>
+                          </div>
+                          <div class="message-content">
+                              {{ turn.usuario }}
+                          </div>
+                      </div>
+                  {% endif %}
+              
+                  {% if turn.respuesta %}
+              
+                      <div class="message ai">
+                          <div class="message-header">
+                              <div class="message-sender">
+                                  <strong>IA:</strong>
+                              </div>
+                              <div class="message-time">Hace 5 min</div>
+                          </div>
+                          <div class="message-content">
+                              {{ turn.respuesta }}
+                          </div>
+                      </div>
+                  {% endif %}
+              
+                          {% empty %}
+                                <p>no hay historial</p>
+                          {% endfor %}
+                      </div>
+              
+                      <section class="response-section">
+                        <div class="response-container">
+                          <div class="response-header">
+                             <i class="fas fa-comment-dots"></i><h2>Respuesta generada por la IA:</h2>
+                          </div>
+                          <div class="response-content">
+                             {{ response }}
+                          </div>
+                        </div>   
+                      </section>
+              
+                  </div>
+              </div> 
+            <!-- **************************************CHAT***************************************************** -->
+        <textarea name="prompt" class="chat-textarea"
+          placeholder="Escribe tu pregunta aqui...">{{ audio_usuario }}</textarea>
+
+      </div>
+      
+    
+    </div>
+
+    <div class="chat-controls">
+      <div class="file-upload-btn">
+        <i class="fas fa-file-upload"></i>
+        Subir archivo
+        <input type="file"
+          accept="application/pdf,.doc,.docx,.xls,.xlsx,.txt"
+          name="archivo">
+      </div>
+
+      <div class="voice-controls">
+        <input type="file" name="audio" id="audioInput" hidden>
+        <button type="button" id="grabar" class=" voice-btn-record">🎙️Grabar</button>
+        <button type="button" id="detener" disabled class="voice-btn-stop">⏹️ Detener</button>
+      </div>
+          <button id="generar" type="submit" class="generate-btn">
+          <i class="fas fa-bolt"></i> Generar respuesta
+          </button>
+    </div>
+  </form>
+</div>
+<br>
+
+     <div class="history-chats-container">
+        
+        <div class="history-header">
+          <h1>Historial de conversaciones</h1>
+          <div class="container-btn-clear"> 
+                <form action="{% url 'home' %}" method="post">
+                    {% csrf_token %}             
+                    <input type="hidden" name="chat_id" value="{{ chat_id }}">
+                    <button class="clear-history-btn" id="borrarHistorial" type="submit" name="borrarHistorial"><i class=" fas fa-trash-alt"></i> Borrar historial</button>
+                </form>
+          </div>
+          
+          <!-- lista de historial de chats  -->
+           <div class="chat-list-container">
+            <h3>Listado de conversaciones</h3>
+            {% if chats %}
+              <ul>
+                {% for chat in chats %}
+
+                   <li class="chat-item {% if chat.chat_id == chat_id %}active{% endif %}"> 
+                   <a href="{% url 'home' %}?chat_id={{ chat.chat_id }}">
+                   <div class="chat-title">{{ chat.title }}</div>   
+                   <div class="chat-meta">
+                    🕑 {{ chat.last_updated|slice:":10" }} ·
+                    💬 {{ chat.message_count }}
+                   </div>
+                   </a>
+
+                   <form action="" method="post" class="delete-chat-form">
+                     {% csrf_token %}
+                     <input type="hidden" name="chat_id" value="{{ chat.chat_id }}">
+                     <button type="submit" name="delete_chat" class="delete-chat-btn">🗑️</button>
+                   </form>
+
+                   </li>  
+                {% endfor %}
+              </ul>
+            {% else %}
+               <p>No hay onversaciones Aun</p>
+            {% endif %}
+           </div>
+
+        </div>
+      
+    </div>
+
+    <div class="profile-cognitive-container">
+       <div class="profile-fortalezas-container">
+            <h3>Fortalezas</h3>
+          <ul>
+              {% for p in profile %}
+                  <div class="profile-fortalezas-header">
+                      <h3>Area : {{ p.area }} </h3>
+                  </div>
+                 
+                 {% for item in p.strong_area %}
+                      <li>{{ item }} </li>
+                  {% empty %}
+                      <li>No se identificaron fortalezas</li>
+                 {% endfor %}
+                 
+              {% endfor %}
+          </ul>
+       </div>
+
+       <div class="profile-weak-container">
+        <h3>Debilidades</h3>
+          <ul>
+              {% for p in profile %}
+              
+                 {% for item in p.weak_areas %}
+                      <li>{{ item }} </li>
+                  {% empty %}
+                      <li>No se identificaron debilidades</li>
+                 {% endfor %}
+                 
+              {% endfor %}
+          </ul>
+       </div>
+
+       <div class="profile-recommendations-container">
+        <h3>Progresos</h3>
+          <ul>
+              {% for p in profile %}
+              
+                 {% for item in p.progress %}
+                      <li>{{ item }} </li>
+                  {% empty %}
+                      <li>No se identificaron progresos</li>
+                 {% endfor %}
+                 
+              {% endfor %}
+          </ul>
+       </div>
+
+    </div>
+  
+    {% endblock %} 
+    <br>
+<!-- ********************************RESPUESTA*********************************** -->
+
+
+<!-- ============================FOOTER================================= -->
+    <footer class="footer-custom">
+      <div class="container">
+          <div class="row">
+  
+              <div class="col-md-3 mb-4">
+                  <div class="footer-title"><b>ProyectoGrado</b></div>
+                  <ul class="footer-links">
+                    <li><i class="fas fa-info-circle "></i><a href=""> Acerca del proyecto</a></li>
+                    <li><i class="fas fa-question-circle"></i><a href=""> Preguntas Frecuentes</a></li>
+                    <li><i class="fas fa-newspaper"></i><a href=""> Blog y Noticias</a></li>
+                  </ul>
+              </div>
+   
+              <div class="col-md-3 mb-4">
+                  <div class="footer-title"><b> Contacto</b></div>
+                  <ul class="footer-links">
+                    <li><i class="fas fa-envelope"></i><a href=""> Adriangalindez@unicomfacauca.edu.co</a></li>
+                    <li><i class="fas fa-phone"></i><a href=""> +57 310 496 6154</a></li>
+                    <li><i class="fas fa-map-marker-alt"></i><a href=""> Popayan, Colombia</a></li>
+                  </ul>             
+              </div>
+  
+              <div class="col-md-3 mb-4">
+                  <div class="footer-title"><b> Sobre Nosotros</b></div>
+                  <ul class="footer-links">
+                    <li><i  class="fas fa-users"></i><a href=""> Nuestro Equipo</a></li>
+                    <li><i class="fas fa-handshake"></i><a href=""> Socios y aliados</a></li>
+                    <li><i class="fas fa-bullseye"></i><a href=""> Mision y vision</a></li> 
+                  </ul>             
+              </div>    
+  
+              <div class="col-md-3 mb-4">
+                  <div class="footer-title"><b>Desarrollado Por:</b></div>
+                  <ul class="footer-links">
+                    <li><i class="fas fa-code"></i><a href=""> Equipo de desarrollo </a></li>
+                    <li><i class="fas fa-heart"></i> <a href=""> Contribuidores</a></li>
+                    <li><i class="fab fa-github"></i><a href=""> Repositorio Github</a></li>  
+                  </ul>         
+              </div>    
+                  
+              <div class="copyright"> © Derechos reservados Corporacion universitaria Unicomfacauca</div>
+        </div>
+    </footer>
+<!-- =================================================================== -->
+{% block extra_js %}
+<script src="{% static 'js/script.js' %}"></script> <!-- referencia a js  -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+{% endblock %}
+</body>
+</html>

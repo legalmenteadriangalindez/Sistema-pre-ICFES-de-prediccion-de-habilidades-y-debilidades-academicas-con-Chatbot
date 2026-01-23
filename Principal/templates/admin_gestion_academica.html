@@ -1,4 +1,4 @@
-{% extends "home.html" %}
+{% extends "home_admin_academico.html" %}
 {% load static %}
 {% block title %} registro {% endblock %} 
     
@@ -27,10 +27,11 @@
             </tr>
         </thead>
         <tbody>
+            {% for g in grados %}
             <tr>
-                <td>Id del usuario</td>
-                <td>elemento</td>
-                <td>elemento</td>
+                <td>{{g.id}}</td>
+                <td>{{g.nombre}}</td>
+                <td>{{g.activo}}</td>
                 <td><button class="btn btn-sm btn-primary">Editar</button></td>
                 <td><button class="btn btn-sm btn-danger">Eliminar</button></td>
                 <td>
@@ -40,8 +41,38 @@
                   </div>
                 </td>
             </tr>
+            {%endfor%}
+            <tr>
+                <td>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregar_grado">
+                      + Agregar Nuevo
+                    </button>
+                </td>
+            </tr>
         </tbody>
     </table>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="agregar_grado" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Nuevo Grado </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="" method="post">
+        {% csrf_token %}
+        {{form_grados}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+      </div>
+      </form>
+    </div>
+  </div>
 </div>
 
 
@@ -59,10 +90,11 @@
             </tr>
         </thead>
         <tbody>
+            {%for j in jornadas%}
             <tr>
-                <td>Id del usuario</td>
-                <td>elemento</td>
-                <td>elemento</td>
+                <td>{{j.id}}</td>
+                <td>{{j.nombre}}</td>
+                <td>{{j.activo}}</td>
                 <td><button class="btn btn-sm btn-primary">Editar</button></td>
                 <td><button class="btn btn-sm btn-danger">Eliminar</button></td>
                 <td>
@@ -72,8 +104,38 @@
                   </div>
                 </td>
             </tr>
+            {%endfor%}
+            <tr>
+                <td>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregar_jornada">
+                      + Agregar Nuevo
+                    </button>
+                </td>
+            </tr>
         </tbody>
     </table>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="agregar_jornada" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Nueva Jornada </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="" method="post">
+        {% csrf_token %}
+        {{form_jornadas}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+      </div>
+      </form>
+    </div>
+  </div>
 </div>
 
 <div class="container mt-5">
@@ -93,13 +155,15 @@
             </tr>
         </thead>
         <tbody>
+            {%for c in cursos %}
             <tr>
-                <td>Id del usuario</td>
-                <td>elemento</td>
-                <td>elemento</td>
-                <td>elemento</td>
-                <td>elemento</td>
-                <td>elemento</td>
+                <td>{{c.id}}</td>
+                <td>{{c.nombre}}</td>
+                <td>{{c.grado.nombre }}</td>
+                <td>{{c.jornada.nombre}}</td>
+                <td>{{c.cupo_maximo}}</td>
+                <td>{{c.activo}}</td>
+
                 <td><button class="btn btn-sm btn-primary">Editar</button></td>
                 <td><button class="btn btn-sm btn-danger">Eliminar</button></td>
                 <td>
@@ -109,8 +173,38 @@
                   </div>
                 </td>
             </tr>
+            {%endfor%}
+            <tr>
+                <td>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregar_curso">
+                      + Agregar Nuevo
+                    </button>
+                </td>
+            </tr>
         </tbody>
     </table>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="agregar_curso" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Nuevo Curso </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="" method="post">
+        {% csrf_token %}
+        {{form_cursos}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+      </div>
+      </form>
+    </div>
+  </div>
 </div>
 
 
@@ -130,12 +224,13 @@
             </tr>
         </thead>
         <tbody>
+            {%for sed in sedes %}
             <tr>
-                <td>Id del usuario</td>
-                <td>elemento</td>
-                <td>elemento</td>
-                <td>elemento</td>
-                <td>elemento</td>
+                <td>{{sed.id}}</td>
+                <td>{{sed.nombre}}</td>
+                <td>{{sed.direccion}}</td>
+                <td>{{sed.telefono}}</td>
+                <td>{{sed.estado}}</td>
                 <td><button class="btn btn-sm btn-primary">Editar</button></td>
                 <td><button class="btn btn-sm btn-danger">Eliminar</button></td>
                 <td>
@@ -145,8 +240,38 @@
                   </div>
                 </td>
             </tr>
+            {%endfor%}
+            <tr>
+                <td>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregar_sede">
+                      + Agregar Nuevo
+                    </button>
+                </td>
+            </tr>
         </tbody>
     </table>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="agregar_sede" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Nueva Sede </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="" method="post">
+        {% csrf_token %}
+        {{form_sedes}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+      </div>
+      </form>
+    </div>
+  </div>
 </div>
 
 <div class="container mt-5">
@@ -165,12 +290,13 @@
             </tr>
         </thead>
         <tbody>
+            {%for anio in anio_lectivos %}
             <tr>
-                <td>Id del usuario</td>
-                <td>elemento</td>
-                <td>elemento</td>
-                <td>elemento</td>
-                <td>elemento</td>
+                <td>{{anio.id}}</td>
+                <td>{{anio.anio}}</td>
+                <td>{{anio.fecha_inico}}</td>
+                <td>{{anio.fecha_fin}}</td>
+                <td>{{anio.activo}}</td>
                 <td><button class="btn btn-sm btn-primary">Editar</button></td>
                 <td><button class="btn btn-sm btn-danger">Eliminar</button></td>
                 <td>
@@ -180,8 +306,38 @@
                   </div>
                 </td>
             </tr>
+            {%endfor%}
+            <tr>
+                <td>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregar_anio">
+                      + Agregar Nuevo
+                    </button>
+                </td>
+            </tr>
         </tbody>
     </table>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="agregar_anio" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Nuevo año lectivo </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="" method="post">
+        {% csrf_token %}
+        {{form_anios}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+      </div>
+      </form>
+    </div>
+  </div>
 </div>
 
 <div class="container mt-5">
@@ -200,12 +356,13 @@
             </tr>
         </thead>
         <tbody>
+            {%for p in periodos %}
             <tr>
-                <td>Id del usuario</td>
-                <td>elemento</td>
-                <td>elemento</td>
-                <td>elemento</td>
-                <td>elemento</td>
+                <td>{{p.id}}</td>
+                <td>{{p.nombre}}</td>
+                <td>{{p.fecha_inico}}</td>
+                <td>{{p.fecha_fin}}</td>
+                <td>{{p.activo}}</td>
                 <td><button class="btn btn-sm btn-primary">Editar</button></td>
                 <td><button class="btn btn-sm btn-danger">Eliminar</button></td>
                 <td>
@@ -213,45 +370,40 @@
                     <input class="form-check-input" type="checkbox" id="user1" checked>
                     <label class="form-check-label" for="user1"></label>
                   </div>
+                </td>
+            </tr>
+            {%endfor%}
+            <tr>
+                <td>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregar_periodo">
+                      + Agregar Nuevo
+                    </button>
                 </td>
             </tr>
         </tbody>
     </table>
 </div>
 
-<div class="container mt-5">
-    <h2>Gestion de Periodos</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID del usuario</th>
-                <th>Nombre del Periodo </th>
-                <th>Fecha de Inicio</th>
-                <th>Fecha de finalizacion</th>
-                <th>Estado</th>
-                <th>editar</th>
-                <th>Eliminar</th>
-                <th>Activar/Desactivar</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Id del usuario</td>
-                <td>elemento</td>
-                <td>elemento</td>
-                <td>elemento</td>
-                <td>elemento</td>
-                <td><button class="btn btn-sm btn-primary">Editar</button></td>
-                <td><button class="btn btn-sm btn-danger">Eliminar</button></td>
-                <td>
-                  <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="user1" checked>
-                    <label class="form-check-label" for="user1"></label>
-                  </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+<!-- Modal -->
+<div class="modal fade" id="agregar_periodo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Nuevo periodo </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="" method="post">
+        {% csrf_token %}
+        {{form_periodos}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+      </div>
+      </form>
+    </div>
+  </div>
 </div>
 
 <div class="container mt-5">
@@ -268,10 +420,11 @@
             </tr>
         </thead>
         <tbody>
+            {%for m in materias %}
             <tr>
-                <td>Id del usuario</td>
-                <td>elemento</td>
-                <td>elemento</td>
+                <td>{{m.id}}</td>
+                <td>{{m.nombre}}</td>
+                <td>{{m.activo}}</td>
                 <td><button class="btn btn-sm btn-primary">Editar</button></td>
                 <td><button class="btn btn-sm btn-danger">Eliminar</button></td>
                 <td>
@@ -281,9 +434,38 @@
                   </div>
                 </td>
             </tr>
+            {%endfor%}
+            <tr>
+                <td>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregar_materia">
+                      + Agregar Nuevo
+                    </button>
+                </td>
+            </tr>
         </tbody>
     </table>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="agregar_materia" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Nueva materia </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="" method="post">
+        {% csrf_token %}
+        {{form_materias}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
 
 {% endblock %}

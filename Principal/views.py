@@ -14,6 +14,7 @@ from Principal.IA.processor_PDF import prueba
 # from Principal.IA.LangGraph.graph_chatbot.graph import chat,chat_memory_deslizante,chat_memory_vectorial
 from Principal.IA.LangGraph.graph_chatbot.chatbot import chatbotManager
 from .forms import *
+from .models import *
 
 # ********************************IMPORTACIONES**************************************************
 
@@ -303,10 +304,32 @@ def registro(request):
 
 
 #======================================ADMIN GESTION DB=====================================================================
-
 def gestion_db(request):
+    roles = Rol.objects.all()
+    sexos = Sexo.objects.all()
+    Relacion_acudientes = RelacionAcudiente.objects.all()
+    if request.method == "POST":
+        form_roles = RolForm(request.POST)
+        form_sexos = SexoForm(request.POST)
+        form_rel = RelacionAcudienteForm(request.POST)
+        if form_roles.is_valid():
+            form_roles.save()
+            redirect('admin_gestion_db')
+        if form_sexos.is_valid():
+            form_sexos.save()
+        if form_rel.is_valid():
+            form_rel.save()
+    else :
+        form_roles= RolForm()
+        form_sexos = SexoForm()
+        form_rel = RelacionAcudienteForm()
     contexto = {
-        "DATO": "dato"
+        "roles": roles,
+        "sexos": sexos,
+        "Relacion_acudientes": Relacion_acudientes,
+        "form_roles": form_roles,
+        "form_sexos": form_sexos,
+        "form_relaciones": form_rel
     }
     return render(request, "admin_gestion_db.html", contexto)
 #***************************************ADMIN GESTION DB********************************************************************
@@ -428,52 +451,26 @@ def gestion_admin(request):
 # @user_passes_test(es_coordinador)
 
 def gestion_acudientes_estudiantes(request):
-    accion = None
 
-    if request.method == "POST" and "registrar_acudiente" in request.POST:
-        accion = "acudiente"
-
-        persona_form = PersonaForm(request.POST)
-
-        if persona_form.is_valid():
-            
-            persona = persona_form.save(commit=False)
-            persona.sexo_id = request.POST.get("sexo")
-            persona.save()
-
-            
-            relacion_id = request.POST.get("relacion")
-            acudiente = Acudiente.objects.create(
-                persona=persona,
-                relacion_id=relacion_id
-            )
-
-            
-            estudiante_id = request.POST.get("estudiante")
-            estudiante = get_object_or_404(Estudiante, id=estudiante_id)
-
-            estudiante.acudiente = acudiente
-            estudiante.save()
-
-            return redirect("gestion_acudientes_estudiantes")
-
-    else:
-        persona_form = PersonaForm()
-
+    estudiantes = Estudiante.objects.all()
+    acudientes = Acudiente.objects.all()
+    if request.method == "POST":
+        form_estudiantes = EstudianteForm(request.POST)
+        form_acudientes = AcudienteForm(request.POST)
+        if form_estudiantes.is_valid():
+            form_estudiantes.save()
+        if form_acudientes.is_valid():
+            form_acudientes.save()
+    else :
+        form_estudiantes = EstudianteForm()
+        form_acudientes = AcudienteForm()
     contexto = {
-        "accion": accion,
-        "persona_form": persona_form,
-        "sexos": Sexo.objects.filter(activo=True),
-        "relacion_acudientes": RelacionAcudiente.objects.filter(activo=True),
-        "estudiantes": Estudiante.objects.filter(acudiente__isnull=True)
-                                          .select_related("persona"),
+        "estudiantes": estudiantes,
+        "acudientes": acudientes,
+        "form_estudiantes": form_estudiantes,
+        "form_acudientes": form_acudientes
     }
-    estudiantes = Estudiante.objects.filter(acudiente__isnull=True).select_related("persona")
-    print("Cantidad estudiantes disponibles:", estudiantes.count())
-    for e in estudiantes:
-        print(e.id, e.persona.nombre, e.persona.apellido)
     return render(request, "gestion_estudiantes_acudientes.html", contexto)
-
 #************************************GESTION ESTUDIANTES Y ACUDIENTES******************************************************
 
 
@@ -483,25 +480,43 @@ def gestion_acudientes_estudiantes(request):
 # @user_passes_test(es_coordinador)
 
 def gestion_users(request):
+    users = User.objects.all()
+    personas = Persona.objects.all()
+    if request.POST == "POST":
+        form_personas = PersonaForm(request.POST)
+        form_usuarios = UserRegisterForm(request.POST)
+        if form_personas.is_valid():
+            form_personas.save()
+        if form_usuarios.is_valid():
+           form_usuarios.save()
+    else :
+        form_personas = PersonaForm()
+        form_usuarios = UserRegisterForm()
     contexto = {
-        "DATO": "dato"
+        "usuarios": users,
+        "personas": personas,
+        "form_personas": form_personas,
+        "form_usuarios": form_usuarios
     }
     return render(request, "admin_gestion_user.html", contexto)
-
 #************************************ADMINISTRADOR GESTION USUARIOS******************************************************
+
 
 
 # =======================================ACUDIENTE======================================================================
 # @login_required
 # @user_passes_test(es_coordinador)
-
+@login_required
 def acudiente(request):
+    
     contexto = {
-        "DATO": "dato"
+        "acudientes": None,
+        "estudiantes": None
     }
     return render(request, "acudiente.html", contexto)
 
 #************************************ACUDIENTE******************************************************
+
 
 
 # =======================================ADMIN GESTION ACADEMICA======================================================================
@@ -509,12 +524,69 @@ def acudiente(request):
 # @user_passes_test(es_coordinador)
 
 def gestion_academica(request):
+    grados = Grado.objects.all()
+    Jornadas = Jornada.objects.all()
+    cursos = Curso.objects.all()
+    sedes = Sede.objects.all()
+    anio_lectivos= AnioLectivo.objects.all()
+    periodos= PeriodoAcademico.objects.all()
+    materias = Materia.objects.all()
+    
+    if request.method == "POST":
+        form_grados = GradoForm(request.POST)
+        form_cursos = CursoForm(request.POST)
+        form_jornadas = JornadaForm(request.POST)
+        form_sedes = SedeForm(request.POST)
+        form_anio_lectitvo= AnioLectivoForm(request.POST)
+        form_periodos = PeriodoAcademicoForm(request.POST)
+        form_materias = MateriaForm(request.POST)
+        if form_grados.is_valid():
+            form_grados.save()
+
+        if form_cursos.is_valid():
+            form_cursos.save()
+
+        if form_jornadas.is_valid():
+            form_jornadas.save()
+
+        if form_sedes.is_valid():
+           form_sedes.save()
+
+        if form_anio_lectitvo.is_valid():
+           form_anio_lectitvo.save()
+
+        if form_periodos.is_valid():
+            form_periodos.save()
+
+        if form_materias.is_valid():
+            form_materias.save()
+    else :
+        form_grados = GradoForm()
+        form_cursos = CursoForm()
+        form_jornadas = JornadaForm()
+        form_sedes = SedeForm()
+        form_anio_lectitvo= AnioLectivoForm()
+        form_periodos = PeriodoAcademicoForm()
+        form_materias = MateriaForm()
     contexto = {
-        "DATO": "dato"
+        "cursos": cursos,
+        "grados": grados,
+        "jornadas": Jornadas,
+        "sedes": sedes,
+        "anio_lectivo": anio_lectivos,
+        "periodos": periodos,
+        "materias": materias,
+        "form_grados": form_grados,
+        "form_cursos": form_cursos,
+        "form_jornadas": form_jornadas,
+        "form_sedes": form_sedes,
+        "form_anios": form_anio_lectitvo,
+        "form_periodos": form_periodos,
+        "form_materias" : form_materias
     }
     return render(request, "admin_gestion_academica.html", contexto)
-
 #************************************ADMINISTRADOR GESTION ACADEMICA******************************************************
+
 
 
 # =======================================DOCENTES======================================================================
@@ -522,9 +594,12 @@ def gestion_academica(request):
 # @user_passes_test(es_coordinador)
 
 def docentes(request):
+    asignacion_docentes = AsignacionDocente.objects.all()
     contexto = {
-        "DATO": "dato"
+        "a_docentes": asignacion_docentes
     }
     return render(request, "docentes.html", contexto)
 
 #************************************DOCENTES******************************************************
+
+

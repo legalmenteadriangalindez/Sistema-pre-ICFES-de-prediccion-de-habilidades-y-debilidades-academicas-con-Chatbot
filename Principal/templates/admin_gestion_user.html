@@ -1,4 +1,4 @@
-{% extends "home.html" %}
+{% extends "home_admin_academico.html" %}
 {% load static %}
 {% block title %} registro {% endblock %} 
     
@@ -30,13 +30,15 @@
             </tr>
         </thead>
         <tbody>
+            {% for u in usuarios %}
             <tr>
-                <td>Id del usuario</td>
-                <td>elemento</td>
-                <td>elemento</td>
-                <td>elemento</td>
-                <td>elemento</td>
-                <td>elemento</td>
+                <td>{{u.id}}</td>
+                <td>{{u.username}}</td>
+                <td>{{u.email}}</td>
+                <td>{{u.PerfilUsuario.Rol.nombre}}</td>
+                <td>{{u.date_joined}}</td>
+                <td>{{u.is_active}}</td>
+                <!-- <td>{{u.activo}}</td> -->
                 <td><button class="btn btn-sm btn-primary">Editar</button></td>
                 <td><button class="btn btn-sm btn-danger">Eliminar</button></td>
                 <td>
@@ -46,8 +48,38 @@
                   </div>
                 </td>
             </tr>
+            {% endfor %}
+            <tr>
+                <td>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregar_usuario">
+                      + Agregar Nuevo
+                    </button>
+                </td>
+            </tr>
         </tbody>
     </table>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="agregar_usuario" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Nuevo Usuario </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="" method="post">
+        {% csrf_token %}
+        {{form_usuarios}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+      </div>
+      </form>
+    </div>
+  </div>
 </div>
 
 <div class="container mt-5">
@@ -56,6 +88,7 @@
         <thead>
             <tr>
                 <th>ID del usuario</th>
+                <th>Nombre de usuario</th>
                 <th>Nombre</th>
                 <th>Apellido</th>
                 <th>Documento</th>
@@ -69,15 +102,17 @@
             </tr>
         </thead>
         <tbody>
+            {% for p in personas %}
             <tr>
-                <td>Id del usuario</td>
-                <td>elemento</td>
-                <td>elemento</td>
-                <td>elemento</td>
-                <td>elemento</td>
-                <td>elemento</td>
-                <td>elemento</td>
-                <td>elemento</td>
+                <td>{{p.id}}</td>
+                <td>{{p.user}}</td>
+                <td>{{p.nombre}}</td>
+                <td>{{p.apellido}}</td>
+                <td>{{p.documento}}</td>
+                <td>{{p.fecha_nacimiento}}</td>
+                <td>{{p.direccion}}</td>
+                <td>{{p.telefono}}</td>
+                <td>{{p.sexo.descripcion}}</td>
                 <td><button class="btn btn-sm btn-primary">Editar</button></td>
                 <td><button class="btn btn-sm btn-danger">Eliminar</button></td>
                 <td>
@@ -87,11 +122,39 @@
                   </div>
                 </td>
             </tr>
+            {%endfor%}
+            <tr>
+                <td>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregar_persona">
+                      + Agregar Nuevo
+                    </button>
+                </td>
+            </tr>
         </tbody>
     </table>
 </div>
 
-
+<!-- Modal -->
+<div class="modal fade" id="agregar_persona" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Nueva Persona</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="" method="post">
+        {% csrf_token %}
+        {{form_personas}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
 
 <!-- Crear, editar y eliminar usuarios ( PerfilUsuario).
 
