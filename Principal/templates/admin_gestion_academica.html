@@ -33,7 +33,7 @@
                 <td>{{g.nombre}}</td>
                 <td>{{g.activo}}</td>
                 <td><button class="btn btn-sm btn-primary">Editar</button></td>
-                <td><button class="btn btn-sm btn-danger">Eliminar</button></td>
+                <td><a href="{% url 'eliminar_admin_gestion_academico' 'grados' g.id %}"><button  class="btn btn-sm btn-danger">Eliminar</button></a></td>
                 <td>
                   <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="user1" checked>
@@ -68,7 +68,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        <button type="submit" name="form" value="grados" class="btn btn-primary">Guardar Cambios</button>
       </div>
       </form>
     </div>
@@ -96,7 +96,7 @@
                 <td>{{j.nombre}}</td>
                 <td>{{j.activo}}</td>
                 <td><button class="btn btn-sm btn-primary">Editar</button></td>
-                <td><button class="btn btn-sm btn-danger">Eliminar</button></td>
+                <td><a href="{% url 'eliminar_admin_gestion_academico' 'jornadas' j.id %}"><button  class="btn btn-sm btn-danger">Eliminar</button></a></td>
                 <td>
                   <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="user1" checked>
@@ -131,7 +131,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        <button type="submit" name="form" value="jornadas" class="btn btn-primary">Guardar Cambios</button>
       </div>
       </form>
     </div>
@@ -165,7 +165,7 @@
                 <td>{{c.activo}}</td>
 
                 <td><button class="btn btn-sm btn-primary">Editar</button></td>
-                <td><button class="btn btn-sm btn-danger">Eliminar</button></td>
+                <td><a href="{% url 'eliminar_admin_gestion_academico' 'cursos' c.id %}"><button  class="btn btn-sm btn-danger">Eliminar</button></a></td>
                 <td>
                   <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="user1" checked>
@@ -200,7 +200,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        <button type="submit"  name="form" value="cursos"  class="btn btn-primary">Guardar Cambios</button>
       </div>
       </form>
     </div>
@@ -232,7 +232,7 @@
                 <td>{{sed.telefono}}</td>
                 <td>{{sed.estado}}</td>
                 <td><button class="btn btn-sm btn-primary">Editar</button></td>
-                <td><button class="btn btn-sm btn-danger">Eliminar</button></td>
+                <td><a href="{% url 'eliminar_admin_gestion_academico' 'sedes' sed.id %}"><button  class="btn btn-sm btn-danger">Eliminar</button></a></td>
                 <td>
                   <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="user1" checked>
@@ -267,7 +267,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        <button type="submit" name="form" value="sedes"  class="btn btn-primary">Guardar Cambios</button>
       </div>
       </form>
     </div>
@@ -298,7 +298,7 @@
                 <td>{{anio.fecha_fin}}</td>
                 <td>{{anio.activo}}</td>
                 <td><button class="btn btn-sm btn-primary">Editar</button></td>
-                <td><button class="btn btn-sm btn-danger">Eliminar</button></td>
+                <td><a href="{% url 'eliminar_admin_gestion_academico' 'anios' anio.id %}"><button  class="btn btn-sm btn-danger">Eliminar</button></a></td>
                 <td>
                   <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="user1" checked>
@@ -333,7 +333,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        <button type="submit" name="form" value="anios"  class="btn btn-primary">Guardar Cambios</button>
       </div>
       </form>
     </div>
@@ -364,7 +364,7 @@
                 <td>{{p.fecha_fin}}</td>
                 <td>{{p.activo}}</td>
                 <td><button class="btn btn-sm btn-primary">Editar</button></td>
-                <td><button class="btn btn-sm btn-danger">Eliminar</button></td>
+                <td><a href="{% url 'eliminar_admin_gestion_academico' 'periodos' p.id %}"><button  class="btn btn-sm btn-danger">Eliminar</button></a></td>
                 <td>
                   <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="user1" checked>
@@ -399,7 +399,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        <button type="submit"  name="form" value="periodos"  class="btn btn-primary">Guardar Cambios</button>
       </div>
       </form>
     </div>
@@ -426,7 +426,7 @@
                 <td>{{m.nombre}}</td>
                 <td>{{m.activo}}</td>
                 <td><button class="btn btn-sm btn-primary">Editar</button></td>
-                <td><button class="btn btn-sm btn-danger">Eliminar</button></td>
+                <td><a href="{% url 'eliminar_admin_gestion_academico' 'materias' m.id %}"><button  class="btn btn-sm btn-danger">Eliminar</button></a></td>
                 <td>
                   <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="user1" checked>
@@ -461,7 +461,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        <button type="submit" name="form" value="materias"  class="btn btn-primary">Guardar Cambios</button>
       </div>
       </form>
     </div>

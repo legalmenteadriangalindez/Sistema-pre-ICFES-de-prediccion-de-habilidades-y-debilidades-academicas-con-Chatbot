@@ -348,131 +348,27 @@ def eliminar_admin_gestion_db(request,tipo,id):
 
 
 
-#===================================GESTION ADMIN============================================================
-# @login_required
-# @user_passes_test(es_admin)
-def gestion_admin(request):
-    accion = None
-    
-    if request.method == "POST":
-    
-        if "registrar_sexo" in request.POST:
-            accion = "sexo"
-            sexo_form = SexoForm(request.POST)
-            if sexo_form.is_valid():
-                sexo_form.save()
-
-        elif "registrar_relaciones" in request.POST:
-            accion = "relacion"
-            relacion_form = RelacionAcudienteForm(request.POST)
-            if relacion_form.is_valid():
-                relacion_form.save()
-
-        elif "registrar_grados" in request.POST:
-            accion = "grado"
-            grado_form = GradoForm(request.POST)
-            if grado_form.is_valid():
-                grado_form.save()
-
-        elif "registrar_jornadas" in request.POST:
-            accion = "jornada"
-            jornada_form = JornadaForm(request.POST)
-            if jornada_form.is_valid():
-                jornada_form.save()
-
-        elif "registrar_sedes" in request.POST:
-            accion = "sede"
-            sede_form = SedeForm(request.POST)
-            if sede_form.is_valid():
-                sede_form.save()
-
-        elif "registrar_anio_lectivo" in request.POST:
-            accion = "anio"
-            anio_form = AnioLectivoForm(request.POST)
-            if anio_form.is_valid():
-                anio_form.save()
-
-        elif "registrar_periodo" in request.POST:
-            accion = "periodo"
-            periodo_form = PeriodoAcademicoForm(request.POST)
-            if periodo_form.is_valid():
-                periodo_form.save()
-
-        elif "registrar_materias" in request.POST:
-            accion = "materia"
-            materia_form = MateriaForm(request.POST)
-            if materia_form.is_valid():
-                materia_form.save()
-
-    if request.method == "POST":
-        # Instanciamos todos los formularios con POST
-        sexo_form = SexoForm(request.POST)
-        relacion_form = RelacionAcudienteForm(request.POST)
-        grado_form = GradoForm(request.POST)
-        jornada_form = JornadaForm(request.POST)
-        sede_form = SedeForm(request.POST)
-        anio_form = AnioLectivoForm(request.POST)
-        periodo_form = PeriodoAcademicoForm(request.POST)
-        materia_form = MateriaForm(request.POST)
-
-        # Validamos todos los formularios
-        if (sexo_form.is_valid() and relacion_form.is_valid() and grado_form.is_valid() 
-            and jornada_form.is_valid() and sede_form.is_valid() 
-            and anio_form.is_valid() and periodo_form.is_valid() and materia_form.is_valid()
-        ):
-            sexo_form.save()
-            relacion_form.save()
-            grado_form.save()
-            jornada_form.save()
-            sede_form.save()
-            anio_form.save()
-            periodo_form.save()
-            materia_form.save()
-
-            return redirect("gestion_admin")  # redirigir para limpiar POST
-    else:
-        # Inicializamos formularios vacíos
-        sexo_form = SexoForm()
-        relacion_form = RelacionAcudienteForm()
-        grado_form = GradoForm()
-        jornada_form = JornadaForm()
-        sede_form = SedeForm()
-        anio_form = AnioLectivoForm()
-        periodo_form = PeriodoAcademicoForm()
-        materia_form = MateriaForm()
-
-    context = {
-        "accion": accion,
-        "sexo_form": sexo_form,
-        "relacion_form": relacion_form,
-        "grado_form": grado_form,
-        "jornada_form": jornada_form,
-        "sede_form": sede_form,
-        "anio_form": anio_form,
-        "periodo_form": periodo_form,
-        "materia_form": materia_form,
-    }
-
-    return render(request, "gestion_admin.html", context)
-
-#***************************************GESTION ADMIN*********************************************************
-
 
 # =======================================GESTION ACUDIENTES Y ESTUDIANTES======================================================================
 # @login_required
 # @user_passes_test(es_coordinador)
-
 def gestion_acudientes_estudiantes(request):
 
     estudiantes = Estudiante.objects.all()
     acudientes = Acudiente.objects.all()
     if request.method == "POST":
-        form_estudiantes = EstudianteForm(request.POST)
-        form_acudientes = AcudienteForm(request.POST)
-        if form_estudiantes.is_valid():
-            form_estudiantes.save()
-        if form_acudientes.is_valid():
-            form_acudientes.save()
+        tipo_form= request.POST.get("form")
+        if tipo_form == "estudiantes":
+            form_estudiantes = EstudianteForm(request.POST)
+            if form_estudiantes.is_valid():
+                form_estudiantes.save()
+        else:
+            form_estudiantes = EstudianteForm(request.POST)
+        if tipo_form == "acudientes":
+            if form_acudientes.is_valid():
+               form_acudientes.save()
+        else:
+           form_acudientes = AcudienteForm(request.POST)
     else :
         form_estudiantes = EstudianteForm()
         form_acudientes = AcudienteForm()
@@ -483,6 +379,15 @@ def gestion_acudientes_estudiantes(request):
         "form_acudientes": form_acudientes
     }
     return render(request, "gestion_estudiantes_acudientes.html", contexto)
+
+def eliminar_gestion_acudientes_estudiantes(request,tipo,id):
+    if tipo == "estudiantes":
+        estudiante = Estudiante.objects.get(id=id)
+        estudiante.delete()
+    if tipo == "acudientes":
+        acudiente=Acudiente.objects.get(id=id)
+        acudiente.delete()
+    return redirect('gestion_acudientes_estudiantes')
 #************************************GESTION ESTUDIANTES Y ACUDIENTES******************************************************
 
 
@@ -493,13 +398,20 @@ def gestion_acudientes_estudiantes(request):
 def gestion_users(request):
     users = User.objects.all()
     personas = Persona.objects.all()
-    if request.POST == "POST":
-        form_personas = PersonaForm(request.POST)
-        form_usuarios = UserRegisterForm(request.POST)
-        if form_personas.is_valid():
-            form_personas.save()
-        if form_usuarios.is_valid():
-           form_usuarios.save()
+    if request.method == "POST":
+        tipo_form = request.POST.get("form")
+        if tipo_form == "usuarios":
+            form_usuarios = UserRegisterForm(request.POST)
+            if form_usuarios.is_valid():
+               form_usuarios.save()
+        else:
+            form_usuarios = UserRegisterForm(request.POST)
+        if tipo_form == "personas":
+            form_personas = PersonaForm(request.POST)
+            if form_personas.is_valid():
+               form_personas.save()
+        else:
+            form_personas = PersonaForm(request.POST)
     else :
         form_personas = PersonaForm()
         form_usuarios = UserRegisterForm()
@@ -510,6 +422,15 @@ def gestion_users(request):
         "form_usuarios": form_usuarios
     }
     return render(request, "admin_gestion_user.html", contexto)
+
+def eliminar_gestion_users(request,tipo,id):
+    if tipo =="usuarios":
+        user = User.objects.get(id=id)
+        user.delete()
+    if tipo == "personas":
+        persona = Persona.objects.get(id=id)
+        persona.delete()
+    return redirect('admin_gestion_user')
 #************************************ADMINISTRADOR GESTION USUARIOS******************************************************
 
 
@@ -532,7 +453,6 @@ def acudiente(request):
 # =======================================ADMIN GESTION ACADEMICA======================================================================
 # @login_required
 # @user_passes_test(es_coordinador)
-
 def gestion_academica(request):
     grados = Grado.objects.all()
     Jornadas = Jornada.objects.all()
@@ -543,33 +463,56 @@ def gestion_academica(request):
     materias = Materia.objects.all()
     
     if request.method == "POST":
-        form_grados = GradoForm(request.POST)
-        form_cursos = CursoForm(request.POST)
-        form_jornadas = JornadaForm(request.POST)
-        form_sedes = SedeForm(request.POST)
-        form_anio_lectitvo= AnioLectivoForm(request.POST)
-        form_periodos = PeriodoAcademicoForm(request.POST)
-        form_materias = MateriaForm(request.POST)
-        if form_grados.is_valid():
-            form_grados.save()
+        tipo_form = request.POST.get("form")
 
-        if form_cursos.is_valid():
-            form_cursos.save()
+        if tipo_form == "grados":
+            form_grados = GradoForm(request.POST)
+            if form_grados.is_valid():
+               form_grados.save()
+        else:
+            form_grados = GradoForm(request.POST)
 
-        if form_jornadas.is_valid():
-            form_jornadas.save()
+        if tipo_form == "cursos":
+            form_cursos = CursoForm(request.POST)
+            if form_cursos.is_valid():
+               form_cursos.save()
+        else :
+           form_cursos = CursoForm(request.POST) 
 
-        if form_sedes.is_valid():
-           form_sedes.save()
+        if tipo_form == "jornadas":
+           form_jornadas = JornadaForm(request.POST)
+           if form_jornadas.is_valid():
+               form_jornadas.save()
+        else:
+            form_jornadas = JornadaForm(request.POST)
 
-        if form_anio_lectitvo.is_valid():
-           form_anio_lectitvo.save()
-
-        if form_periodos.is_valid():
-            form_periodos.save()
-
-        if form_materias.is_valid():
-            form_materias.save()
+        if tipo_form == "sedes":
+           form_sedes = SedeForm(request.POST)
+           if form_sedes.is_valid():
+               form_sedes.save()
+        else:
+            form_sedes = SedeForm(request.POST)
+        
+        if tipo_form == "anios":
+           form_anio_lectitvo= AnioLectivoForm(request.POST)
+           if form_anio_lectitvo.is_valid():
+              form_anio_lectitvo.save()
+        else:
+            form_anio_lectitvo= AnioLectivoForm(request.POST) 
+        
+        if tipo_form == "periodos":
+           form_periodos = PeriodoAcademicoForm(request.POST)
+           if form_periodos.is_valid():
+               form_periodos.save()
+        else:
+           form_periodos = PeriodoAcademicoForm(request.POST)  
+        
+        if tipo_form == "materias":
+           form_materias = MateriaForm(request.POST)
+           if form_materias.is_valid():
+               form_materias.save()
+        else:
+           form_materias = MateriaForm(request.POST) 
     else :
         form_grados = GradoForm()
         form_cursos = CursoForm()
@@ -595,6 +538,30 @@ def gestion_academica(request):
         "form_materias" : form_materias
     }
     return render(request, "admin_gestion_academica.html", contexto)
+
+def eliminar_gestion_academica(request,tipo,id):
+    if tipo == "grados":
+        grado = Grado.objects.get(id=id)
+        grado.delete()
+    if tipo == "jornadas": 
+        jornada = Jornada.objects.get(id=id)
+        jornada.delete()
+    if tipo == "cursos":
+        curso = Curso.objects.get(id=id)
+        curso.delete()
+    if tipo == "sedes":
+        sede = Sede.objects.get(id=id)
+        sede.delete()
+    if tipo == "anios":
+        anio_lectivo = AnioLectivo.objects.get(id=id)
+        anio_lectivo.delete()
+    if tipo == "periodos":
+        periodo = PeriodoAcademico.objects.get(id=id)
+        periodo.delete()
+    if tipo == "materias":
+        materia = Materia.objects.get(id=id)
+        materia.delete()
+    return redirect('admin_gestion_academica')
 #************************************ADMINISTRADOR GESTION ACADEMICA******************************************************
 
 

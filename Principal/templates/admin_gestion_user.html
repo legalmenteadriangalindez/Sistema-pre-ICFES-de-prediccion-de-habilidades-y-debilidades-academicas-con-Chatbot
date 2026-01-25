@@ -40,7 +40,7 @@
                 <td>{{u.is_active}}</td>
                 <!-- <td>{{u.activo}}</td> -->
                 <td><button class="btn btn-sm btn-primary">Editar</button></td>
-                <td><button class="btn btn-sm btn-danger">Eliminar</button></td>
+                <td><a href="{% url 'eliminar_admin_gestion_users' 'usuarios' u.id %}"><button  class="btn btn-sm btn-danger">Eliminar</button></a></td>
                 <td>
                   <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="user1" checked>
@@ -75,7 +75,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        <button type="submit" name="form" value="usuarios" class="btn btn-primary">Guardar Cambios</button>
       </div>
       </form>
     </div>
@@ -114,7 +114,7 @@
                 <td>{{p.telefono}}</td>
                 <td>{{p.sexo.descripcion}}</td>
                 <td><button class="btn btn-sm btn-primary">Editar</button></td>
-                <td><button class="btn btn-sm btn-danger">Eliminar</button></td>
+                <td><a href="{% url 'eliminar_admin_gestion_users' 'personas' p.id %}"><button  class="btn btn-sm btn-danger">Eliminar</button></a></td>
                 <td>
                   <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="user1" checked>
@@ -149,14 +149,14 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        <button type="submit" name="form" value="personas"  class="btn btn-primary">Guardar Cambios</button>
       </div>
       </form>
     </div>
   </div>
 </div>
 
-<!-- Crear, editar y eliminar usuarios ( PerfilUsuario).
+<!-- 
 
 Asignar roles a los usuarios.
 

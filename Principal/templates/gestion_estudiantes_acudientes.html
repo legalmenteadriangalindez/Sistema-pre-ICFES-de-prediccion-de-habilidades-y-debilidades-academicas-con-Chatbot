@@ -85,7 +85,7 @@ Reportes de notas y desempeño por periodo. -->
                   </div>
                 </td> 
                 <td><button class="btn btn-sm btn-primary">Editar</button></td>
-                <td><button class="btn btn-sm btn-danger">Eliminar</button></td>             
+                <td><a href="{% url 'eliminar_gestion_acudientes_estudiantes' 'estudiantes' e.id %}"><button class="btn btn-sm btn-danger">Eliminar</button></a></td>             
             </tr>
             {%endfor%}
             <tr>
@@ -115,7 +115,7 @@ Reportes de notas y desempeño por periodo. -->
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        <button type="submit" name="form" value="estudiantes" class="btn btn-primary">Guardar Cambios</button>
       </div>
       </form>
     </div>
@@ -161,7 +161,7 @@ Reportes de notas y desempeño por periodo. -->
                   </div>
                 </td> 
                 <td><button class="btn btn-sm btn-primary">Editar</button></td>
-                <td><button class="btn btn-sm btn-danger">Eliminar</button></td>             
+                <td><a href="{% url 'eliminar_gestion_acudientes_estudiantes' 'acudientes' a.id %}"><button class="btn btn-sm btn-danger">Eliminar</button></a></td>             
             </tr>
             {% endfor %}
             <tr>
@@ -191,7 +191,7 @@ Reportes de notas y desempeño por periodo. -->
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        <button type="submit" name="form" value="acudientes"  class="btn btn-primary">Guardar Cambios</button>
       </div>
       </form>
     </div>

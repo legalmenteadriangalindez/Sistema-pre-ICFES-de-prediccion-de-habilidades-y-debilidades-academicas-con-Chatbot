@@ -270,7 +270,7 @@ class PersonaForm(forms.ModelForm):
 class EstudianteForm(forms.ModelForm):
     class Meta:
         model = Estudiante
-        fields = ["curso", "acudiente", "necesidades_especiales"]
+        fields = ["curso", "acudiente", "necesidades_especiales","persona"]
 
         widgets = {
             "curso": forms.Select(attrs={"class": "input-select"}),

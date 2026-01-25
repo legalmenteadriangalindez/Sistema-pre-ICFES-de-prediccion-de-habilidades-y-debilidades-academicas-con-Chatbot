@@ -12,7 +12,6 @@ urlpatterns = [
   path('configuraciones/',views.configuraciones,name="configuraciones"), # configuraciones
   path('perfil/',views.perfil,name="perfil"), # url perfil de usuario
   path('registro/',views.registro,name="registro"), # url registro 
-  path('gestion_admin/',views.gestion_admin,name="gestion_admin"), # url gestion admin 
   path('gestion_acudientes_estudiantes/',views.gestion_acudientes_estudiantes,name="gestion_acudientes_estudiantes"), # url gestion acudientes y docentes
   path('admin_gestion_users/',views.gestion_users,name="admin_gestion_users"), # url gestion admin users 
   path('admin_gestion_academica/',views.gestion_academica,name="admin_gestion_academica"), # url gestion academica 
@@ -20,5 +19,8 @@ urlpatterns = [
   path('docentes/',views.docentes,name="docentes"), # url docentes 
   path('acudiente/',views.acudiente,name="acudiente"), # url acudiente 
   path('salir/', views.salir, name='salir'), # url logout 
-  path('eliminar_admin_gestion_db/<tipo>/<id>',views.eliminar_admin_gestion_db,name="eliminar_admin_gestion_db")
+  path('eliminar_admin_gestion_db/<tipo>/<id>',views.eliminar_admin_gestion_db,name="eliminar_admin_gestion_db"),
+  path('eliminar_admin_gestion_academico/<tipo>/<id>',views.eliminar_gestion_academica,name="eliminar_admin_gestion_academico"),
+  path('eliminar_admin_gestion_users/<tipo>/<id>',views.eliminar_gestion_users,name="eliminar_admin_gestion_users"),
+  path('eliminar_gestion_acudientes_estudiantes/<tipo>/<id>',views.eliminar_gestion_acudientes_estudiantes,name='eliminar_gestion_acudientes_estudiantes')
 ]
