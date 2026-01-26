@@ -528,6 +528,7 @@ class ProgresoTema(models.Model):
 #**********TABLA PROGRESO DEL TEMA ASIGNADO********
 
 
+
 #==========TABLA ACTIVIDADES========
 class Actividad(models.Model):
     tema = models.ForeignKey(Tema, on_delete=models.PROTECT)
@@ -539,6 +540,7 @@ class Actividad(models.Model):
     def __str__(self):
         return self.titulo
 #**********TABLA ACTIVIDADES********
+
 
 
 #==========TABLA ACTIVIDADES ASIGNADAS========
@@ -561,3 +563,66 @@ class ActividadAsignada(models.Model):
         return f"{self.estudiante} - {self.actividad}"
 #**********TABLA ACTIVIDADES ASIGNADAS********
 
+
+
+#===========TABLA DE ANALISIS COGNITIVO======
+class AnalisisCognitivo(models.Model):
+    estudiante = models.OneToOneField(Estudiante, on_delete=models.CASCADE)
+    nivel_general = models.ForeignKey(NivelAprendizaje, on_delete=models.PROTECT)
+    dudas_frecuentes = models.TextField()
+    areas_fuertes = models.TextField()
+    areas_debiles = models.TextField()
+    fecha = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Análisis {self.estudiante}"
+#***********TABLA DE ANALISIS COGNITIVO*****
+
+
+
+#===========TABLA CARRERAS==============
+class Carrera(models.Model):
+    nombre = models.CharField(max_length=100)
+    descripcion = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.nombre
+#***********TABLA CARRERAS**************
+
+
+
+#==========TABLA RECOMENDACION VOCACIONAL======
+class RecomendacionVocacional(models.Model):
+    estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE)
+    carrera = models.ForeignKey(Carrera, on_delete=models.PROTECT)
+    compatibilidad = models.DecimalField(max_digits=5, decimal_places=2)
+    conocimientos_necesarios = models.TextField()
+    puntaje_requerido = models.DecimalField(max_digits=5, decimal_places=2)
+    fecha = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.estudiante} - {self.carrera}"
+#**********TABLA RECOMENDACION VOCACIONAL*******
+
+
+
+#===========TABLA MATERIALES ===============
+class MaterialEstudio(models.Model):
+    tema = models.ForeignKey(Tema, on_delete=models.PROTECT)
+    titulo = models.CharField(max_length=100)
+    url = models.URLField()
+    activo = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.titulo
+#*************TABLA MATERIALES*****************
+
+
+
+#==========TABLA MATERIALES ASIGNADOS=======
+class MaterialAsignado(models.Model):
+    estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE)
+    material = models.ForeignKey(MaterialEstudio, on_delete=models.PROTECT)
+    completado = models.BooleanField(default=False)
+    fecha = models.DateTimeField(auto_now_add=True)
+#**********TABLA MATERIALES ASIGNADOS*******

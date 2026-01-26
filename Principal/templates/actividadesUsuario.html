@@ -1,0 +1,54 @@
+{% extends "./home.html" %}
+{% block tittle %} carreras {% endblock %} 
+
+{% block content %}  
+
+<h1>Actividades de Usuario</h1> 
+
+<div class="container mt-5">
+    <h2>Actividades asignadas al usuario</h2>
+    <table class="table">
+        <thead>
+
+            <tr>
+                <th>ID del usuario</th>
+                <th>Materia</th>
+                <th>Tema</th>
+                <th>Titulo</th>
+                <th>Descripcion</th>
+                <th>Nivel</th>
+                <th>Puntaje</th>
+                <th>Progreso</th>
+                <th>Marcar como completada</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in usuarios %}
+            <tr>
+                <td>{{u.id}}</td>
+                <td>{{u.username}}</td>
+                <td>{{u.email}}</td>
+                <td>{{u.PerfilUsuario.Rol.nombre}}</td>
+                <td>{{u.date_joined}}</td>
+                <td>{{u.is_active}}</td>
+                <!-- <td>{{u.activo}}</td> -->
+                <td><button class="btn btn-sm btn-primary">Editar</button></td>
+                <td><a href="{% url 'eliminar_admin_gestion_users' 'usuarios' u.id %}"><button  class="btn btn-sm btn-danger">Eliminar</button></a></td>
+                <td>
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="user1" checked>
+                    <label class="form-check-label" for="user1"></label>
+                  </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Progreso</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
+    
+

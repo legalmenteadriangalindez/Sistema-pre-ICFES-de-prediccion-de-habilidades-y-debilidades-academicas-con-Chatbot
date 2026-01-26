@@ -156,8 +156,8 @@ def recomendaciones(request):
 
 # =============================CARRERAS======================================
 @login_required
-def carreras(request):
-    return render(request,"Carreras.html")     # view Carreras Profesionales
+def actividadesUsuario(request):
+    return render(request,"actividadesUsuario.html")     # view Carreras Profesionales
 # # ********************************CARRERAS**************************************************
 
 
@@ -203,7 +203,7 @@ def perfil(request):
         "acudiente": acudiente,
         }
     
-    return render(request,"PerfilDeUsuario.html",contexto)     # view Perfil de usuario
+    return render(request,"PerfilDeUsuarios.html",contexto)     # view Perfil de usuario
     
 # ********************************PERFIL DE USUARIO**************************************************
 
