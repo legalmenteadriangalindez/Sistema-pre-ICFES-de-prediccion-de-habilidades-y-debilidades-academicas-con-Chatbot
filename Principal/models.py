@@ -81,7 +81,6 @@ class RelacionAcudiente(models.Model):
 #==================TABLA ACUDIENTE=============
 class Acudiente(models.Model):
     persona = models.OneToOneField(Persona, on_delete=models.CASCADE)
-    relacion = models.ForeignKey(RelacionAcudiente, on_delete=models.PROTECT)
 
     def __str__(self):
         return f"{self.persona.nombre} {self.persona.apellido}"
@@ -259,89 +258,138 @@ class PeriodoAcademico(models.Model):
 
 
 
+
+
+
+
 #==================TABLA ESTUDIANTE=============
 class Estudiante(models.Model):
     persona = models.OneToOneField(Persona, on_delete=models.CASCADE)
-    curso = models.ForeignKey(Curso, on_delete=models.PROTECT)
     necesidades_especiales = models.TextField(blank=True,null=True)
 
-    acudiente = models.ForeignKey(Acudiente,related_name="estudiantes",on_delete=models.SET_NULL,null=True,blank=True,)
 
     def __str__(self):
         return f"{self.persona.nombre} {self.persona.apellido}"
 #*********************TABLA ESTUDIANTE******************
 
 
+#====================TABLA ESTUDIANTE ACUDIENTE============
+class EstudianteAcudiente(models.Model):
+    estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE)
+    acudiente = models.ForeignKey(Acudiente, on_delete=models.CASCADE)
+    relacion = models.ForeignKey(RelacionAcudiente, on_delete=models.PROTECT)
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["estudiante","acudiente"],
+                name="unique_estudiante_acudiente"
+            )
+        ]
+
+#*********************TABLA ESTUDIANTE ACUDIENTE************
+
+
+#============TABLA MATRICULA================
+class Matricula(models.Model):
+    estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE)
+    curso = models.ForeignKey(Curso, on_delete=models.PROTECT)
+    anio_lectivo = models.ForeignKey(AnioLectivo, on_delete=models.PROTECT)
+    fecha = models.DateField(auto_now_add=True)
+    activa = models.BooleanField(default=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["estudiante","anio_lectivo"],
+                name="unique_matricula_anual"
+            )
+        ]
+
+#************TABLA MATRICULA***************
 
 # ================== TABLA NOTA ==================
 class Nota(models.Model):
-    estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE)
+    matricula = models.ForeignKey(Matricula, on_delete=models.CASCADE, null=True, blank=True)
     asignacion = models.ForeignKey(AsignacionDocente,on_delete=models.PROTECT)
     periodo = models.ForeignKey(PeriodoAcademico, on_delete=models.PROTECT)
 
-    valor = models.DecimalField(max_digits=4, decimal_places=2,validators=[MinValueValidator(0), MaxValueValidator(5)])  # 0.00 a 5.00
+    valor = models.DecimalField(max_digits=4, decimal_places=2,
+        validators=[MinValueValidator(0), MaxValueValidator(5)]
+    )
     fecha_registro = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         constraints = [
-        models.UniqueConstraint(
-            fields=["estudiante", "asignacion", "periodo"],
-            name="unique_nota_estudiante_asignacion_periodo"
-        )
-    ]
+            models.UniqueConstraint(
+                fields=["matricula", "asignacion", "periodo"],
+                name="unique_nota_matricula_asignacion_periodo"
+            )
+        ]
 
     def __str__(self):
-        return f"{self.estudiante} - {self.valor}"
+        return f"{self.matricula.estudiante} - {self.valor}"
+
 # ****************** TABLA NOTA ******************
 
 
 
 # ================== TABLA BOLETÍN ==================
 class Boletin(models.Model):
-    estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE)
-    periodo = models.ForeignKey(PeriodoAcademico, on_delete=models.PROTECT)
-    fecha_generacion = models.DateTimeField(auto_now_add=True)
-    promedio_periodo = models.DecimalField(
-        max_digits=4,
-        decimal_places=2,
-        blank=True,
-        null=True
+    matricula = models.ForeignKey(
+        Matricula,
+        on_delete=models.CASCADE,
+        related_name="boletines", null=True, blank=True
     )
-    observaciones_generales = models.TextField(blank=True, null=True)
+    periodo = models.ForeignKey(
+        PeriodoAcademico,
+        on_delete=models.PROTECT
+    )
+    fecha_generacion = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         constraints = [
-        models.UniqueConstraint(
-            fields=["estudiante", "periodo"],
-            name="unique_boletin_estudiante_periodo"
-        )
-    ]
+            models.UniqueConstraint(
+                fields=["matricula", "periodo"],
+                name="unique_boletin_matricula_periodo"
+            )
+        ]
 
     def __str__(self):
-        return f"Boletín {self.estudiante} - P{self.periodo.numero}"
+        return f"Boletín {self.matricula.estudiante} - {self.periodo}"
+
 # ****************** TABLA BOLETÍN ******************
 
 
 
 # ================== TABLA OBSERVACIÓN ==================
 class Observacion(models.Model):
-    estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE)
-    asignacion = models.ForeignKey(AsignacionDocente, on_delete=models.PROTECT)
-    periodo = models.ForeignKey(PeriodoAcademico, on_delete=models.PROTECT)
-
-    texto = models.TextField()
+    matricula = models.ForeignKey(
+        Matricula,
+        on_delete=models.CASCADE,
+        related_name="observaciones", null=True, blank=True
+    )
+    asignacion = models.ForeignKey(
+        AsignacionDocente,
+        on_delete=models.PROTECT
+    )
+    periodo = models.ForeignKey(
+        PeriodoAcademico,
+        on_delete=models.PROTECT
+    )
+    descripcion = models.TextField()
     fecha = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         constraints = [
-        models.UniqueConstraint(
-            fields=["estudiante", "asignacion", "periodo"],
-            name="unique_observacion_est_asig_periodo"
-        )
-    ]
+            models.UniqueConstraint(
+                fields=["matricula", "asignacion", "periodo"],
+                name="unique_observacion_matricula_asignacion_periodo"
+            )
+        ]
 
     def __str__(self):
-        return f"Obs {self.estudiante} - {self.asignacion.materia}"
+        return f"{self.matricula.estudiante} - {self.asignacion}"
+
 # ****************** TABLA OBSERVACIÓN ******************
 
 
@@ -407,18 +455,41 @@ class NivelAprendizaje(models.Model):
 #*******************TABLA NIVEL DE APREDIZAJE****
 
 
+
 #===================TABLA PERFIL PEDAGOGICO========
 class PerfilPedagogico(models.Model):
-    estudiante = models.OneToOneField(Estudiante, on_delete=models.CASCADE)
+    estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE)
     ritmo = models.ForeignKey(RitmoAprendizaje, on_delete=models.PROTECT)
     estilo = models.ForeignKey(EstiloAprendizaje, on_delete=models.PROTECT)
     nivel = models.ForeignKey(NivelAprendizaje, on_delete=models.PROTECT)
     fecha_actualizacion = models.DateTimeField(auto_now=True)
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["estudiante"],
+                name="unique_perfil_fecha"
+            )
+        ]
 
     def __str__(self):
         return f"Perfil {self.estudiante}"
 #*******************TABLA PERFIL PEDAGOGICO********
 
+
+
+#===========TABLA DE ANALISIS COGNITIVO======
+class AnalisisCognitivo(models.Model):
+    estudiante = models.ForeignKey(Estudiante,on_delete=models.CASCADE,related_name="analisis_cognitivos")    
+    nivel_general = models.ForeignKey(NivelAprendizaje, on_delete=models.PROTECT)
+    dudas_frecuentes = models.TextField()
+    areas_fuertes = models.TextField()
+    areas_debiles = models.TextField()
+    fecha = models.DateTimeField(auto_now_add=True)
+
+
+    def __str__(self):
+        return f"Análisis {self.estudiante}"
+#***********TABLA DE ANALISIS COGNITIVO*****
 
 
 
@@ -432,35 +503,37 @@ class Riesgo(models.Model):
 #**********TABLA RIESGOS**************************
 
 
+
 #==========TABLA PREDICCION DE RIESGO===========
 class PrediccionRiesgo(models.Model):
-    estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE)
+    matricula = models.ForeignKey(Matricula, on_delete=models.CASCADE, null=True, blank=True)
     riesgo = models.ForeignKey(Riesgo, on_delete=models.PROTECT)
-    probabilidad = models.DecimalField(max_digits=5, decimal_places=2,validators=[MinValueValidator(0), MaxValueValidator(1)])
+    probabilidad = models.DecimalField(
+    max_digits=5,
+    decimal_places=2,
+    validators=[MinValueValidator(0), MaxValueValidator(1)]
+)
     fecha = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         constraints = [
-        models.UniqueConstraint(
-            fields=["estudiante", "riesgo"],
-            name="unique_prediccion_riesgo"
-        )
-    ]
-
-    def __str__(self):
-        return f"{self.estudiante} - {self.riesgo}"
+            models.UniqueConstraint(
+                fields=["matricula", "riesgo"],
+                name="unique_prediccion_riesgo"
+            )
+        ]
 #**********TABLA PREDICCION DE RIESGO***********
 
 
 
 #==========TABLA RECOMENDACIONES================
 class Recomendacion(models.Model):
-    estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE)
+    matricula = models.ForeignKey(Matricula, on_delete=models.CASCADE, null=True, blank=True)
     texto = models.TextField()
     fecha = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Rec {self.estudiante}"
+        return f"Rec {self.matricula}"
 #**********TABLA RECOMENDACIONES****************
 
 
@@ -475,6 +548,7 @@ class PreferenciaAccesibilidad(models.Model):
     def __str__(self):
         return f"Accesibilidad {self.estudiante}"
 #*****TABLA PREFERNCIAS DE ACCECIBILIDAD*******
+
 
 
 #==================TABLA TEMAS===============
@@ -545,7 +619,7 @@ class Actividad(models.Model):
 
 #==========TABLA ACTIVIDADES ASIGNADAS========
 class ActividadAsignada(models.Model):
-    estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE)
+    matricula = models.ForeignKey(Matricula, on_delete=models.CASCADE)
     actividad = models.ForeignKey(Actividad, on_delete=models.PROTECT)
     fecha_asignacion = models.DateTimeField(auto_now_add=True)
     completada = models.BooleanField(default=False)
@@ -554,29 +628,14 @@ class ActividadAsignada(models.Model):
     class Meta:
         constraints = [
         models.UniqueConstraint(
-            fields=["estudiante", "actividad"],
+            fields=["matricula", "actividad"],
             name="unique_actividad_asignada"
         )
     ]
 
     def __str__(self):
-        return f"{self.estudiante} - {self.actividad}"
+        return f"{self.matricula.estudiante} - {self.actividad}"
 #**********TABLA ACTIVIDADES ASIGNADAS********
-
-
-
-#===========TABLA DE ANALISIS COGNITIVO======
-class AnalisisCognitivo(models.Model):
-    estudiante = models.OneToOneField(Estudiante, on_delete=models.CASCADE)
-    nivel_general = models.ForeignKey(NivelAprendizaje, on_delete=models.PROTECT)
-    dudas_frecuentes = models.TextField()
-    areas_fuertes = models.TextField()
-    areas_debiles = models.TextField()
-    fecha = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"Análisis {self.estudiante}"
-#***********TABLA DE ANALISIS COGNITIVO*****
 
 
 
@@ -593,7 +652,7 @@ class Carrera(models.Model):
 
 #==========TABLA RECOMENDACION VOCACIONAL======
 class RecomendacionVocacional(models.Model):
-    estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE)
+    matricula = models.ForeignKey(Matricula, on_delete=models.CASCADE, null=True, blank=True)
     carrera = models.ForeignKey(Carrera, on_delete=models.PROTECT)
     compatibilidad = models.DecimalField(max_digits=5, decimal_places=2)
     conocimientos_necesarios = models.TextField()
@@ -601,7 +660,7 @@ class RecomendacionVocacional(models.Model):
     fecha = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.estudiante} - {self.carrera}"
+        return f"{self.matricula} - {self.carrera}"
 #**********TABLA RECOMENDACION VOCACIONAL*******
 
 
@@ -621,8 +680,33 @@ class MaterialEstudio(models.Model):
 
 #==========TABLA MATERIALES ASIGNADOS=======
 class MaterialAsignado(models.Model):
-    estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE)
+    matricula = models.ForeignKey(Matricula, on_delete=models.CASCADE, null=True, blank=True)
     material = models.ForeignKey(MaterialEstudio, on_delete=models.PROTECT)
     completado = models.BooleanField(default=False)
     fecha = models.DateTimeField(auto_now_add=True)
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["matricula","material"],
+                name="unique_material_asignado"
+            )
+        ]
 #**********TABLA MATERIALES ASIGNADOS*******
+
+
+
+#=============TABLA CONVERSACIONES==============
+class Conversacion(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    fecha_inicio = models.DateTimeField(auto_now_add=True)
+#**************TABLA CONVERSACIONES*****************
+
+
+
+#=======================TABLA MENSAGE=======================
+class Mensaje(models.Model):
+    conversacion = models.ForeignKey(Conversacion, on_delete=models.CASCADE)
+    rol = models.CharField(max_length=10)  # user, ai, system
+    contenido = models.TextField()
+    fecha = models.DateTimeField(auto_now_add=True)
+#*********************TABLA MENSAGE****************************

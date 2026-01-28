@@ -87,7 +87,7 @@ class AcudienteForm(forms.ModelForm):
         )
     class Meta:
         model = Acudiente
-        fields = ["persona", "relacion"]
+        fields = ["persona"]
         
         widgets = {
             "persona": forms.Select(attrs={"class": "input-select"}),
@@ -96,7 +96,7 @@ class AcudienteForm(forms.ModelForm):
 
 class AsignarAcudienteForm(forms.Form):
     estudiante = forms.ModelChoiceField(
-        queryset=Estudiante.objects.filter(acudiente__isnull=True),
+        queryset=Estudiante.objects.filter(estudianteacudiente__isnull=True),
         label="Estudiante",
         empty_label="Seleccione un estudiante",
         widget=forms.Select(attrs={"class": "form-select"})
@@ -178,7 +178,7 @@ class NotaForm(forms.ModelForm):
         model = Nota
         fields = "__all__"
         widgets = {
-            "estudiante": forms.Select(attrs={"class": "input-select"}),
+            "matricula": forms.Select(attrs={"class": "input-select"}),
             "asignacion": forms.Select(attrs={"class": "input-select"}),
             "periodo": forms.Select(attrs={"class": "input-select"}),
             "valor": forms.NumberInput(attrs={"class": "input-field"}),
@@ -190,7 +190,7 @@ class BoletinForm(forms.ModelForm):
         model = Boletin
         fields = "__all__"
         widgets = {
-            "estudiante": forms.Select(attrs={"class": "input-select"}),
+            "matricula": forms.Select(attrs={"class": "input-select"}),
             "periodo": forms.Select(attrs={"class": "input-select"}),
             "promedio_periodo": forms.NumberInput(attrs={"class": "input-field"}),
             "observaciones_generales": forms.Textarea(
@@ -204,7 +204,7 @@ class ObservacionForm(forms.ModelForm):
         model = Observacion
         fields = "__all__"
         widgets = {
-            "estudiante": forms.Select(attrs={"class": "input-select"}),
+            "matricula": forms.Select(attrs={"class": "input-select"}),
             "asignacion": forms.Select(attrs={"class": "input-select"}),
             "periodo": forms.Select(attrs={"class": "input-select"}),
             "texto": forms.Textarea(
@@ -275,11 +275,9 @@ class PersonaForm(forms.ModelForm):
 class EstudianteForm(forms.ModelForm):
     class Meta:
         model = Estudiante
-        fields = ["curso", "acudiente", "necesidades_especiales","persona"]
+        fields = ["necesidades_especiales","persona"]
 
         widgets = {
-            "curso": forms.Select(attrs={"class": "input-select"}),
-            "acudiente": forms.Select(attrs={"class": "input-select"}),
             "necesidades_especiales": forms.Textarea(
                 attrs={"class": "input-text-area", "rows": 3}
             ),
@@ -353,10 +351,9 @@ class RiesgoForm(forms.ModelForm):
 class PrediccionRiesgoForm(forms.ModelForm):
     class Meta:
         model = PrediccionRiesgo
-        fields = ["estudiante","riesgo","probabilidad"]
+        fields = ["riesgo","probabilidad"]
 
         widgets = {
-            "estudiante": forms.Select(attrs={"class": "input-select"}),
             "riesgo": forms.Select(attrs={"class": "input-select"}),
             "probabilidad" : forms.NumberInput(attrs={"step": "0.01"})
         }
@@ -364,10 +361,10 @@ class PrediccionRiesgoForm(forms.ModelForm):
 class RecomendacionForm(forms.ModelForm):
     class Meta:
         model = Recomendacion
-        fields = ["estudiante","texto"]
+        fields = ["matricula","texto"]
 
         widgets ={
-            "estudiante": forms.Select(attrs={"class": "input-select"}),
+            "matricula": forms.Select(attrs={"class": "input-select"}),
             "texto": forms.TextInput(attrs={"class": "input-field"})
         }
 

@@ -1,5 +1,6 @@
 # ================================IMPORTACIONES===============================================
-from django.contrib.auth import logout
+from django.contrib.auth import logout,login
+import json
 from django.contrib.auth.decorators import login_required, user_passes_test
 from itertools import chain
 from django.shortcuts import render,redirect,get_object_or_404
@@ -32,8 +33,8 @@ def salir(request):
 # =================================HOME=======================================
 @login_required
 def home(request):
-
-    user_id = "user_test"
+    user = request.user
+    user_id = str(user.id)
     chat_id = request.GET.get("chat_id","default")
     chatbot = chatbotManager.get_chatbot(user_id)
     raw_historial = chatbot.get_conversation_history(chat_id, limit=50)
@@ -149,9 +150,68 @@ def test(request):
 # =============================RECOMENDACIONES======================================
 @login_required
 def recomendaciones(request):
-    return render(request,"Recomendaciones.html")     # view recomendacion de carreras con IA
-# ********************************RECOMENDACIONES**************************************************
+    user = request.user
+    print("USER ID:", user.id)
 
+    persona = getattr(user,"persona",None)
+    estudiante = getattr(persona,"estudiante",None) if persona else None
+
+    perfil_pedagogico = None
+    analisis_cognitivo = None
+    recomendacion_vocacional = None
+    material_estudio_recomendado = None
+
+    if estudiante :
+        perfil_pedagogico = PerfilPedagogico.objects.filter(estudiante=estudiante).first()
+        analisis_cognitivo = AnalisisCognitivo.objects.filter(estudiante=estudiante).first()
+        recomendacion_vocacional = RecomendacionVocacional.objects.filter(estudiante=estudiante)
+        material_estudio_recomendado = MaterialAsignado.objects.filter(estudiante=estudiante)
+    print(material_estudio_recomendado)
+    ruta = rf"ProyectoDeGrado\DATABASES\USERS\{user.id}\cognitive_profile.json"
+    print(ruta)
+
+    with open(ruta, "r",encoding="utf-8") as archivo:
+        data = json.load(archivo)
+    
+    if isinstance(data, dict):
+       data = [data]
+    registro = None 
+    
+    for item in data:
+        if int(item["user_id"]) == user.id:
+            registro = item
+            break
+    print("REGISTRO ENCONTRADO:", registro)
+    
+    for registro in data:
+        nivel, _ = NivelAprendizaje.objects.get_or_create(
+            nombre=registro["general_level"].capitalize()
+        )
+
+
+    analisis_cognitivo, _ = AnalisisCognitivo.objects.create(estudiante=estudiante,
+                                                             defaults={
+                                                                 "nivel_general": nivel,
+                                                                 "areas_fuertes": ", ".join(registro["strong_areas"]),
+                                                                 "areas_debiles": ", ".join(registro["weak_areas"]),
+                                                                 "dudas_frecuentes": ", ".join(registro["frequent_mistakes"]),
+                                                                  }
+                                                            )
+    perfil_pedagogico = PerfilPedagogico.objects.filter(estudiante=estudiante).first()
+    recomendacion_vocacional = RecomendacionVocacional.objects.filter(estudiante=estudiante)
+    material_estudio_recomendado = MaterialAsignado.objects.filter(estudiante=estudiante)
+    analisis_cognitivo = AnalisisCognitivo.objects.filter(estudiante=estudiante)
+
+    contexto = {
+        "perfil_pedagogico": perfil_pedagogico,
+        "analisis_cognitivo": analisis_cognitivo,
+        "recomendacion_vocacional": recomendacion_vocacional,
+        "material_estudio_recomendado": material_estudio_recomendado,
+    }
+
+    return render(request,"Recomendaciones.html",contexto)     # view recomendacion de carreras con IA
+
+#********************************RECOMENDACIONES**************************************************
 
 
 # =============================CARRERAS======================================
@@ -291,7 +351,7 @@ def registro(request):
             estudiante = estudiante_form.save(commit=False)
             estudiante.persona = persona
             estudiante.save()
-            inicioDeSesion(request, user)
+            login(request, user)
             return redirect("login")  
     else:
         user_form = UserRegisterForm()
@@ -304,6 +364,7 @@ def registro(request):
 
 
 #======================================ADMIN GESTION DB=====================================================================
+@login_required
 def gestion_db(request):
     roles = Rol.objects.all()
     sexos = Sexo.objects.all()
@@ -314,7 +375,7 @@ def gestion_db(request):
         form_rel = RelacionAcudienteForm(request.POST)
         if form_roles.is_valid():
             form_roles.save()
-            redirect('admin_gestion_db')
+            return redirect('admin_gestion_db')
         if form_sexos.is_valid():
             form_sexos.save()
         if form_rel.is_valid():
@@ -350,10 +411,8 @@ def eliminar_admin_gestion_db(request,tipo,id):
 
 
 # =======================================GESTION ACUDIENTES Y ESTUDIANTES======================================================================
-# @login_required
-# @user_passes_test(es_coordinador)
+@login_required # @user_passes_test(es_coordinador)
 def gestion_acudientes_estudiantes(request):
-
     estudiantes = Estudiante.objects.all()
     acudientes = Acudiente.objects.all()
     if request.method == "POST":
@@ -393,8 +452,7 @@ def eliminar_gestion_acudientes_estudiantes(request,tipo,id):
 
 
 # =======================================ADMINISTRADOR GESTION USUARIOS======================================================================
-# @login_required
-# @user_passes_test(es_coordinador)
+@login_required # @user_passes_test(es_coordinador)
 def gestion_users(request):
     users = User.objects.all()
     personas = Persona.objects.all()
@@ -436,9 +494,7 @@ def eliminar_gestion_users(request,tipo,id):
 
 
 # =======================================ACUDIENTE======================================================================
-# @login_required
-# @user_passes_test(es_coordinador)
-@login_required
+@login_required # @user_passes_test(es_coordinador)
 def acudiente(request):
     
     contexto = {
@@ -451,8 +507,7 @@ def acudiente(request):
 
 
 # =======================================ADMIN GESTION ACADEMICA======================================================================
-# @login_required
-# @user_passes_test(es_coordinador)
+@login_required # @user_passes_test(es_coordinador)
 def gestion_academica(request):
     grados = Grado.objects.all()
     Jornadas = Jornada.objects.all()
@@ -567,11 +622,11 @@ def eliminar_gestion_academica(request,tipo,id):
 
 
 # =======================================DOCENTES======================================================================
-# @login_required
-# @user_passes_test(es_coordinador)
-
+@login_required # @user_passes_test(es_docente)
 def docentes(request):
-    asignacion_docentes = AsignacionDocente.objects.all()
+    user = request.user
+
+    asignacion_docentes = AsignacionDocente.objects.filter(docente__persona__user=request.user)
     contexto = {
         "a_docentes": asignacion_docentes
     }
