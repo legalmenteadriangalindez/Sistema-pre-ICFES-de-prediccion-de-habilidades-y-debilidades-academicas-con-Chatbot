@@ -378,7 +378,7 @@ class ModernMemoryManager:
         with open(path, "w", encoding="utf-8") as f:
             json.dump(profiles, f, indent=2, ensure_ascii=False)
 
-    def build_cognitive_profile(self, history: list):
+    def build_cognitive_profile(self, history: list,user_id:str):
         conversation_pairs = []
         temp_pair = {}
         for msg in history:
@@ -398,6 +398,7 @@ class ModernMemoryManager:
         
         return {
         "chat_id": cognitive_profile_id,
+        "user_id": user_id,
         "area": cognitive_profile.area,
         "general_level": cognitive_profile.general_level,
         "strong_areas": cognitive_profile.strong_areas,

@@ -123,7 +123,7 @@ class ModernChatbot:
             if not messages:
                 return {}
             
-            profile = self.memory_manager.build_cognitive_profile(messages[:6])
+            profile = self.memory_manager.build_cognitive_profile(messages[:6],self.user_id)
 
             if profile:
                self.memory_manager.save_cognitive_profile(profile)
