@@ -3,7 +3,6 @@
 
 from Principal.IA.LangGraph.graph import init_graph_evaluation,init_graph_generator, graph_gen_compile,graph_evaluation_compiled
 
-from Principal.models import QuizState
 
 #*****************************************IMORTACIONES****************************************
 

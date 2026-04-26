@@ -32,6 +32,7 @@
        <a href="{% url 'perfil' %}"> <b>Perfil De Usuario 👤</b></a>
        <a href="{% url 'login' %}"><button id="iniciarSesion">Iniciar sesion</button></a>
        <a href="{% url 'registro' %}"><button id="registrarse" >Registrarse</button></a>
+       <a href="{% url 'salir' %}">❌ Salir</a>
     </nav>
 <!-- ================================================================= -->
 
@@ -130,7 +131,7 @@
                       <div class="mensages ">
                           {% for turn  in historial %}
               
-                          {% if turn.usuario != "None" %}
+                          {% if turn.usuario %}
                 
                       <div class="message user">
                           <div class="message-header">
@@ -168,7 +169,7 @@
                       <section class="response-section">
                         <div class="response-container">
                           <div class="response-header">
-                             <i class="fas fa-comment-dots"></i><h2>Respuesta generada por la IA:</h2>
+                             <i class="fas fa-comment-dots"></i><h2>Hola mi nombre es Haru tu asistente virtual dime en que puedo ayudarte:</h2>
                           </div>
                           <div class="response-content">
                              {{ response }}
@@ -187,13 +188,22 @@
     
     </div>
 
-    <div class="chat-controls">
+    <!-- <div class="chat-controls">
       <div class="file-upload-btn">
         <i class="fas fa-file-upload"></i>
         Subir archivo
         <input type="file"
           accept="application/pdf,.doc,.docx,.xls,.xlsx,.txt"
           name="archivo">
+      </div> -->
+      <div class="chat-controls">
+        <label class="file-upload-btn">
+          <i class="fas fa-file-upload"></i>
+          Subir archivo
+          <input type="file"
+            accept=".pdf,.doc,.docx,.xls,.xlsx,.txt"
+            name="archivo">
+        </label>
       </div>
 
       <div class="voice-controls">
@@ -213,7 +223,7 @@
         
         <div class="history-header">
           <h1>Historial de conversaciones</h1>
-          <div class="container-btn-clear"> 
+          <div class="container-btn-clear" hidden> 
                 <form action="{% url 'home' %}" method="post">
                     {% csrf_token %}             
                     <input type="hidden" name="chat_id" value="{{ chat_id }}">
@@ -225,7 +235,7 @@
            <div class="chat-list-container">
             <h3>Listado de conversaciones</h3>
             {% if chats %}
-              <ul>
+              <ul  class="chat-list">
                 {% for chat in chats %}
 
                    <li class="chat-item {% if chat.chat_id == chat_id %}active{% endif %}"> 
@@ -237,10 +247,16 @@
                    </div>
                    </a>
 
-                   <form action="" method="post" class="delete-chat-form">
+                   <form action="" id="deleteForm-{{ chat.chat_id }}" method="post" class="delete-chat-form">
                      {% csrf_token %}
                      <input type="hidden" name="chat_id" value="{{ chat.chat_id }}">
-                     <button type="submit" name="delete_chat" class="delete-chat-btn">🗑️</button>
+                     <!-- <button type="submit" name="delete_chat" class="delete-chat-btn" onclick="openDeleteModal('{{ chat.chat_id }}')">🗑️</button> -->
+                     <button type="submit"
+                             name="delete_chat"
+                             class="delete-chat-btn"
+                             onclick="openDeleteModal('{{ chat.chat_id }}'); return false;">
+                         🗑️
+                     </button> 
                    </form>
 
                    </li>  
@@ -255,7 +271,7 @@
       
     </div>
 
-    <div class="profile-cognitive-container">
+    <div class="profile-cognitive-container" hidden>
        <div class="profile-fortalezas-container">
             <h3>Fortalezas</h3>
           <ul>
@@ -311,6 +327,9 @@
 <!-- ********************************RESPUESTA*********************************** -->
 
 
+
+
+
 <!-- ============================FOOTER================================= -->
     <footer class="footer-custom">
       <div class="container">
@@ -354,11 +373,16 @@
                   
               <div class="copyright"> © Derechos reservados Corporacion universitaria Unicomfacauca</div>
         </div>
+
     </footer>
+
+
 <!-- =================================================================== -->
 {% block extra_js %}
 <script src="{% static 'js/script.js' %}"></script> <!-- referencia a js  -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 {% endblock %}
+
+
 </body>
 </html>

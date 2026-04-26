@@ -54,22 +54,6 @@
 <!-- ======================================================================================== -->
 
 
-<!-- =========================================INFORMACION DEL DOCENTE============================== --> 
-
-<div class="teaching-information-container">
-<h1><i class="fas fa-chalkboard-teacher"></i> Informacion del Docente</h1>
-<ul>
-    <li> <i class="fas fa-user"></i> <b><label for=""> Nombre: {{ docente.persona.nombre }}</label></b></li>
-    <li> <i class="fas fa-user"></i> <b><label for=""> Apellido: {{ docente.persona.apellido }}</label></b></li>
-    <li> <i class="fas fa-id-card"></i> <b><label for=""> Numero de docente: {{ docente.persona.documento }}</label></b></li>
-    <li> <i class="fas fa-venus-mars"></i> <b><label for=""> Sexo: {{ docente.persona.sexo.descripcion }}</label></b></li>
-    <li> <i class="fas fa-envelope"></i> <b><label for=""> Correo electronico: {{ docente.persona.user.email }}</label></b></li>
-    <li> <i class="fas fa-map-marker-alt"></i> <b><label for=""> Direccion: {{ docente.persona.direccion }}</label></b></li>
-    <li> <i class="fas fa-phone"></i> <b><label for=""> Telefono: {{ docente.persona.telefono }}</label></b></li>
-    <li> <i class="fas fa-edit"></i> <a href="#"><b>Editar ✍️</b></a></li>
-</ul>
-</div>
-<!-- ================================================================== -->
 
 <div class="btn-container">
     <!-- =======================================ELIMINAR CUENTA ================================================= -->
@@ -80,5 +64,6 @@
          <div id="cerrarSesion"> <a href="#"><b><i class="fas fa-sign-out-alt"></i> Cerrar sesion</b></a></div>
     <!-- ======================================================================================== -->
 </div>
+
 </section>
 {% endblock %}

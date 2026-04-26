@@ -76,67 +76,8 @@
 </div>
 
 
-<div class="container mt-5">
-    <h2>Gestion de Jornadas</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID del usuario</th>
-                <th>Nombre de la Jornada </th>
-                <th>Estado</th>
-                <th>editar</th>
-                <th>Eliminar</th>
-                <th>Activar/Desactivar</th>
-            </tr>
-        </thead>
-        <tbody>
-            {%for j in jornadas%}
-            <tr>
-                <td>{{j.id}}</td>
-                <td>{{j.nombre}}</td>
-                <td>{{j.activo}}</td>
-                <td><button class="btn btn-sm btn-primary">Editar</button></td>
-                <td><a href="{% url 'eliminar_admin_gestion_academico' 'jornadas' j.id %}"><button  class="btn btn-sm btn-danger">Eliminar</button></a></td>
-                <td>
-                  <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="user1" checked>
-                    <label class="form-check-label" for="user1"></label>
-                  </div>
-                </td>
-            </tr>
-            {%endfor%}
-            <tr>
-                <td>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregar_jornada">
-                      + Agregar Nuevo
-                    </button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
 
-<!-- Modal -->
-<div class="modal fade" id="agregar_jornada" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Nueva Jornada </h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form action="" method="post">
-        {% csrf_token %}
-        {{form_jornadas}}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" name="form" value="jornadas" class="btn btn-primary">Guardar Cambios</button>
-      </div>
-      </form>
-    </div>
-  </div>
-</div>
+
 
 <div class="container mt-5">
     <h2>Gestion de Cursos</h2>
@@ -208,71 +149,7 @@
 </div>
 
 
-<div class="container mt-5">
-    <h2>Gestion de Sedes</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID del usuario</th>
-                <th>Nombre de la Sede </th>
-                <th>Direccio</th>
-                <th>Telefono</th>
-                <th>Estado</th>
-                <th>editar</th>
-                <th>Eliminar</th>
-                <th>Activar/Desactivar</th>
-            </tr>
-        </thead>
-        <tbody>
-            {%for sed in sedes %}
-            <tr>
-                <td>{{sed.id}}</td>
-                <td>{{sed.nombre}}</td>
-                <td>{{sed.direccion}}</td>
-                <td>{{sed.telefono}}</td>
-                <td>{{sed.estado}}</td>
-                <td><button class="btn btn-sm btn-primary">Editar</button></td>
-                <td><a href="{% url 'eliminar_admin_gestion_academico' 'sedes' sed.id %}"><button  class="btn btn-sm btn-danger">Eliminar</button></a></td>
-                <td>
-                  <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="user1" checked>
-                    <label class="form-check-label" for="user1"></label>
-                  </div>
-                </td>
-            </tr>
-            {%endfor%}
-            <tr>
-                <td>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregar_sede">
-                      + Agregar Nuevo
-                    </button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
 
-<!-- Modal -->
-<div class="modal fade" id="agregar_sede" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Nueva Sede </h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form action="" method="post">
-        {% csrf_token %}
-        {{form_sedes}}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" name="form" value="sedes"  class="btn btn-primary">Guardar Cambios</button>
-      </div>
-      </form>
-    </div>
-  </div>
-</div>
 
 <div class="container mt-5">
     <h2>Gestion de Años Lectivos</h2>
@@ -340,71 +217,7 @@
   </div>
 </div>
 
-<div class="container mt-5">
-    <h2>Gestion de Periodos</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID del usuario</th>
-                <th>Nombre del Periodo </th>
-                <th>Fecha de Inicio</th>
-                <th>Fecha de finalizacion</th>
-                <th>Estado</th>
-                <th>editar</th>
-                <th>Eliminar</th>
-                <th>Activar/Desactivar</th>
-            </tr>
-        </thead>
-        <tbody>
-            {%for p in periodos %}
-            <tr>
-                <td>{{p.id}}</td>
-                <td>{{p.nombre}}</td>
-                <td>{{p.fecha_inico}}</td>
-                <td>{{p.fecha_fin}}</td>
-                <td>{{p.activo}}</td>
-                <td><button class="btn btn-sm btn-primary">Editar</button></td>
-                <td><a href="{% url 'eliminar_admin_gestion_academico' 'periodos' p.id %}"><button  class="btn btn-sm btn-danger">Eliminar</button></a></td>
-                <td>
-                  <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="user1" checked>
-                    <label class="form-check-label" for="user1"></label>
-                  </div>
-                </td>
-            </tr>
-            {%endfor%}
-            <tr>
-                <td>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregar_periodo">
-                      + Agregar Nuevo
-                    </button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
 
-<!-- Modal -->
-<div class="modal fade" id="agregar_periodo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Nuevo periodo </h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form action="" method="post">
-        {% csrf_token %}
-        {{form_periodos}}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit"  name="form" value="periodos"  class="btn btn-primary">Guardar Cambios</button>
-      </div>
-      </form>
-    </div>
-  </div>
-</div>
 
 <div class="container mt-5">
     <h2>Gestion de Materias</h2>
