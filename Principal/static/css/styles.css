@@ -750,15 +750,15 @@ footer{
     width: 60%;
 }
 
-.profile-fortalezas-header{
+/* .profile-fortalezas-header{
     
-}
+} */
 
 
-.profile-fortalezas-container,.profile-weak-container,.profile-recommendations-container li{
+/* .profile-fortalezas-container,.profile-weak-container,.profile-recommendations-container li{
 
    list-style: none;
-}
+} */
 
 /* =================NAV RESPONSIVE ANDROID================== */
 @media(max-width: 600px){
@@ -795,3 +795,66 @@ footer{
 /* ================================================ */
 
 
+
+/* =====================bOTON DE ELIMINAR CHAT HISTORIAL===============   */
+.delete-modal {
+    position: fixed;
+    inset: 0;
+
+    background: rgba(0, 0, 0, 0.6);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 999999; /* súper arriba de todo */
+}
+
+.delete-modal.hidden {
+    display: none;
+}
+
+.delete-modal-content {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    width: 320px;
+    text-align: center;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+
+
+/* input de archivos  */
+.file-upload-btn {
+    background-color: white;
+    border: 2px dashed #A68B6A;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 🔴 OCULTAR el input real */
+.file-upload-btn input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.chat-list {
+    list-style: none;
+}

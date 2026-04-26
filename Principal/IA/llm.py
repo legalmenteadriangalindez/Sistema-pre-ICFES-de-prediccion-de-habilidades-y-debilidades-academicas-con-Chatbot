@@ -13,9 +13,9 @@ from typing import List,Literal
 
 
 llm = ChatOllama(model="llama3",temperature=0.1) #creación de una instancia del modelo LLM con el modelo "llama3" y una temperatura de 0.7 una temperatura baja es menos creativo una temperatura alta es mas creativo
-chat_bot = ChatOllama(model="llama3:8b",temperature=0) # ,num_predict=150
+chat_bot = ChatOllama(model="llama3:8b",base_url="http://127.0.0.1:11434",temperature=0) # ,num_predict=150
 # chat_bot = ChatOllama(model="gemma3:4b-it-qat",temperature=0)
-chat = ChatOllama(model="llama3:8b",temperature=0)
+chat = ChatOllama(model="llama3:8b",base_url="http://127.0.0.1:11434",temperature=0)
 
 
 # ==========================================RESPUESTAS ESTRUCTURADAS ==========================================================

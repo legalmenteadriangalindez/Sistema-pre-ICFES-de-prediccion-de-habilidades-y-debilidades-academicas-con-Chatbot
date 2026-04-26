@@ -113,3 +113,57 @@ botonDetenerAudio.onclick =() => {
 
 
 //****************************************MICROFONO********************************************************************
+
+
+//****************************************BOTON DE CONFIRMACION ***************************************************** */
+
+let chatToDelete = null;
+
+// pedir confirmación del sistema (nativo)
+function openDeleteModal(chatId) {
+    chatToDelete = chatId;
+
+    const confirmacion = confirm("¿Seguro que deseas eliminar esta conversación?");
+
+    if (confirmacion) {
+        confirmDelete();
+    } else {
+        chatToDelete = null;
+    }
+}
+
+// ejecuta eliminación
+function confirmDelete() {
+    if (!chatToDelete) return;
+
+    const form = document.getElementById(`deleteForm-${chatToDelete}`);
+
+    if (form) {
+        form.submit();
+    }
+
+    chatToDelete = null;
+}
+
+// NOTIFICACIÓN SIMPLE (opcional pero recomendado)
+function showToast(message) {
+    const toast = document.createElement("div");
+
+    toast.innerText = message;
+
+    toast.style.position = "fixed";
+    toast.style.bottom = "20px";
+    toast.style.right = "20px";
+    toast.style.background = "#28a745";
+    toast.style.color = "white";
+    toast.style.padding = "12px 18px";
+    toast.style.borderRadius = "8px";
+    toast.style.boxShadow = "0 4px 10px rgba(0,0,0,0.3)";
+    toast.style.zIndex = "99999";
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.remove();
+    }, 2500);
+}
