@@ -1,0 +1,125 @@
+[
+  {
+    "chat_id": "fba2d9f0-0819-4f4d-8196-dc1a41ea35f8",
+    "user_id": 5,
+    "area": "matematicas",
+    "general_level": "intermediate",
+    "strong_areas": [
+      "algebra"
+    ],
+    "weak_areas": [],
+    "frequent_mistakes": [],
+    "progress": [
+      "geometria"
+    ],
+    "created_at": "2026-04-22T11:43:10.261054",
+    "last_update": "2026-04-22T11:43:10.261074",
+    "last_updated": "2026-04-22T11:43:10.261093"
+  },
+  {
+    "chat_id": "17e9c31f-8b9f-46c9-9ae1-c21d43f1f580",
+    "user_id": "5",
+    "area": "lectura_critica",
+    "general_level": "intermediate",
+    "strong_areas": [
+      "comunicación"
+    ],
+    "weak_areas": [],
+    "frequent_mistakes": [],
+    "progress": [],
+    "created_at": "2026-04-22T11:43:29.260953",
+    "last_update": "2026-04-22T11:43:29.260977",
+    "last_updated": "2026-04-22T11:43:29.260995"
+  },
+  {
+    "chat_id": "0142923d-f5be-4e91-bb68-62740fbe3d70",
+    "user_id": "5",
+    "area": "lectura_critica",
+    "general_level": "intermediate",
+    "strong_areas": [
+      "comunicación"
+    ],
+    "weak_areas": [],
+    "frequent_mistakes": [],
+    "progress": [],
+    "created_at": "2026-04-22T11:43:53.589737",
+    "last_update": "2026-04-22T11:43:53.589759",
+    "last_updated": "2026-04-22T11:43:53.589782"
+  },
+  {
+    "chat_id": "d5074517-706f-450d-a65f-79471cbc57b7",
+    "user_id": "5",
+    "area": "matematicas",
+    "general_level": "intermediate",
+    "strong_areas": [
+      "algebra"
+    ],
+    "weak_areas": [],
+    "frequent_mistakes": [],
+    "progress": [],
+    "created_at": "2026-04-24T07:30:24.951033",
+    "last_update": "2026-04-24T07:30:24.951044",
+    "last_updated": "2026-04-24T07:30:24.951055"
+  },
+  {
+    "chat_id": "a4ab9058-ba9f-4a10-a540-539a6c745f02",
+    "user_id": "5",
+    "area": "matematicas",
+    "general_level": "intermediate",
+    "strong_areas": [
+      "algebra"
+    ],
+    "weak_areas": [],
+    "frequent_mistakes": [],
+    "progress": [],
+    "created_at": "2026-04-24T07:32:16.485492",
+    "last_update": "2026-04-24T07:32:16.485502",
+    "last_updated": "2026-04-24T07:32:16.485511"
+  },
+  {
+    "chat_id": "e138ec00-6df5-4527-90de-82d5740bb1de",
+    "user_id": "5",
+    "area": "matematicas",
+    "general_level": "intermediate",
+    "strong_areas": [
+      "ingles"
+    ],
+    "weak_areas": [],
+    "frequent_mistakes": [],
+    "progress": [],
+    "created_at": "2026-04-26T17:03:40.260881",
+    "last_update": "2026-04-26T17:03:40.260906",
+    "last_updated": "2026-04-26T17:03:40.260928"
+  },
+  {
+    "chat_id": "777a9b84-3624-4b29-841c-251ea3c43a36",
+    "user_id": "5",
+    "area": "matematicas",
+    "general_level": "basic",
+    "strong_areas": [
+      "hola"
+    ],
+    "weak_areas": [],
+    "frequent_mistakes": [],
+    "progress": [],
+    "created_at": "2026-04-26T17:05:16.116172",
+    "last_update": "2026-04-26T17:05:16.116184",
+    "last_updated": "2026-04-26T17:05:16.116194"
+  },
+  {
+    "chat_id": "69e88f24-43f8-48da-86ff-2ffe270f016d",
+    "user_id": "5",
+    "area": "matematicas",
+    "general_level": "intermediate",
+    "strong_areas": [
+      "bug",
+      "chiste"
+    ],
+    "weak_areas": [],
+    "frequent_mistakes": [],
+    "progress": [],
+    "created_at": "2026-04-26T17:06:00.383484",
+    "last_update": "2026-04-26T17:06:00.383499",
+    "last_updated": "2026-04-26T17:06:00.383512"
+  }
+]
