@@ -2,9 +2,8 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import (
-    Sexo, RelacionAcudiente, Acudiente, Docente,
-    Grado, Jornada, Curso, Sede, AnioLectivo,
-    Materia, AsignacionDocente, PeriodoAcademico,
+    Sexo, RelacionAcudiente, Acudiente,
+    Grado, Curso, AnioLectivo,Materia,
     Nota, Boletin, Observacion,Persona,Estudiante,Rol,RitmoAprendizaje,
     EstiloAprendizaje,NivelAprendizaje,PerfilPedagogico,Riesgo,
     PrediccionRiesgo,Recomendacion,PreferenciaAccesibilidad,
@@ -42,26 +41,8 @@ class GradoForm(forms.ModelForm):
         }
 
 
-class JornadaForm(forms.ModelForm):
-    class Meta:
-        model = Jornada
-        exclude = ['codigo']
-        widgets = {
-            "nombre": forms.TextInput(attrs={"class": "input-field"}),
-            "activo": forms.CheckboxInput(attrs={"class": "input-checkbox"}),
-        }
 
 
-class SedeForm(forms.ModelForm):
-    class Meta:
-        model = Sede
-        exclude = ['codigo']
-        widgets = {
-            "nombre": forms.TextInput(attrs={"class": "input-field"}),
-            "direccion": forms.TextInput(attrs={"class": "input-field"}),
-            "telefono": forms.TextInput(attrs={"class": "input-field"}),
-            "activo": forms.CheckboxInput(attrs={"class": "input-checkbox"}),
-        }
 
 
 class AnioLectivoForm(forms.ModelForm):
@@ -109,13 +90,6 @@ class AsignarAcudienteForm(forms.Form):
         widget=forms.Select(attrs={"class": "form-select"})
     )
 
-class DocenteForm(forms.ModelForm):
-    class Meta:
-        model = Docente
-        fields = ["persona"]
-        widgets = {
-            "persona": forms.Select(attrs={"class": "input-select"}),
-        }
 
 
 class CursoForm(forms.ModelForm):
@@ -125,7 +99,6 @@ class CursoForm(forms.ModelForm):
         widgets = {
             "grado": forms.Select(attrs={"class": "input-select"}),
             "nombre": forms.TextInput(attrs={"class": "input-field"}),
-            "jornada": forms.Select(attrs={"class": "input-select"}),
             "cupo_maximo": forms.NumberInput(attrs={"class": "input-field"}),
             "activo": forms.CheckboxInput(attrs={"class": "input-checkbox"}),
         }
@@ -141,36 +114,8 @@ class MateriaForm(forms.ModelForm):
         }
 
 
-class AsignacionDocenteForm(forms.ModelForm):
-    class Meta:
-        model = AsignacionDocente
-        fields = "__all__"
-        widgets = {
-            "docente": forms.Select(attrs={"class": "input-select"}),
-            "curso": forms.Select(attrs={"class": "input-select"}),
-            "materia": forms.Select(attrs={"class": "input-select"}),
-            "anio_lectivo": forms.Select(attrs={"class": "input-select"}),
-            "sede": forms.Select(attrs={"class": "input-select"}),
-            "activo": forms.CheckboxInput(attrs={"class": "input-checkbox"}),
-        }
 
 
-class PeriodoAcademicoForm(forms.ModelForm):
-    class Meta:
-        model = PeriodoAcademico
-        fields = "__all__"
-        widgets = {
-            "numero": forms.NumberInput(attrs={"class": "input-field"}),
-            "nombre": forms.TextInput(attrs={"class": "input-field"}),
-            "anio_lectivo": forms.Select(attrs={"class": "input-select"}),
-            "fecha_inicio": forms.DateInput(attrs={
-                "type": "date", "class": "input-field"
-            }),
-            "fecha_fin": forms.DateInput(attrs={
-                "type": "date", "class": "input-field"
-            }),
-            "activo": forms.CheckboxInput(attrs={"class": "input-checkbox"}),
-        }
 
 
 class NotaForm(forms.ModelForm):
@@ -180,7 +125,6 @@ class NotaForm(forms.ModelForm):
         widgets = {
             "matricula": forms.Select(attrs={"class": "input-select"}),
             "asignacion": forms.Select(attrs={"class": "input-select"}),
-            "periodo": forms.Select(attrs={"class": "input-select"}),
             "valor": forms.NumberInput(attrs={"class": "input-field"}),
         }
 
@@ -191,7 +135,6 @@ class BoletinForm(forms.ModelForm):
         fields = "__all__"
         widgets = {
             "matricula": forms.Select(attrs={"class": "input-select"}),
-            "periodo": forms.Select(attrs={"class": "input-select"}),
             "promedio_periodo": forms.NumberInput(attrs={"class": "input-field"}),
             "observaciones_generales": forms.Textarea(
                 attrs={"class": "input-text-area", "rows": 3}
@@ -206,7 +149,6 @@ class ObservacionForm(forms.ModelForm):
         widgets = {
             "matricula": forms.Select(attrs={"class": "input-select"}),
             "asignacion": forms.Select(attrs={"class": "input-select"}),
-            "periodo": forms.Select(attrs={"class": "input-select"}),
             "texto": forms.Textarea(
                 attrs={"class": "input-text-area", "rows": 3}
             ),
@@ -371,10 +313,9 @@ class RecomendacionForm(forms.ModelForm):
 class PreferenciaAccesibilidadForm(forms.ModelForm):
     class Meta:
         model= PreferenciaAccesibilidad
-        fields = ["estudiante","necesita_audio","necesita_visual","necesita_texto_simple"]
+        fields = ["necesita_audio","necesita_visual","necesita_texto_simple"]
 
         widgets ={
-            "estudiante": forms.Select(attrs={"class": "input-select"}),
             "necesita_audio": forms.CheckboxInput(attrs={"class": "input-checkbox"}),
             "necesita_visual" : forms.CheckboxInput(attrs={"class": "input-checkbox"}),
             "necesita_texto_simple": forms.CheckboxInput(attrs={"class": "input-checkbox"}),
@@ -394,12 +335,11 @@ class TemaAsignadoForm(forms.ModelForm):
     class Meta:
         model = TemaAsignado
 
-        fields = ["estudiante","tema","periodo"]
+        fields = ["estudiante","tema"]
 
         widgets = {
             "estudiante": forms.Select(attrs={"class": "input-select"}),
             "tema": forms.Select(attrs={"class": "input-select"}),
-            "periodo" : forms.Select(attrs={"class": "input-select"})
         }
 
 class ProgresoTemaForm(forms.ModelForm):

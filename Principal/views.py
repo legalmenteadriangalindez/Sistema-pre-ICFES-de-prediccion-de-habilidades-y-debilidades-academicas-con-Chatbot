@@ -1,5 +1,7 @@
 # ================================IMPORTACIONES===============================================
 from django.contrib.auth import logout,login
+import os
+from django.conf import settings
 import json
 from django.contrib.auth.decorators import login_required, user_passes_test
 from itertools import chain
@@ -8,6 +10,7 @@ from django.http import JsonResponse #, HttpResponse
 from Principal.services.files import guardar_PDFs
 from Principal.services.audio import procesar_audio
 from Principal.services.gestion_view_test import generar_quizes,generar_material,agrupar_historial_por_turnos
+from Principal.services.services_view_home import *
 # from Principal.services.rag_service import rag_system
 from Principal.services.gestion_historial import obtener_historial,eliminar_historial,guardar_ia,guardar_user,procesar_historial
 from Principal.services.gestion_prompts import get_chain_chatbot,extraer_texto_ai
@@ -34,8 +37,18 @@ def salir(request):
 @login_required
 def home(request):
     user = request.user
+    print(user.id)
+    persona = getattr(user, "persona", None)
+    estudiante = getattr(persona, "estudiante", None) if persona else None
+    
+    if not estudiante:
+       print("Este usuario no tiene estudiante asociado")
     user_id = str(user.id)
-    chat_id = request.GET.get("chat_id","default")
+    chat_id = request.POST.get("chat_id") or request.GET.get("chat_id", "default")
+    perfil = PerfilUsuario.objects.filter(user= user).first()
+    persona = Persona.objects.filter(perfil_user=perfil).first()
+    estudiante = Estudiante.objects.filter(persona= persona).first()
+    matricula = Matricula.objects.filter(estudiante=estudiante,activa=True).first()
     chatbot = chatbotManager.get_chatbot(user_id)
     raw_historial = chatbot.get_conversation_history(chat_id, limit=50)
     chats = chatbot.memory_manager.get_user_chats()
@@ -49,6 +62,47 @@ def home(request):
         "chats" : chats,
         "profile": chatbot.memory_manager.get_cognitive_profile()
     } 
+    ruta = fr"C:\Users\User\Downloads\ProyectoDeGrado\ProyectoDeGrado\DATABASES\USERS\{user.id}\cognitive_profile.json"
+ 
+    if os.path.exists(ruta):
+        with open(ruta, "r", encoding="utf-8") as archivo:
+            data = json.load(archivo)
+    else:
+        print(f"No se encontró el archivo para el usuario {user.id} creando uno nuevo ")
+        perfil = chatbot.memory_manager.build_cognitive_profile(raw_historial,user.id)
+        chatbot.memory_manager.save_cognitive_profile(dict(perfil))
+        with open(ruta, "r", encoding="utf-8") as archivo:
+            data = json.load(archivo)
+
+    registros_usuario = [r for r in data if int(r["user_id"]) == user.id]
+
+    registro = registros_usuario[-1] if registros_usuario else None
+    
+    level, area, fuertes, debil, errores = get_records(registro)
+    ritmo = set_RitmoAprendizaje("Medio", "Desde JSON")
+    estilo = set_EstiloAprendizaje("Visual", "Desde JSON")
+    if estudiante:
+        set_PerfilPedagogico(estudiante, ritmo, estilo, level)
+        set_AnalisisCognitivo(estudiante, level, fuertes, debil, errores)
+    # carrera = Carrera.objects.get(nombre="Ingeniería")
+    
+    # RecomendacionVocacional.objects.create(
+    #     matricula=matricula,
+    #     carrera=carrera,
+    #     compatibilidad=0.80,
+    #     conocimientos_necesarios="Álgebra, lógica",
+    #     puntaje_requerido=3.5
+    # )
+    # temas = Tema.objects.filter(nombre__icontains=area)
+    
+    # for tema in temas:
+    #     materiales = MaterialEstudio.objects.filter(tema=tema)
+    #     for material in materiales:
+    #         MaterialAsignado.objects.create(
+    #             matricula=matricula,
+    #             material=material
+    #         )
+
 
     resultado = {"success": False, "response": None}
     
@@ -96,7 +150,9 @@ def home(request):
         #***********enviar mensaje al chatbot*******
 
         # ==actualizar historial después de enviar mensaje==
-        contexto["historial"] = chatbot.get_conversation_history(chat_id, limit=50)
+        contexto["historial"] = agrupar_historial_por_turnos(
+           chatbot.get_conversation_history(chat_id, limit=50)
+        )
         # **actualizar historial después de enviar mensaje**
 
 
@@ -151,56 +207,27 @@ def test(request):
 @login_required
 def recomendaciones(request):
     user = request.user
-    print("USER ID:", user.id)
 
-    persona = getattr(user,"persona",None)
-    estudiante = getattr(persona,"estudiante",None) if persona else None
+    perfil = PerfilUsuario.objects.filter(user= user).first()
+    persona = Persona.objects.filter(perfil_user=perfil).first()
+    estudiante = Estudiante.objects.filter(persona= persona).first()
 
+    if not estudiante:
+        return render(request,"Recomendaciones.html",{"error": "este perfil no tiene estudiante asociado"})
+    
+    print(estudiante)
+    matricula = Matricula.objects.filter(estudiante=estudiante,activa=True).first()
     perfil_pedagogico = None
     analisis_cognitivo = None
     recomendacion_vocacional = None
     material_estudio_recomendado = None
 
-    if estudiante :
-        perfil_pedagogico = PerfilPedagogico.objects.filter(estudiante=estudiante).first()
-        analisis_cognitivo = AnalisisCognitivo.objects.filter(estudiante=estudiante).first()
-        recomendacion_vocacional = RecomendacionVocacional.objects.filter(estudiante=estudiante)
-        material_estudio_recomendado = MaterialAsignado.objects.filter(estudiante=estudiante)
-    print(material_estudio_recomendado)
-    ruta = rf"ProyectoDeGrado\DATABASES\USERS\{user.id}\cognitive_profile.json"
-    print(ruta)
-
-    with open(ruta, "r",encoding="utf-8") as archivo:
-        data = json.load(archivo)
-    
-    if isinstance(data, dict):
-       data = [data]
-    registro = None 
-    
-    for item in data:
-        if int(item["user_id"]) == user.id:
-            registro = item
-            break
-    print("REGISTRO ENCONTRADO:", registro)
-    
-    for registro in data:
-        nivel, _ = NivelAprendizaje.objects.get_or_create(
-            nombre=registro["general_level"].capitalize()
-        )
-
-
-    analisis_cognitivo, _ = AnalisisCognitivo.objects.create(estudiante=estudiante,
-                                                             defaults={
-                                                                 "nivel_general": nivel,
-                                                                 "areas_fuertes": ", ".join(registro["strong_areas"]),
-                                                                 "areas_debiles": ", ".join(registro["weak_areas"]),
-                                                                 "dudas_frecuentes": ", ".join(registro["frequent_mistakes"]),
-                                                                  }
-                                                            )
     perfil_pedagogico = PerfilPedagogico.objects.filter(estudiante=estudiante).first()
-    recomendacion_vocacional = RecomendacionVocacional.objects.filter(estudiante=estudiante)
-    material_estudio_recomendado = MaterialAsignado.objects.filter(estudiante=estudiante)
-    analisis_cognitivo = AnalisisCognitivo.objects.filter(estudiante=estudiante)
+    analisis_cognitivo = AnalisisCognitivo.objects.filter(estudiante=estudiante).first()
+
+    recomendacion_vocacional = RecomendacionVocacional.objects.filter(matricula=matricula)
+    material_estudio_recomendado = MaterialAsignado.objects.filter(matricula=matricula)
+
 
     contexto = {
         "perfil_pedagogico": perfil_pedagogico,
@@ -210,8 +237,8 @@ def recomendaciones(request):
     }
 
     return render(request,"Recomendaciones.html",contexto)     # view recomendacion de carreras con IA
-
 #********************************RECOMENDACIONES**************************************************
+
 
 
 # =============================CARRERAS======================================
@@ -247,11 +274,11 @@ def perfil(request):
     user = request.user
     persona = getattr(user, "persona", None)
     estudiante = None
-    docente = None
+    # docente = None
     acudiente = None
     if persona:
        estudiante = getattr(persona, "estudiante", None) if persona else None
-       docente = getattr(persona, "docente", None) if persona else None
+    #    docente = getattr(persona, "docente", None) if persona else None
        if estudiante:
           acudiente = getattr(estudiante, "acudiente", None) if estudiante else None
 
@@ -259,7 +286,7 @@ def perfil(request):
         "user": user,
         "persona": persona,
         "estudiante": estudiante,
-        "docente": docente,
+        # "docente": docente,
         "acudiente": acudiente,
         }
     
@@ -510,11 +537,8 @@ def acudiente(request):
 @login_required # @user_passes_test(es_coordinador)
 def gestion_academica(request):
     grados = Grado.objects.all()
-    Jornadas = Jornada.objects.all()
     cursos = Curso.objects.all()
-    sedes = Sede.objects.all()
     anio_lectivos= AnioLectivo.objects.all()
-    periodos= PeriodoAcademico.objects.all()
     materias = Materia.objects.all()
     
     if request.method == "POST":
@@ -533,20 +557,6 @@ def gestion_academica(request):
                form_cursos.save()
         else :
            form_cursos = CursoForm(request.POST) 
-
-        if tipo_form == "jornadas":
-           form_jornadas = JornadaForm(request.POST)
-           if form_jornadas.is_valid():
-               form_jornadas.save()
-        else:
-            form_jornadas = JornadaForm(request.POST)
-
-        if tipo_form == "sedes":
-           form_sedes = SedeForm(request.POST)
-           if form_sedes.is_valid():
-               form_sedes.save()
-        else:
-            form_sedes = SedeForm(request.POST)
         
         if tipo_form == "anios":
            form_anio_lectitvo= AnioLectivoForm(request.POST)
@@ -555,13 +565,7 @@ def gestion_academica(request):
         else:
             form_anio_lectitvo= AnioLectivoForm(request.POST) 
         
-        if tipo_form == "periodos":
-           form_periodos = PeriodoAcademicoForm(request.POST)
-           if form_periodos.is_valid():
-               form_periodos.save()
-        else:
-           form_periodos = PeriodoAcademicoForm(request.POST)  
-        
+
         if tipo_form == "materias":
            form_materias = MateriaForm(request.POST)
            if form_materias.is_valid():
@@ -571,25 +575,16 @@ def gestion_academica(request):
     else :
         form_grados = GradoForm()
         form_cursos = CursoForm()
-        form_jornadas = JornadaForm()
-        form_sedes = SedeForm()
         form_anio_lectitvo= AnioLectivoForm()
-        form_periodos = PeriodoAcademicoForm()
         form_materias = MateriaForm()
     contexto = {
         "cursos": cursos,
         "grados": grados,
-        "jornadas": Jornadas,
-        "sedes": sedes,
         "anio_lectivo": anio_lectivos,
-        "periodos": periodos,
         "materias": materias,
         "form_grados": form_grados,
         "form_cursos": form_cursos,
-        "form_jornadas": form_jornadas,
-        "form_sedes": form_sedes,
         "form_anios": form_anio_lectitvo,
-        "form_periodos": form_periodos,
         "form_materias" : form_materias
     }
     return render(request, "admin_gestion_academica.html", contexto)
@@ -598,21 +593,12 @@ def eliminar_gestion_academica(request,tipo,id):
     if tipo == "grados":
         grado = Grado.objects.get(id=id)
         grado.delete()
-    if tipo == "jornadas": 
-        jornada = Jornada.objects.get(id=id)
-        jornada.delete()
     if tipo == "cursos":
         curso = Curso.objects.get(id=id)
         curso.delete()
-    if tipo == "sedes":
-        sede = Sede.objects.get(id=id)
-        sede.delete()
     if tipo == "anios":
         anio_lectivo = AnioLectivo.objects.get(id=id)
         anio_lectivo.delete()
-    if tipo == "periodos":
-        periodo = PeriodoAcademico.objects.get(id=id)
-        periodo.delete()
     if tipo == "materias":
         materia = Materia.objects.get(id=id)
         materia.delete()
@@ -621,16 +607,5 @@ def eliminar_gestion_academica(request,tipo,id):
 
 
 
-# =======================================DOCENTES======================================================================
-@login_required # @user_passes_test(es_docente)
-def docentes(request):
-    user = request.user
-
-    asignacion_docentes = AsignacionDocente.objects.filter(docente__persona__user=request.user)
-    contexto = {
-        "a_docentes": asignacion_docentes
-    }
-    return render(request, "docentes.html", contexto)
-#************************************DOCENTES******************************************************
 
 
