@@ -4,6 +4,9 @@ import os
 from django.conf import settings
 import json
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.db import transaction
+from django.views.decorators.http import require_POST
+from django.core.exceptions import PermissionDenied
 from itertools import chain
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import JsonResponse #, HttpResponse
@@ -366,15 +369,19 @@ def registro(request):
 
         if (user_form.is_valid()and persona_form.is_valid()and estudiante_form.is_valid()):
             
-            user = user_form.save()
-            persona = persona_form.save(commit=False)
-            persona.user = user
-            persona.save()
-            estudiante = estudiante_form.save(commit=False)
-            estudiante.persona = persona
-            estudiante.save()
+            with transaction.atomic():
+                user = user_form.save()
+                perfil = PerfilUsuario.objects.create(user=user)
+                rol_estudiante, _ = Rol.objects.get_or_create(nombre="ESTUDIANTE")
+                perfil.roles.add(rol_estudiante)
+                persona = persona_form.save(commit=False)
+                persona.perfil_user = perfil
+                persona.save()
+                estudiante = estudiante_form.save(commit=False)
+                estudiante.persona = persona
+                estudiante.save()
             login(request, user)
-            return redirect("login")  
+            return redirect("home")  
     else:
         user_form = UserRegisterForm()
         persona_form = PersonaForm()
@@ -385,8 +392,19 @@ def registro(request):
 
 
 
+def es_gestor(request_user):
+    if not request_user.is_authenticated:
+        return False
+    if request_user.is_superuser or request_user.is_staff:
+        return True
+    return PerfilUsuario.objects.filter(
+        user=request_user, roles__nombre__iexact="ADMIN"
+    ).exists()
+
+
 #======================================ADMIN GESTION DB=====================================================================
 @login_required
+@user_passes_test(es_gestor, login_url='/login/')
 def gestion_db(request):
     roles = Rol.objects.all()
     sexos = Sexo.objects.all()
@@ -416,6 +434,9 @@ def gestion_db(request):
     }
     return render(request, "admin_gestion_db.html", contexto)
 
+@login_required
+@user_passes_test(es_gestor, login_url='/login/')
+@require_POST
 def eliminar_admin_gestion_db(request,tipo,id):
     if tipo == "rol":
       rol = Rol.objects.get(id=id)
@@ -434,6 +455,7 @@ def eliminar_admin_gestion_db(request,tipo,id):
 
 # =======================================GESTION ACUDIENTES Y ESTUDIANTES======================================================================
 @login_required # @user_passes_test(es_coordinador)
+@user_passes_test(es_gestor, login_url='/login/')
 def gestion_acudientes_estudiantes(request):
     estudiantes = Estudiante.objects.all()
     acudientes = Acudiente.objects.all()
@@ -446,10 +468,11 @@ def gestion_acudientes_estudiantes(request):
         else:
             form_estudiantes = EstudianteForm(request.POST)
         if tipo_form == "acudientes":
+            form_acudientes = AcudienteForm(request.POST)
             if form_acudientes.is_valid():
                form_acudientes.save()
         else:
-           form_acudientes = AcudienteForm(request.POST)
+           form_acudientes = AcudienteForm()
     else :
         form_estudiantes = EstudianteForm()
         form_acudientes = AcudienteForm()
@@ -461,6 +484,9 @@ def gestion_acudientes_estudiantes(request):
     }
     return render(request, "gestion_estudiantes_acudientes.html", contexto)
 
+@login_required
+@user_passes_test(es_gestor, login_url='/login/')
+@require_POST
 def eliminar_gestion_acudientes_estudiantes(request,tipo,id):
     if tipo == "estudiantes":
         estudiante = Estudiante.objects.get(id=id)
@@ -475,6 +501,7 @@ def eliminar_gestion_acudientes_estudiantes(request,tipo,id):
 
 # =======================================ADMINISTRADOR GESTION USUARIOS======================================================================
 @login_required # @user_passes_test(es_coordinador)
+@user_passes_test(es_gestor, login_url='/login/')
 def gestion_users(request):
     users = User.objects.all()
     personas = Persona.objects.all()
@@ -503,6 +530,9 @@ def gestion_users(request):
     }
     return render(request, "admin_gestion_user.html", contexto)
 
+@login_required
+@user_passes_test(es_gestor, login_url='/login/')
+@require_POST
 def eliminar_gestion_users(request,tipo,id):
     if tipo =="usuarios":
         user = User.objects.get(id=id)
@@ -510,7 +540,7 @@ def eliminar_gestion_users(request,tipo,id):
     if tipo == "personas":
         persona = Persona.objects.get(id=id)
         persona.delete()
-    return redirect('admin_gestion_user')
+    return redirect('admin_gestion_users')
 #************************************ADMINISTRADOR GESTION USUARIOS******************************************************
 
 
@@ -530,6 +560,7 @@ def acudiente(request):
 
 # =======================================ADMIN GESTION ACADEMICA======================================================================
 @login_required # @user_passes_test(es_coordinador)
+@user_passes_test(es_gestor, login_url='/login/')
 def gestion_academica(request):
     grados = Grado.objects.all()
     cursos = Curso.objects.all()
@@ -584,6 +615,9 @@ def gestion_academica(request):
     }
     return render(request, "admin_gestion_academica.html", contexto)
 
+@login_required
+@user_passes_test(es_gestor, login_url='/login/')
+@require_POST
 def eliminar_gestion_academica(request,tipo,id):
     if tipo == "grados":
         grado = Grado.objects.get(id=id)
