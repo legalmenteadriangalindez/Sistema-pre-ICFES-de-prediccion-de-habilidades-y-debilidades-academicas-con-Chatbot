@@ -20,6 +20,9 @@
       {% if user_form.errors or persona_form.errors or estudiante_form.errors %}
         <div class="alert alert-danger">
           Revisa los datos ingresados.
+          {{ user_form.errors }}
+          {{ persona_form.errors }}
+          {{ estudiante_form.errors }}
         </div>
       {% endif %}
 
@@ -46,8 +49,6 @@
              <div class="input col-md-6"><label for="" class="form-label">Telefono:</label> {{ persona_form.telefono}}</div>
              
              <h5 class="mt-3">Datos académicos</h5>
-             <div class="col-md-6"><label class="form-label">Curso</label>{{ estudiante_form.curso }}</div>
-             <div class="col-md-6"><label class="form-label">Acudiente</label>{{ estudiante_form.acudiente }}</div>
              <div class="input col-md-6"><label for="" class="form-label">Nesecidades especiales:</label> {{ estudiante_form.necesidades_especiales}}</div>
              
              
