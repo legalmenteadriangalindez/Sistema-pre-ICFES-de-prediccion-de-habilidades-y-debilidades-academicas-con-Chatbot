@@ -13,6 +13,7 @@ from django.http import JsonResponse #, HttpResponse
 from Principal.services.files import guardar_PDFs
 from Principal.services.audio import procesar_audio
 from Principal.services.gestion_view_test import generar_quizes,generar_material,agrupar_historial_por_turnos
+from Principal.services.pruebas_ingles import generar_prueba_ingles
 from Principal.services.services_view_home import *
 from Principal.IA.LangGraph.graph_chatbot.chatbot import chatbotManager
 from .forms import *
@@ -175,28 +176,29 @@ def home(request):
 # ==============================TEST===============================================
 @login_required
 def test(request):
-    # ---------------------usuario de testeo----------------------
-    user = request.user
-    if not user.is_authenticated:
-        from django.contrib.auth.models import User
-        user, _ = User.objects.get_or_create(username='testuser')
-    # -------------------------------------------------------------
-
-    contexto = {
-        "preguntas": [],
-        "materiales_recomendados": []
-    }    
-    if request.method == "POST" and "materia" in request.POST:
+    contexto = {"preguntas": [], "materiales_recomendados": []}
+    if request.method == "POST" and request.POST.get("verificar_ingles"):
+        claves = request.session.pop("prueba_ingles_claves", None)
+        if not claves:
+            contexto["error_prueba"] = "La prueba expiró. Genera una nueva prueba de inglés."
+        else:
+            respuestas = [request.POST.get(f"respuesta_{i}", "") for i in range(len(claves))]
+            aciertos = sum(respuesta == clave for respuesta, clave in zip(respuestas, claves))
+            contexto["resultado_ingles"] = {"aciertos": aciertos, "total": len(claves), "porcentaje": round(100 * aciertos / len(claves))}
+    elif request.method == "POST" and "materia" in request.POST:
         materia = request.POST["materia"]
-
-        #generar las preguntas  inicio del grafo de generacion
-        preguntas = generar_quizes(materia,1)
-        contexto["preguntas"] = preguntas
-
-        #iniciar generacion de materiales        
-        materiales_recomendados = generar_material(preguntas)
-        contexto["materiales_recomendados"] = materiales_recomendados
-    return render(request,"TestDeVocacion.html", contexto)  
+        if materia.strip().casefold() in ("ingles", "inglés"):
+            preguntas = generar_prueba_ingles()
+            request.session["prueba_ingles_claves"] = [p["respuesta_correcta"] for p in preguntas]
+            contexto["preguntas_ingles"] = [
+                {k: v for k, v in pregunta.items() if k != "respuesta_correcta"}
+                for pregunta in preguntas
+            ]
+        else:
+            preguntas = generar_quizes(materia, 1)
+            contexto["preguntas"] = preguntas
+            contexto["materiales_recomendados"] = generar_material(preguntas)
+    return render(request, "TestDeVocacion.html", contexto)
 # ********************************TEST***************************************
 
 
