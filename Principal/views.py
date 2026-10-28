@@ -395,7 +395,7 @@ def registro(request):
 def es_gestor(request_user):
     if not request_user.is_authenticated:
         return False
-    if request_user.is_superuser or request_user.is_staff:
+    if request_user.is_superuser:
         return True
     return PerfilUsuario.objects.filter(
         user=request_user, roles__nombre__iexact="ADMIN"
@@ -410,16 +410,19 @@ def gestion_db(request):
     sexos = Sexo.objects.all()
     Relacion_acudientes = RelacionAcudiente.objects.all()
     if request.method == "POST":
-        form_roles = RolForm(request.POST)
-        form_sexos = SexoForm(request.POST)
-        form_rel = RelacionAcudienteForm(request.POST)
-        if form_roles.is_valid():
+        tipo_form = request.POST.get("form")
+        form_roles = RolForm(request.POST if tipo_form == "roles" else None)
+        form_sexos = SexoForm(request.POST if tipo_form == "sexos" else None)
+        form_rel = RelacionAcudienteForm(request.POST if tipo_form == "relaciones" else None)
+        if tipo_form == "roles" and form_roles.is_valid():
             form_roles.save()
-            return redirect('admin_gestion_db')
-        if form_sexos.is_valid():
+            return redirect("admin_gestion_db")
+        if tipo_form == "sexos" and form_sexos.is_valid():
             form_sexos.save()
-        if form_rel.is_valid():
+            return redirect("admin_gestion_db")
+        if tipo_form == "relaciones" and form_rel.is_valid():
             form_rel.save()
+            return redirect("admin_gestion_db")
     else :
         form_roles= RolForm()
         form_sexos = SexoForm()
