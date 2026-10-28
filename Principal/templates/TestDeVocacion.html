@@ -158,6 +158,40 @@
    </form>
 </div>
 <!-- ========================================OPCIONES============================================ -->
+{% if error_prueba %}<div class="alert alert-warning">{{ error_prueba }}</div>{% endif %}
+{% if resultado_ingles %}
+<div class="alert alert-info" role="status">
+  <h2>Resultado de inglés</h2>
+  <p>Respuestas correctas: {{ resultado_ingles.aciertos }} de {{ resultado_ingles.total }}.</p>
+  <p>Porcentaje: {{ resultado_ingles.porcentaje }} %</p>
+  <p>Puedes generar otra prueba para continuar practicando.</p>
+</div>
+{% endif %}
+{% if preguntas_ingles %}
+<section class="container mt-4" aria-labelledby="titulo-ingles">
+<h2 id="titulo-ingles">Prueba de inglés · Saber 11</h2>
+<p>Lee cada aviso o texto y selecciona la respuesta correcta (A, B o C).</p>
+<form action="{% url 'test' %}" method="post">
+{% csrf_token %}
+<input type="hidden" name="verificar_ingles" value="1">
+{% for p in preguntas_ingles %}
+<fieldset class="border rounded p-3 mb-3">
+<legend class="fs-5">Pregunta {{ forloop.counter }} · {% if p.tipo == 'aviso' %}Interpretación de avisos{% else %}Completar texto{% endif %}</legend>
+<div class="p-3 mb-2 bg-light border rounded"><strong>{{ p.contexto }}</strong></div>
+<p>{{ p.pregunta }}</p>
+{% for letra, texto in p.opciones.items %}
+<div class="form-check mb-2">
+<input class="form-check-input" type="radio" name="respuesta_{{ p.id }}" id="ingles_{{ p.id }}_{{ letra }}" value="{{ letra }}" required>
+<label class="form-check-label" for="ingles_{{ p.id }}_{{ letra }}">{{ letra }}. {{ texto }}</label>
+</div>
+{% endfor %}
+</fieldset>
+{% endfor %}
+<button type="submit" class="btn btn-primary">Calificar prueba de inglés</button>
+</form>
+</section>
+{% endif %}
+{% if not preguntas_ingles %}
 <h1>Selecciona la respuesta correcta:</h1>
 <div id="opciones_test">
 
@@ -239,6 +273,7 @@
 <br>
 
 
+{% endif %}
 <!-- ============================================================================================= -->
 
 {% endblock %}
