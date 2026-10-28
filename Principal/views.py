@@ -65,7 +65,7 @@ def home(request):
     registro = contexto["profile"]
     if isinstance(registro, list):
         registro = next((item for item in reversed(registro) if isinstance(item, dict) and str(item.get("user_id")) == user_id), None)
-    if isinstance(registro, dict) and registro.get("nivel_general") and estudiante:
+    if isinstance(registro, dict) and registro.get("general_level") and estudiante:
         level, area, fuertes, debil, errores = get_records(registro)
         ritmo = set_RitmoAprendizaje("Medio", "Desde JSON")
         estilo = set_EstiloAprendizaje("Visual", "Desde JSON")
