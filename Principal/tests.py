@@ -109,3 +109,32 @@ class CuestionarioTests(TestCase):
         generar.assert_called_once_with("Matemáticas", 1)
         materiales.assert_called_once()
         self.assertEqual(response.context["materiales_recomendados"], ["Álgebra"])
+
+
+class PruebasInglesTests(TestCase):
+    def setUp(self):
+        self.usuario = User.objects.create_user("ingles_prueba", password="clave-test")
+        self.client.force_login(self.usuario)
+
+    def test_generar_ingles_sin_llm_y_sin_claves_en_html(self):
+        response = self.client.post(reverse("test"), {"materia": "Ingles"})
+        self.assertEqual(response.status_code, 200)
+        preguntas = response.context["preguntas_ingles"]
+        self.assertEqual(len(preguntas), 10)
+        self.assertEqual({p["tipo"] for p in preguntas}, {"aviso", "texto"})
+        self.assertTrue(all("respuesta_correcta" not in p for p in preguntas))
+        self.assertEqual(len(self.client.session["prueba_ingles_claves"]), 10)
+
+    def test_calificacion_ingles_en_servidor(self):
+        self.client.post(reverse("test"), {"materia": "Ingles"})
+        claves = self.client.session["prueba_ingles_claves"]
+        respuestas = {f"respuesta_{i}": clave for i, clave in enumerate(claves)}
+        response = self.client.post(reverse("test"), {"verificar_ingles": "1", **respuestas})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context["resultado_ingles"]["porcentaje"], 100)
+        self.assertNotIn("prueba_ingles_claves", self.client.session)
+
+    def test_no_permite_recalificar_prueba_consumida(self):
+        self.client.post(reverse("test"), {"verificar_ingles": "1"})
+        response = self.client.post(reverse("test"), {"verificar_ingles": "1"})
+        self.assertIn("error_prueba", response.context)
