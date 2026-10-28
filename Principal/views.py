@@ -61,26 +61,14 @@ def home(request):
         "chats" : chats,
         "profile": chatbot.memory_manager.get_cognitive_profile()
     } 
-    ruta = fr"C:\Users\User\Downloads\ProyectoDeGrado\ProyectoDeGrado\DATABASES\USERS\{user.id}\cognitive_profile.json"
- 
-    if os.path.exists(ruta):
-        with open(ruta, "r", encoding="utf-8") as archivo:
-            data = json.load(archivo)
-    else:
-        print(f"No se encontró el archivo para el usuario {user.id} creando uno nuevo ")
-        perfil = chatbot.memory_manager.build_cognitive_profile(raw_historial,user.id)
-        chatbot.memory_manager.save_cognitive_profile(dict(perfil))
-        with open(ruta, "r", encoding="utf-8") as archivo:
-            data = json.load(archivo)
-
-    registros_usuario = [r for r in data if int(r["user_id"]) == user.id]
-
-    registro = registros_usuario[-1] if registros_usuario else None
-    
-    level, area, fuertes, debil, errores = get_records(registro)
-    ritmo = set_RitmoAprendizaje("Medio", "Desde JSON")
-    estilo = set_EstiloAprendizaje("Visual", "Desde JSON")
-    if estudiante:
+    # Utilizar el perfil del gestor de memoria; no depender de rutas de Windows.
+    registro = contexto["profile"]
+    if isinstance(registro, list):
+        registro = next((item for item in reversed(registro) if isinstance(item, dict) and str(item.get("user_id")) == user_id), None)
+    if isinstance(registro, dict) and registro.get("nivel_general") and estudiante:
+        level, area, fuertes, debil, errores = get_records(registro)
+        ritmo = set_RitmoAprendizaje("Medio", "Desde JSON")
+        estilo = set_EstiloAprendizaje("Visual", "Desde JSON")
         set_PerfilPedagogico(estudiante, ritmo, estilo, level)
         set_AnalisisCognitivo(estudiante, level, fuertes, debil, errores)
     # carrera = Carrera.objects.get(nombre="Ingeniería")
@@ -391,7 +379,7 @@ def registro(request):
     if request.method == "POST":
         user_form = UserRegisterForm(request.POST)
         persona_form = PersonaForm(request.POST)
-        estudiante_form = EstudianteForm(request.POST)
+        estudiante_form = RegistroEstudianteForm(request.POST)
 
         if (user_form.is_valid()and persona_form.is_valid()and estudiante_form.is_valid()):
             
@@ -411,7 +399,7 @@ def registro(request):
     else:
         user_form = UserRegisterForm()
         persona_form = PersonaForm()
-        estudiante_form = EstudianteForm()
+        estudiante_form = RegistroEstudianteForm()
 
     return render(request,"Registro.html",{"user_form": user_form,"persona_form": persona_form,"estudiante_form": estudiante_form,},)  # view Registrarse
 # ********************************REGISTRO**************************************************
