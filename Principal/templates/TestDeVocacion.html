@@ -167,6 +167,27 @@
   <p>Puedes generar otra prueba para continuar practicando.</p>
 </div>
 {% endif %}
+{% if competencias_ingles %}
+<section class="container mt-3" aria-label="Desempeño por competencia">
+<h3>Desempeño por competencia</h3>
+<ul>{% for competencia in competencias_ingles %}<li>{{ competencia.nombre }}: {{ competencia.aciertos }} de {{ competencia.total }} correctas</li>{% endfor %}</ul>
+</section>
+{% endif %}
+{% if detalles_ingles %}
+<section class="container mt-3" aria-label="Retroalimentación de la evaluación">
+<h3>Revisión de tus respuestas</h3>
+{% for p in detalles_ingles %}
+<article class="border rounded p-3 mb-3">
+<h4>Pregunta {{ forloop.counter }}: {% if p.es_correcta %}Correcta{% else %}Incorrecta{% endif %}</h4>
+<p><strong>{{ p.competencia }}</strong></p>
+<p>{{ p.contexto }}</p><p>{{ p.pregunta }}</p>
+<p>Tu respuesta: {{ p.respuesta_estudiante|default:"Sin responder" }}</p>
+<p>Respuesta correcta: {{ p.respuesta_correcta }} — {% for letra, texto in p.opciones.items %}{% if letra == p.respuesta_correcta %}{{ texto }}{% endif %}{% endfor %}</p>
+<p>{{ p.explicacion }}</p>
+</article>
+{% endfor %}
+</section>
+{% endif %}
 {% if preguntas_ingles %}
 <section class="container mt-4" aria-labelledby="titulo-ingles">
 <h2 id="titulo-ingles">Prueba de inglés · Saber 11</h2>
