@@ -33,5 +33,5 @@ class Migration(migrations.Migration):
                 ("intento", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name="respuestas", to="Principal.intentoevaluacion")),
             ],
         ),
-        migrations.AddConstraint(model_name="respuest a evaluacion".replace(" ", ""), constraint=models.UniqueConstraint(fields=("intento", "numero"), name="unique_respuesta_intento_numero")),
+        migrations.AddConstraint(model_name="respuestaevaluacion", constraint=models.UniqueConstraint(fields=("intento", "numero"), name="unique_respuesta_intento_numero")),
     ]
