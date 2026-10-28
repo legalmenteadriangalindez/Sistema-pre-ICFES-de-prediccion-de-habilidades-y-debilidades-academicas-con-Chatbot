@@ -199,7 +199,7 @@ class UserRegisterForm(UserCreationForm):
 class PersonaForm(forms.ModelForm):
     class Meta:
         model = Persona
-        exclude = ["user"]
+        exclude = ["perfil_user"]
 
         widgets = {
             "nombre": forms.TextInput(attrs={"class": "input-field"}),
