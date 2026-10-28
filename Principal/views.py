@@ -178,22 +178,46 @@ def home(request):
 def test(request):
     contexto = {"preguntas": [], "materiales_recomendados": []}
     if request.method == "POST" and request.POST.get("verificar_ingles"):
-        claves = request.session.pop("prueba_ingles_claves", None)
-        if not claves:
+        pendientes = request.session.pop("prueba_ingles_preguntas", None)
+        if not pendientes:
             contexto["error_prueba"] = "La prueba expiró. Genera una nueva prueba de inglés."
         else:
-            respuestas = [request.POST.get(f"respuesta_{i}", "") for i in range(len(claves))]
-            aciertos = sum(respuesta == clave for respuesta, clave in zip(respuestas, claves))
-            contexto["resultado_ingles"] = {"aciertos": aciertos, "total": len(claves), "porcentaje": round(100 * aciertos / len(claves))}
+            perfil = PerfilUsuario.objects.filter(user=request.user).first()
+            persona = Persona.objects.filter(perfil_user=perfil).first()
+            estudiante = Estudiante.objects.filter(persona=persona).first()
+            if not estudiante:
+                contexto["error_prueba"] = "Debes completar tu registro como estudiante para guardar resultados."
+            else:
+                from collections import defaultdict
+                aciertos = 0
+                detalles = []
+                competencias = defaultdict(lambda: {"aciertos": 0, "total": 0})
+                for pregunta in pendientes:
+                    respuesta = request.POST.get(f"respuesta_{pregunta['id']}", "")
+                    if respuesta not in ("A", "B", "C"):
+                        respuesta = ""
+                    correcta = respuesta == pregunta["respuesta_correcta"]
+                    aciertos += int(correcta)
+                    competencia = pregunta["competencia"]
+                    competencias[competencia]["total"] += 1
+                    competencias[competencia]["aciertos"] += int(correcta)
+                    detalles.append({**pregunta, "respuesta_estudiante": respuesta, "es_correcta": correcta})
+                with transaction.atomic():
+                    intento = IntentoEvaluacion.objects.create(estudiante=estudiante, materia="Inglés", total_preguntas=len(pendientes), aciertos=aciertos)
+                    RespuestaEvaluacion.objects.bulk_create([
+                        RespuestaEvaluacion(intento=intento, numero=p["id"], competencia=p["competencia"], enunciado=p["contexto"], pregunta=p["pregunta"], opciones=p["opciones"], respuesta_estudiante=p["respuesta_estudiante"], respuesta_correcta=p["respuesta_correcta"], explicacion=p["explicacion"], es_correcta=p["es_correcta"])
+                        for p in detalles
+                    ])
+                contexto["resultado_ingles"] = {"aciertos": aciertos, "total": len(pendientes), "porcentaje": round(100 * aciertos / len(pendientes)), "intento_id": intento.pk}
+                contexto["detalles_ingles"] = detalles
+                contexto["competencias_ingles"] = [{"nombre": nombre, "aciertos": dato["aciertos"], "total": dato["total"]} for nombre, dato in competencias.items()]
     elif request.method == "POST" and "materia" in request.POST:
         materia = request.POST["materia"]
         if materia.strip().casefold() in ("ingles", "inglés"):
             preguntas = generar_prueba_ingles()
-            request.session["prueba_ingles_claves"] = [p["respuesta_correcta"] for p in preguntas]
-            contexto["preguntas_ingles"] = [
-                {k: v for k, v in pregunta.items() if k != "respuesta_correcta"}
-                for pregunta in preguntas
-            ]
+            request.session["prueba_ingles_preguntas"] = preguntas
+            request.session.pop("prueba_ingles_claves", None)
+            contexto["preguntas_ingles"] = [{k: v for k, v in pregunta.items() if k not in ("respuesta_correcta", "explicacion")} for pregunta in preguntas]
         else:
             preguntas = generar_quizes(materia, 1)
             contexto["preguntas"] = preguntas
