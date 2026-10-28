@@ -214,6 +214,14 @@ class PersonaForm(forms.ModelForm):
         }
 
 
+class RegistroEstudianteForm(forms.ModelForm):
+    """Registro público: la persona se vincula en la vista, nunca desde el navegador."""
+    class Meta:
+        model = Estudiante
+        fields = ["necesidades_especiales"]
+        widgets = {"necesidades_especiales": forms.Textarea(attrs={"class": "input-text-area", "rows": 3})}
+
+
 class EstudianteForm(forms.ModelForm):
     class Meta:
         model = Estudiante
