@@ -28,5 +28,5 @@ def generar_prueba_ingles(cantidad=10):
         random.shuffle(alternativas)
         opciones = {letra: texto for letra, (_, texto) in zip(("A", "B", "C"), alternativas)}
         correcta = next(letra for letra, (anterior, _) in zip(("A", "B", "C"), alternativas) if anterior == original["respuesta_correcta"])
-        preguntas.append({"id": indice, "tipo": original["tipo"], "contexto": original["contexto"], "pregunta": original["pregunta"], "opciones": opciones, "respuesta_correcta": correcta})
+        preguntas.append({"id": indice, "tipo": original["tipo"], "competencia": "Interpretación de avisos" if original["tipo"] == "aviso" else "Gramática y vocabulario", "contexto": original["contexto"], "pregunta": original["pregunta"], "opciones": opciones, "respuesta_correcta": correcta, "explicacion": f"La opción correcta es '{opciones[correcta]}'. Revisa el significado del aviso o la estructura gramatical de la oración."})
     return preguntas
