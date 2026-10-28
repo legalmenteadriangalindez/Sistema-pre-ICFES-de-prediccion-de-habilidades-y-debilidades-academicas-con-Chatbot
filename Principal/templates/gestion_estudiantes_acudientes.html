@@ -85,7 +85,7 @@ Reportes de notas y desempeño por periodo. -->
                   </div>
                 </td> 
                 <td><button class="btn btn-sm btn-primary">Editar</button></td>
-                <td><a href="{% url 'eliminar_gestion_acudientes_estudiantes' 'estudiantes' e.id %}"><button class="btn btn-sm btn-danger">Eliminar</button></a></td>             
+                <td><form method="post" action="{% url 'eliminar_gestion_acudientes_estudiantes' 'estudiantes' e.id %}" style="display:inline">{% csrf_token %}<button type="submit" class="btn btn-sm btn-danger">Eliminar</button></form></td>             
             </tr>
             {%endfor%}
             <tr>
@@ -161,7 +161,7 @@ Reportes de notas y desempeño por periodo. -->
                   </div>
                 </td> 
                 <td><button class="btn btn-sm btn-primary">Editar</button></td>
-                <td><a href="{% url 'eliminar_gestion_acudientes_estudiantes' 'acudientes' a.id %}"><button class="btn btn-sm btn-danger">Eliminar</button></a></td>             
+                <td><form method="post" action="{% url 'eliminar_gestion_acudientes_estudiantes' 'acudientes' a.id %}" style="display:inline">{% csrf_token %}<button type="submit" class="btn btn-sm btn-danger">Eliminar</button></form></td>             
             </tr>
             {% endfor %}
             <tr>
