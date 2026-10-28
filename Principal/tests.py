@@ -115,26 +115,40 @@ class PruebasInglesTests(TestCase):
     def setUp(self):
         self.usuario = User.objects.create_user("ingles_prueba", password="clave-test")
         self.client.force_login(self.usuario)
+        from .models import IntentoEvaluacion, RespuestaEvaluacion
+        self.IntentoEvaluacion = IntentoEvaluacion
+        self.RespuestaEvaluacion = RespuestaEvaluacion
+        perfil = PerfilUsuario.objects.create(user=self.usuario)
+        sexo = Sexo.objects.create(descripcion="Prueba inglés")
+        persona = Persona.objects.create(perfil_user=perfil, nombre="Alumno", apellido="Prueba", documento="99887766", fecha_nacimiento="2008-01-01", direccion="Calle 1", telefono="3001234567", sexo=sexo)
+        Estudiante.objects.create(persona=persona)
 
-    def test_generar_ingles_sin_llm_y_sin_claves_en_html(self):
+    def test_generacion_no_expone_claves(self):
         response = self.client.post(reverse("test"), {"materia": "Ingles"})
         self.assertEqual(response.status_code, 200)
         preguntas = response.context["preguntas_ingles"]
         self.assertEqual(len(preguntas), 10)
         self.assertEqual({p["tipo"] for p in preguntas}, {"aviso", "texto"})
         self.assertTrue(all("respuesta_correcta" not in p for p in preguntas))
-        self.assertEqual(len(self.client.session["prueba_ingles_claves"]), 10)
+        self.assertEqual(len(self.client.session["prueba_ingles_preguntas"]), 10)
 
-    def test_calificacion_ingles_en_servidor(self):
+    def test_calificacion_persiste_respuestas_y_competencias(self):
         self.client.post(reverse("test"), {"materia": "Ingles"})
-        claves = self.client.session["prueba_ingles_claves"]
-        respuestas = {f"respuesta_{i}": clave for i, clave in enumerate(claves)}
+        preguntas = self.client.session["prueba_ingles_preguntas"]
+        respuestas = {f"respuesta_{p['id']}": p["respuesta_correcta"] for p in preguntas}
         response = self.client.post(reverse("test"), {"verificar_ingles": "1", **respuestas})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context["resultado_ingles"]["porcentaje"], 100)
-        self.assertNotIn("prueba_ingles_claves", self.client.session)
+        self.assertEqual(self.IntentoEvaluacion.objects.count(), 1)
+        self.assertEqual(self.RespuestaEvaluacion.objects.count(), 10)
+        self.assertEqual(len(response.context["competencias_ingles"]), 2)
+        self.assertNotIn("prueba_ingles_preguntas", self.client.session)
 
-    def test_no_permite_recalificar_prueba_consumida(self):
-        self.client.post(reverse("test"), {"verificar_ingles": "1"})
-        response = self.client.post(reverse("test"), {"verificar_ingles": "1"})
+    def test_no_permite_recalificar(self):
+        self.client.post(reverse("test"), {"materia": "Ingles"})
+        preguntas = self.client.session["prueba_ingles_preguntas"]
+        respuestas = {f"respuesta_{p['id']}": p["respuesta_correcta"] for p in preguntas}
+        self.client.post(reverse("test"), {"verificar_ingles": "1", **respuestas})
+        response = self.client.post(reverse("test"), {"verificar_ingles": "1", **respuestas})
         self.assertIn("error_prueba", response.context)
+        self.assertEqual(self.IntentoEvaluacion.objects.count(), 1)
