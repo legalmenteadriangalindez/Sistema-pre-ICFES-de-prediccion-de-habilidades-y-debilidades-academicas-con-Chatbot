@@ -7,7 +7,6 @@ from langgraph.checkpoint.sqlite import SqliteSaver
 
 from Principal.IA.llm import chat_bot
 
-from Principal.IA.chains import get_response_generation_chain
 
 from langchain_core.prompts import ChatPromptTemplate,MessagesPlaceholder
 

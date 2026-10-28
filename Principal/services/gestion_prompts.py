@@ -1,33 +1,5 @@
-# ==========================================IMPORTACIONES================================================
-from .gestion_historial import guardar_historial
-
-from Principal.IA.chains import chain_cuestionarios,chain_chatbot,chain_maateriales
-
-from langchain_core.messages import AIMessage
-# ******************************************IMPORTACIONES*************************************************
-
-# ===========================================CHATBOT==============================================================
-
-#------------chat bot--------------
-def get_chain_chatbot(prompt: str):
-   respuesta= chain_chatbot.invoke(prompt)
-   if isinstance(respuesta,AIMessage) and isinstance(respuesta.content,str):
-       return respuesta.content
-   if isinstance(respuesta,AIMessage) and isinstance(respuesta.content,list):
-       for msg in respuesta.content:
-           if isinstance(msg,AIMessage):
-               return msg.content
-   if isinstance(respuesta,list):
-       for msg in respuesta:
-           if isinstance(msg,AIMessage):
-               return msg.content  
-   return str(respuesta.content)
-
-
-# **********************************************************************************************************
-
-
-# ===============================OBTENER CUESTIONARIOS=============================================================================
+"""Servicio activo de generación de preguntas y temas de estudio."""
+from Principal.IA.chains import chain_cuestionarios, chain_maateriales
 
 def get_respuesta(materia: str)-> dict: # metodo para obtener las respuestas en formato json 
     try:
@@ -79,20 +51,3 @@ def get_material_recomendado(contexto: str)-> dict: # metodo para obtener las re
         }
 
  #*************************************GENERAR MATERIAL RECOMENDADO*********************************************************************************
-
-
-
-# ================================================EXTRAER TEXTO DE IA =======================================================================
-def extraer_texto_ai(respuesta):
-    if isinstance(respuesta,str):
-        return respuesta
-    if isinstance(respuesta,AIMessage):
-        return respuesta.content
-    if isinstance(respuesta,list):
-        for msg in respuesta: 
-            if isinstance(msg,AIMessage):
-               return msg.content 
-    raise  ValueError("error al extraer el texto de la IA ")
-# ***********************************************EXTRAER TEXTO CON IA ************************************************************************************
-
-

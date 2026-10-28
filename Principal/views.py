@@ -11,11 +11,6 @@ from Principal.services.files import guardar_PDFs
 from Principal.services.audio import procesar_audio
 from Principal.services.gestion_view_test import generar_quizes,generar_material,agrupar_historial_por_turnos
 from Principal.services.services_view_home import *
-# from Principal.services.rag_service import rag_system
-from Principal.services.gestion_historial import obtener_historial,eliminar_historial,guardar_ia,guardar_user,procesar_historial
-from Principal.services.gestion_prompts import get_chain_chatbot,extraer_texto_ai
-from Principal.IA.processor_PDF import prueba
-# from Principal.IA.LangGraph.graph_chatbot.graph import chat,chat_memory_deslizante,chat_memory_vectorial
 from Principal.IA.LangGraph.graph_chatbot.chatbot import chatbotManager
 from .forms import *
 from .models import *

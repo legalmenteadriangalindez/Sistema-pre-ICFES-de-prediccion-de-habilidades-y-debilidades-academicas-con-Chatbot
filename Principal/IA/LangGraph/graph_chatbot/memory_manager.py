@@ -8,7 +8,6 @@ import chromadb
 
 import uuid
 
-from Principal.IA.prompts import get_extration_prompt
 
 from langchain_huggingface import HuggingFaceEmbeddings
 
@@ -20,18 +19,16 @@ from Principal.IA.LangGraph.graph_chatbot.states import parser_extract_memory
 
 from langchain_chroma import Chroma
 
-from Principal.IA.chains import chain_chatbot,chat_bot 
 
 from langchain_core.messages import HumanMessage,AIMessage
 
 
-from Principal.IA.embeddings import get_embedding
 
 import json 
 
 from datetime import datetime
 
-from Principal.IA.llm import parser_CognitiveProfile,Cognitive_profile
+from Principal.IA.llm import parser_CognitiveProfile, Cognitive_profile, chat_bot
 
 from youtube_search import YoutubeSearch 
 
