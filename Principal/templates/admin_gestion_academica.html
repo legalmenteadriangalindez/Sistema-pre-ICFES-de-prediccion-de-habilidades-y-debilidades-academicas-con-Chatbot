@@ -33,7 +33,7 @@
                 <td>{{g.nombre}}</td>
                 <td>{{g.activo}}</td>
                 <td><button class="btn btn-sm btn-primary">Editar</button></td>
-                <td><a href="{% url 'eliminar_admin_gestion_academico' 'grados' g.id %}"><button  class="btn btn-sm btn-danger">Eliminar</button></a></td>
+                <td><form method="post" action="{% url 'eliminar_admin_gestion_academico' 'grados' g.id %}" style="display:inline">{% csrf_token %}<button type="submit"  class="btn btn-sm btn-danger">Eliminar</button></form></td>
                 <td>
                   <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="user1" checked>
@@ -106,7 +106,7 @@
                 <td>{{c.activo}}</td>
 
                 <td><button class="btn btn-sm btn-primary">Editar</button></td>
-                <td><a href="{% url 'eliminar_admin_gestion_academico' 'cursos' c.id %}"><button  class="btn btn-sm btn-danger">Eliminar</button></a></td>
+                <td><form method="post" action="{% url 'eliminar_admin_gestion_academico' 'cursos' c.id %}" style="display:inline">{% csrf_token %}<button type="submit"  class="btn btn-sm btn-danger">Eliminar</button></form></td>
                 <td>
                   <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="user1" checked>
@@ -175,7 +175,7 @@
                 <td>{{anio.fecha_fin}}</td>
                 <td>{{anio.activo}}</td>
                 <td><button class="btn btn-sm btn-primary">Editar</button></td>
-                <td><a href="{% url 'eliminar_admin_gestion_academico' 'anios' anio.id %}"><button  class="btn btn-sm btn-danger">Eliminar</button></a></td>
+                <td><form method="post" action="{% url 'eliminar_admin_gestion_academico' 'anios' anio.id %}" style="display:inline">{% csrf_token %}<button type="submit"  class="btn btn-sm btn-danger">Eliminar</button></form></td>
                 <td>
                   <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="user1" checked>
@@ -239,7 +239,7 @@
                 <td>{{m.nombre}}</td>
                 <td>{{m.activo}}</td>
                 <td><button class="btn btn-sm btn-primary">Editar</button></td>
-                <td><a href="{% url 'eliminar_admin_gestion_academico' 'materias' m.id %}"><button  class="btn btn-sm btn-danger">Eliminar</button></a></td>
+                <td><form method="post" action="{% url 'eliminar_admin_gestion_academico' 'materias' m.id %}" style="display:inline">{% csrf_token %}<button type="submit"  class="btn btn-sm btn-danger">Eliminar</button></form></td>
                 <td>
                   <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="user1" checked>
