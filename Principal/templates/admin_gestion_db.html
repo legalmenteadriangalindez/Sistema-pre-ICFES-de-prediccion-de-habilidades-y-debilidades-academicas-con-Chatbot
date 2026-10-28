@@ -64,6 +64,9 @@
       </div>
       <div class="modal-body">
         <form action="" method="post">
+        <input type="hidden" name="form" value="relaciones">
+        <input type="hidden" name="form" value="sexos">
+        <input type="hidden" name="form" value="roles">
         {% csrf_token %}
         {{form_roles }}
         
