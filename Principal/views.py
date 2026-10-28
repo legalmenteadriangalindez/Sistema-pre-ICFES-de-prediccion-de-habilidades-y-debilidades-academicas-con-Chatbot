@@ -404,7 +404,7 @@ def es_gestor(request_user):
 
 #======================================ADMIN GESTION DB=====================================================================
 @login_required
-@user_passes_test(es_gestor, login_url='/login/')
+@user_passes_test(es_gestor, login_url='/accounts/login/')
 def gestion_db(request):
     roles = Rol.objects.all()
     sexos = Sexo.objects.all()
@@ -435,7 +435,7 @@ def gestion_db(request):
     return render(request, "admin_gestion_db.html", contexto)
 
 @login_required
-@user_passes_test(es_gestor, login_url='/login/')
+@user_passes_test(es_gestor, login_url='/accounts/login/')
 @require_POST
 def eliminar_admin_gestion_db(request,tipo,id):
     if tipo == "rol":
@@ -455,7 +455,7 @@ def eliminar_admin_gestion_db(request,tipo,id):
 
 # =======================================GESTION ACUDIENTES Y ESTUDIANTES======================================================================
 @login_required # @user_passes_test(es_coordinador)
-@user_passes_test(es_gestor, login_url='/login/')
+@user_passes_test(es_gestor, login_url='/accounts/login/')
 def gestion_acudientes_estudiantes(request):
     estudiantes = Estudiante.objects.all()
     acudientes = Acudiente.objects.all()
@@ -485,7 +485,7 @@ def gestion_acudientes_estudiantes(request):
     return render(request, "gestion_estudiantes_acudientes.html", contexto)
 
 @login_required
-@user_passes_test(es_gestor, login_url='/login/')
+@user_passes_test(es_gestor, login_url='/accounts/login/')
 @require_POST
 def eliminar_gestion_acudientes_estudiantes(request,tipo,id):
     if tipo == "estudiantes":
@@ -501,7 +501,7 @@ def eliminar_gestion_acudientes_estudiantes(request,tipo,id):
 
 # =======================================ADMINISTRADOR GESTION USUARIOS======================================================================
 @login_required # @user_passes_test(es_coordinador)
-@user_passes_test(es_gestor, login_url='/login/')
+@user_passes_test(es_gestor, login_url='/accounts/login/')
 def gestion_users(request):
     users = User.objects.all()
     personas = Persona.objects.all()
@@ -531,7 +531,7 @@ def gestion_users(request):
     return render(request, "admin_gestion_user.html", contexto)
 
 @login_required
-@user_passes_test(es_gestor, login_url='/login/')
+@user_passes_test(es_gestor, login_url='/accounts/login/')
 @require_POST
 def eliminar_gestion_users(request,tipo,id):
     if tipo =="usuarios":
@@ -560,7 +560,7 @@ def acudiente(request):
 
 # =======================================ADMIN GESTION ACADEMICA======================================================================
 @login_required # @user_passes_test(es_coordinador)
-@user_passes_test(es_gestor, login_url='/login/')
+@user_passes_test(es_gestor, login_url='/accounts/login/')
 def gestion_academica(request):
     grados = Grado.objects.all()
     cursos = Curso.objects.all()
@@ -616,7 +616,7 @@ def gestion_academica(request):
     return render(request, "admin_gestion_academica.html", contexto)
 
 @login_required
-@user_passes_test(es_gestor, login_url='/login/')
+@user_passes_test(es_gestor, login_url='/accounts/login/')
 @require_POST
 def eliminar_gestion_academica(request,tipo,id):
     if tipo == "grados":
