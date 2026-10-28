@@ -192,7 +192,6 @@ class ModernChatbot:
     # enviar u n mensaje al chatbot y obtener la respuesta del chatbot
     def chat(self, user_message: str, chat_id: str = "default"):
         try : 
-            config = {"configurable": {"thread_id": f"user_chat_{self.user_id}_{chat_id}"}}
 
             # actualizar el titulo del chat esi es nesesario
             chat_info = self.memory_manager.get_chat_info(chat_id)
@@ -201,6 +200,8 @@ class ModernChatbot:
             if chat_info is None:
                 chat_id = self.memory_manager.create_new_chat(user_message) 
                 chat_info = self.memory_manager.get_chat_info(chat_id)
+
+            config = {"configurable": {"thread_id": f"user_chat_{self.user_id}_{chat_id}"}}
 
             if chat_info['title'] == "Nuevo Chat":
                 chat_title =self.memory_manager.generate_chat_title(user_message)
