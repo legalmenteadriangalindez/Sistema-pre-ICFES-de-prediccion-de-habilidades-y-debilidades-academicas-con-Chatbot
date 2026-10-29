@@ -15,7 +15,8 @@ class RegistroTests(TestCase):
     def setUp(self):
         self.sexo = Sexo.objects.create(descripcion="Prueba")
 
-    def test_registro_crea_relaciones_y_rol(self):
+    @patch("Principal.views.enviar_verificacion")
+    def test_registro_crea_relaciones_y_rol(self, enviar):
         response = self.client.post(reverse("registro"), {
             "username": "alumno_prueba",
             "email": "alumno@example.com",
@@ -30,12 +31,31 @@ class RegistroTests(TestCase):
             "sexo": self.sexo.pk,
             "necesidades_especiales": "",
         })
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 200)
+        enviar.assert_called_once()
         user = User.objects.get(username="alumno_prueba")
+        self.assertFalse(user.is_active)
         perfil = PerfilUsuario.objects.get(user=user)
         self.assertTrue(perfil.roles.filter(nombre="ESTUDIANTE").exists())
         persona = Persona.objects.get(perfil_user=perfil)
         self.assertTrue(Estudiante.objects.filter(persona=persona).exists())
+
+    @patch("Principal.views.enviar_verificacion")
+    def test_verificacion_activa_cuenta(self, enviar):
+        from Principal.services.verificacion_correo import crear_token
+        usuario = User.objects.create_user("pendiente", "pendiente@example.com", "ClavePrueba2026!f", is_active=False)
+        url = reverse("verificar_correo", args=[crear_token(usuario)])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        usuario.refresh_from_db()
+        self.assertTrue(usuario.is_active)
+
+    def test_token_invalido_no_activa_cuenta(self):
+        usuario = User.objects.create_user("sin_verificar", "sin_verificar@example.com", "ClavePrueba2026!f", is_active=False)
+        response = self.client.get(reverse("verificar_correo", args=["token-falso"]))
+        self.assertEqual(response.status_code, 400)
+        usuario.refresh_from_db()
+        self.assertFalse(usuario.is_active)
 
     def test_registro_invalido_no_crea_usuario(self):
         response = self.client.post(reverse("registro"), {
