@@ -1,0 +1,11 @@
+{% extends "home.html" %}
+{% block title %}Verificación de correo{% endblock %}
+{% block content %}
+<main class="container my-5 verification-content">
+<h1>Verificación de correo electrónico</h1>
+{% if estado == "enviado" %}<p>Tu cuenta fue creada. Revisa tu correo y abre el enlace de verificación (válido por 24 horas). Hasta entonces no podrás iniciar sesión.</p>
+{% elif estado == "verificado" %}<p>Tu correo ha sido verificado. Ya puedes iniciar sesión.</p><a href="{% url 'login' %}">Iniciar sesión</a>
+{% elif estado == "error_envio" %}<p>Tu cuenta fue creada, pero no se pudo enviar el mensaje de verificación. Contacta al administrador para solicitar un nuevo envío. Tu cuenta permanece desactivada.</p>
+{% else %}<p>Este enlace no es válido o ha caducado. Solicita un nuevo correo de verificación al administrador.</p>{% endif %}
+</main>
+{% endblock %}

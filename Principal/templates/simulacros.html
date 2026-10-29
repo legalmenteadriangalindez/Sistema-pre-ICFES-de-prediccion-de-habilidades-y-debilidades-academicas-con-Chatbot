@@ -1,0 +1,71 @@
+{% extends "./home.html" %}
+{% load static %}
+{% block title %}Simulacros de práctica{% endblock %}
+{% block extra_head %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/simulacros.css' %}">
+{% endblock %}
+{% block content %}
+<main class="container my-4 simulacros-main">
+<h1>Simulacros de práctica tipo Saber 11</h1>
+<p>Preguntas originales de práctica, no oficiales del ICFES.</p>
+{% if error %}<div class="alert alert-warning">{{ error }}</div>{% endif %}
+{% if not simulacro and not resultado %}
+<form method="post">{% csrf_token %}
+<input type="hidden" name="accion" value="iniciar">
+<label for="materia">Elige la modalidad</label>
+<select name="materia" id="materia" required class="form-select">
+{% for materia in materias %}<option value="{{ materia }}">{{ materia }}</option>{% endfor %}
+<option value="Integral">Integral (todas las materias)</option>
+</select>
+<button type="submit" class="btn btn-primary mt-3">Iniciar simulacro</button>
+</form>
+{% endif %}
+{% if simulacro %}
+<div class="alert alert-info" role="timer" id="simulacro-timer" data-vence="{{ vence }}">Tiempo restante: <strong id="reloj">Calculando...</strong></div>
+<form method="post" id="form-simulacro">{% csrf_token %}
+<input type="hidden" name="accion" value="finalizar">
+{% for p in preguntas %}
+<fieldset class="pregunta-simulacro border rounded p-3 mb-3" {% if not forloop.first %}hidden{% endif %}>
+<legend>Pregunta {{ forloop.counter }} de {{ preguntas|length }} · {{ p.materia }}</legend>
+{% if p.contexto %}<p>{{ p.contexto }}</p>{% endif %}
+<p>{{ p.pregunta }}</p>
+{% for letra, texto in p.opciones.items %}
+<label class="d-block mb-2"><input type="radio" name="respuesta_{{ p.id }}" value="{{ letra }}"> {{ letra }}. {{ texto }}</label>
+{% endfor %}
+</fieldset>
+{% endfor %}
+<div class="d-flex gap-2 mb-3">
+<button type="button" class="btn btn-outline-secondary" id="anterior">Anterior</button>
+<button type="button" class="btn btn-outline-primary" id="siguiente">Siguiente</button>
+<button type="submit" class="btn btn-success">Finalizar y calificar</button>
+</div>
+<h2>Hoja de respuestas</h2>
+<div id="hoja" class="d-flex flex-wrap gap-2" aria-label="Ir a una pregunta"></div>
+</form>
+{% endif %}
+{% if resultado %}
+<div class="alert alert-info">
+<h2>Resultados</h2>
+<p>Aciertos: {{ resultado.aciertos }} de {{ resultado.total }}.</p>
+{% if resultado.vencido %}<p>El tiempo del simulacro había finalizado.</p>{% endif %}
+<p>Resultado guardado en tu historial académico.</p>
+</div>
+<h3>Revisión de respuestas</h3>
+{% for p in detalles %}
+<article class="border rounded p-3 mb-2">
+<p><strong>{{ p.materia }} · {{ p.competencia }}</strong></p>
+<p>{{ p.pregunta }}</p>
+<p>Tu respuesta: {{ p.respuesta|default:"Sin responder" }}. Respuesta correcta: {{ p.correcta }}.</p>
+<p>{{ p.explicacion }}</p>
+</article>
+{% endfor %}
+<a href="{% url 'simulacros' %}" class="btn btn-primary">Nuevo simulacro</a>
+{% endif %}
+</main>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script src="{% static 'js/simulacros.js' %}" defer></script>
+{% endblock %}

@@ -1,0 +1,249 @@
+{% extends "./home.html" %}
+{% block title %} Test de práctica {% endblock %}
+{% load static %}
+{% block extra_head %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/test.css' %}">
+{% endblock %}
+
+{% block content %}  
+<br>
+<br>
+<!-- ==================================================CHAT================================================= -->
+<br>
+<div id="chatContainer" class="chat chat-container">
+<h1>Tu tutor académico con inteligencia artificial</h1>
+  <div class="chat-header">
+    <div>
+      <form action="{% url 'home' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="chat_id" value="{{ chat_id }}">
+        <button type="submit" name="nuevo_chat" class="new-chat-btn">
+          <i class="fas fa-plus"></i> Nuevo Chat
+        </button>
+      </form>
+    </div>
+
+    <div class="chat-title">
+      Asistente de orientación académica
+    </div>
+  </div>
+
+  <form method="post" action="{% url 'home' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="hidden" name="chat_id" value="{{ chat_id }}">
+
+    <div class="chat-input-area">
+      <div id="areaDeTexto" class="chat-input-area">
+        <!-- <label class="chat-label">Preguntar a la IA :</label><br> -->
+
+              <!-- ==============================RESPUESTA===================================-->
+              <div id="respuesta" class="chat-history">
+              
+                  <div class="history-container">
+                      <div class="mensages ">
+                          {% for turn  in historial %}
+              
+                          {% if turn.usuario != "None" %}
+                
+                      <div class="message user">
+                          <div class="message-header">
+                              <div class="message-sender">
+                                  <strong>User:</strong>
+                              </div>
+                              <div class="message-time">Hace 5 min</div>
+                          </div>
+                          <div class="message-content">
+                              {{ turn.usuario }}
+                          </div>
+                      </div>
+                  {% endif %}
+              
+                  {% if turn.respuesta %}
+              
+                      <div class="message ai">
+                          <div class="message-header">
+                              <div class="message-sender">
+                                  <strong>IA:</strong>
+                              </div>
+                              <div class="message-time">Hace 5 min</div>
+                          </div>
+                          <div class="message-content">
+                              {{ turn.respuesta }}
+                          </div>
+                      </div>
+                  {% endif %}
+              
+                          {% empty %}
+                                 <p>Aún no hay conversaciones. Cuando inicies un chat, aparecerá aquí.</p>
+                          {% endfor %}
+                      </div>
+              
+                      <section class="response-section">
+                        <div class="response-container">
+                          <div class="response-header">
+                             <i class="fas fa-comment-dots"></i><h2>Respuesta generada por la IA:</h2>
+                          </div>
+                          <div class="response-content">
+                             {{ response }}
+                          </div>
+                        </div>   
+                      </section>
+              
+                  </div>
+              </div> 
+            <!-- **************************************CHAT***************************************************** -->
+        <textarea name="prompt" class="chat-textarea"
+          placeholder="Escribe tu pregunta aqui...">{{ audio_usuario }}</textarea>
+
+      </div>
+      
+    
+    </div>
+
+    <div class="chat-controls">
+      <div class="file-upload-btn">
+        <i class="fas fa-file-upload"></i>
+        Subir archivo
+        <input type="file"
+          accept="application/pdf,.doc,.docx,.xls,.xlsx,.txt"
+          name="archivo">
+      </div>
+
+      <div class="voice-controls">
+        <input type="file" name="audio" id="audioInput" hidden>
+        <button type="button" id="grabar" class=" voice-btn-record">🎙️Grabar</button>
+        <button type="button" id="detener" disabled class="voice-btn-stop">⏹️ Detener</button>
+      </div>
+          <button id="generar" type="submit" class="generate-btn">
+          <i class="fas fa-bolt"></i> Generar respuesta
+          </button>
+    </div>
+  </form>
+</div>
+<br>
+
+     <div class="history-chats-container">
+      <h1>Historial de conversaciones</h1>
+        <div class="history-header">
+          <div class="container-btn-clear"> 
+                <form action="{% url 'home' %}" method="post">
+                    {% csrf_token %}             
+                    <input type="hidden" name="chat_id" value="{{ chat_id }}">
+                    <button class="clear-history-btn" id="borrarHistorial" type="submit" name="borrarHistorial"><i class=" fas fa-trash-alt"></i> Borrar historial</button>
+                </form>
+          </div>
+        </div>
+      
+    </div>
+    <br><br><br>
+
+    <br>
+<!-- ********************************RESPUESTA*********************************** -->
+
+
+
+<br>
+<div class="materias">
+   <form action="{% url 'test' %}" method="POST">
+    {% csrf_token %}
+   <button type="submit" class="boton_Materias"  name="materia" value="Lectura Critica"><i class="fa fa-book-reader"></i> Lectura Critica</button>
+   <button type="submit" class="boton_Materias"  name="materia" value="Matematicas"><i class="fa fa-calculator"></i> Matematicas</button>
+   <button type="submit" class="boton_Materias"  name="materia" value="Sociales y ciudadanas"><i class="fa fa-globe-americas"></i> Sociales y ciudadanas</button>
+   <button type="submit" class="boton_Materias"  name="materia" value="Ciencias Naturales"><i class="fa fa-flask"></i> Ciencias Naturales</button>
+   <button type="submit" class="boton_Materias"  name="materia" value="Ingles"><i class="fa fa-language"></i> Ingles</button>
+   </form>
+</div>
+<!-- ========================================OPCIONES============================================ -->
+{% if error_prueba %}<div class="alert alert-warning">{{ error_prueba }}</div>{% endif %}
+{% if resultado_evaluacion %}
+<div class="alert alert-info" role="status">
+  <h2>Resultado de {{ materia_evaluacion|default:"la evaluación" }}</h2>
+  <p>Respuestas correctas: {{ resultado_evaluacion.aciertos }} de {{ resultado_evaluacion.total }}.</p>
+  <p>Porcentaje: {{ resultado_evaluacion.porcentaje }} %</p>
+  <p>Este resultado quedó guardado en tu historial académico.</p>
+</div>
+{% endif %}
+{% if competencias_evaluacion %}
+<section class="container mt-3" aria-label="Desempeño por competencia">
+<h3>Desempeño por competencia</h3>
+<ul>{% for competencia in competencias_evaluacion %}<li>{{ competencia.nombre }}: {{ competencia.aciertos }} de {{ competencia.total }} correctas ({{ competencia.porcentaje }} %)</li>{% endfor %}</ul>
+</section>
+{% endif %}
+{% if detalles_evaluacion %}
+<section class="container mt-3" aria-label="Retroalimentación de la evaluación">
+<h3>Revisión de tus respuestas</h3>
+{% for p in detalles_evaluacion %}
+<article class="border rounded p-3 mb-3">
+<h4>Pregunta {{ forloop.counter }}: {% if p.es_correcta %}Correcta{% else %}Incorrecta{% endif %}</h4>
+<p><strong>{{ p.competencia }}</strong></p>
+{% if p.contexto %}<p>{{ p.contexto }}</p>{% endif %}<p>{{ p.pregunta }}</p>
+<p>Tu respuesta: {{ p.respuesta_estudiante|default:"Sin responder" }}</p>
+<p>Respuesta correcta: {{ p.respuesta_correcta }} — {% for letra, texto in p.opciones.items %}{% if letra == p.respuesta_correcta %}{{ texto }}{% endif %}{% endfor %}</p>
+<p>{{ p.explicacion }}</p>
+{% if not p.es_correcta and p.error_comun %}<p><strong>Error que debes revisar:</strong> {{ p.error_comun }}</p>{% endif %}
+</article>
+{% endfor %}
+</section>
+{% endif %}
+{% if preguntas_ingles %}
+<section class="container mt-4" aria-labelledby="titulo-ingles">
+<h2 id="titulo-ingles">Prueba de inglés · Saber 11</h2>
+<p>Lee cada aviso o texto y selecciona la respuesta correcta (A, B o C).</p>
+<form action="{% url 'test' %}" method="post">
+{% csrf_token %}
+<input type="hidden" name="verificar_ingles" value="1">
+{% for p in preguntas_ingles %}
+<fieldset class="border rounded p-3 mb-3">
+<legend class="fs-5">Pregunta {{ forloop.counter }} · {% if p.tipo == 'aviso' %}Interpretación de avisos{% else %}Completar texto{% endif %}</legend>
+<div class="p-3 mb-2 bg-light border rounded"><strong>{{ p.contexto }}</strong></div>
+<p>{{ p.pregunta }}</p>
+{% for letra, texto in p.opciones.items %}
+<div class="form-check mb-2">
+<input class="form-check-input" type="radio" name="respuesta_{{ p.id }}" id="ingles_{{ p.id }}_{{ letra }}" value="{{ letra }}" required>
+<label class="form-check-label" for="ingles_{{ p.id }}_{{ letra }}">{{ letra }}. {{ texto }}</label>
+</div>
+{% endfor %}
+</fieldset>
+{% endfor %}
+<button type="submit" class="btn btn-primary">Calificar prueba de inglés</button>
+</form>
+</section>
+{% endif %}
+{% if preguntas %}
+<section class="container mt-4" aria-label="Cuestionario de práctica">
+<h1>Selecciona la respuesta correcta:</h1>
+<form action="{% url 'test' %}" method="post">
+{% csrf_token %}
+<input type="hidden" name="verificar_cuestionario" value="1">
+{% for p in preguntas %}
+<fieldset class="pregunta-cuestionario border rounded p-3 mb-3">
+  <legend>Pregunta {{ forloop.counter }}</legend>
+  {% if p.contexto %}<p>{{ p.contexto }}</p>{% endif %}
+  <p>{{ p.pregunta }}</p>
+  {% for letra, texto in p.opciones.items %}
+  <label class="opcion d-block mb-2">
+    <input type="radio" name="respuesta_{{ p.id }}" value="{{ letra }}">
+    {{ letra }}. {{ texto }}
+  </label>
+  {% endfor %}
+</fieldset>
+{% endfor %}
+<button type="submit" class="btn btn-primary">Calificar cuestionario</button>
+</form>
+{% if materiales_recomendados %}
+<div class="recommended-container mt-4">
+  <h2 class="recommended-title">Material recomendado</h2>
+  <ul>{% for tema in materiales_recomendados %}<li>{{ tema }}</li>{% endfor %}</ul>
+</div>
+{% endif %}
+</section>
+{% endif %}
+<!-- ============================================================================================= -->
+
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script src="{% static 'js/test.js' %}" defer></script>
+{% endblock %}

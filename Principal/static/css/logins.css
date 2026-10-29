@@ -1,0 +1,38 @@
+
+h1{
+    color: #D91E0D;
+    margin: auto;
+}
+
+
+.input-container{
+    display: inline-flex;
+}
+
+.input-username{
+    margin-left: 20%;
+}
+
+.input-password{
+    margin-left: 9%;
+}
+
+.form-label{
+    font-weight: bold;
+
+}
+
+.btn-login{
+    margin-left: 15%;
+    background-color: #D91E0D;
+    color: white;
+    border-radius: 5px;
+    border: solid 2px black;
+    height: 50px;
+    width: 200px;
+}
+
+.btn-login:hover{
+    background-color: #db9892;
+    transform: translateY(-0.5rem);
+}

@@ -1,0 +1,19 @@
+# Aplicación web y configuración local
+Django>=5.2,<5.3
+python-dotenv>=1.0,<2.0
+
+# Chatbot, generación académica y memoria
+chromadb>=1.0,<2.0
+langchain-chroma>=1.0,<2.0
+langchain-core>=1.0,<2.0
+langchain-huggingface>=1.0,<2.0
+langchain-ollama>=1.0,<2.0
+langgraph>=1.0,<2.0
+langgraph-checkpoint-sqlite>=3.0,<4.0
+pydantic>=2.7,<3.0
+sentence-transformers>=5.0,<6.0
+typing-extensions>=4.12,<5.0
+
+# Recursos de búsqueda usados por las recomendaciones del tutor
+googlesearch-python>=1.2,<2.0
+youtube-search>=2.1,<3.0

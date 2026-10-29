@@ -1,0 +1,73 @@
+h1{
+    color: #D91E0D;
+    margin: auto;
+}
+
+#opciones_test{
+    border: solid 2px black;
+    margin: auto;
+    width: 60%;
+    border-radius: 10px;
+    padding: 12px 24px;
+}
+
+label {
+    margin: auto;
+}
+
+.opcion{
+    display: inline;
+}
+
+.materias{
+    margin: auto;
+    width: auto;
+    height: auto;
+}
+
+.boton_Materias{
+    background-color: #D91E0D;
+    color: white;
+    padding: 12px 24px;
+    width: auto;
+    height: auto;
+}
+
+.pregunta-cuestionario {
+    background: #fff;
+}
+
+.pregunta-cuestionario .opcion {
+    cursor: pointer;
+    border-radius: 0.35rem;
+    padding: 0.5rem;
+}
+
+.pregunta-cuestionario .opcion-seleccionada {
+    background-color: #e8f1ff;
+}
+
+
+.recommended-container{
+
+    background-color: white;
+    margin: auto;
+    border-radius: 5px;
+
+}
+
+.recommended-header{
+
+    text-align: center;
+    
+}
+
+.recommended-title{
+    font-size: 700;
+    color: #D91E0D;
+}
+
+.recommended-container li{
+    list-style: none;
+
+}

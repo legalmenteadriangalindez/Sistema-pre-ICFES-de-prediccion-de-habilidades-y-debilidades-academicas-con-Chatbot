@@ -1,0 +1,201 @@
+{% extends "home_admin_academico.html" %}
+{% load static %}
+{% block title %} Coordinador {% endblock %}
+
+{% block extra_head %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<link rel="stylesheet" href="{% static 'css/register.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<h1> Gestion Estudiantes </h1>
+<!-- Gestión de estudiantes y acudientes:
+
+Registrar Estudiante y Acudiente.
+
+Asignar acudientes a estudiantes.
+
+Ver y editar necesidades especiales de los estudiantes. -->
+<!-- Gestión de estudiantes y acudientes:
+
+Registrar Estudiante y Acudiente.
+
+Asignar acudientes a estudiantes.
+
+Ver y editar necesidades especiales de los estudiantes.
+
+Gestión de evaluaciones:
+
+Registrar y modificar Nota.
+
+Generar Boletin.
+
+Registrar Observacion.
+
+Reportes y estadísticas:
+
+Listar estudiantes por curso y grado.
+
+Listar docentes y sus asignaciones.
+
+Reportes de notas y desempeño por periodo. -->
+<div class="container mt-5">
+    <h2>Estudiantes</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID del estudiante</th>
+                <th>Nombre</th>
+                <th>apellido</th>
+                <th>documento</th>
+                <th>fecha de nacimiento</th>
+                <th>direccion</th>
+                <th>telefono</th>
+                <th>sexo</th>
+                <th>Grado</th>
+                <th>Jornada</th>
+                <th>Acudiente</th>
+                <th>Estado</th>
+                <th>Activar/Desactivar</th>
+                <th>Editar</th>
+                <th>Eliminar</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for e in estudiantes %}
+            <tr>
+                <td>{{e.id}}</td>
+                <td>{{e.persona.nombre}}</td>
+                <td>{{e.persona.apellido}}</td>
+                <td>{{e.persona.documento }}</td>
+                <td>{{e.persona.fecha_nacimiento }}</td>
+                <td>{{e.persona.direccion }}</td>
+                <td>{{e.persona.telefono }}</td>
+                <td>{{e.persona.sexo }}</td>
+                <td>{{e.curso.grado.nombre }}</td>
+                <td>{{e.curso.jornada.nombre }}</td>
+                <td>{{e.acudiente.persona.nombre}}</td>
+                <td>{{e.persona.activo }}</td> 
+                <td>
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="user1" checked>
+                    <label class="form-check-label" for="user1"></label>
+                  </div>
+                </td> 
+                <td><button class="btn btn-sm btn-primary">Editar</button></td>
+                <td><form method="post" action="{% url 'eliminar_gestion_acudientes_estudiantes' 'estudiantes' e.id %}" class="d-inline">{% csrf_token %}<button type="submit" class="btn btn-sm btn-danger">Eliminar</button></form></td>
+            </tr>
+            {%endfor%}
+            <tr>
+                <td>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregar_estudiante">
+                      + Agregar Nuevo
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="agregar_estudiante" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Nuevo Grado </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="" method="post">
+        {% csrf_token %}
+        {{form_estudiantes}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" name="form" value="estudiantes" class="btn btn-primary">Guardar Cambios</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<h1> Gestion de Acudientes </h1>
+<div class="container mt-5">
+    <h2>Acudientes</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID del estudiante</th>
+                <th>Nombre</th>
+                <th>apellido</th>
+                <th>documento</th>
+                <th>fecha de nacimiento</th>
+                <th>direccion</th>
+                <th>telefono</th>
+                <th>sexo</th>
+                <th>Estado</th>
+                <th>Activar/Desactivar</th>
+                <th>Editar</th>
+                <th>Eliminar</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for a in acudientes %}
+            <tr>
+                <td>{{a.id}}</td>
+                <td>{{a.persona.nombre}}</td>
+                <td>{{a.persona.apellido}}</td>
+                <td>{{a.persona.documento }}</td>
+                <td>{{a.persona.fecha_nacimiento }}</td>
+                <td>{{a.persona.direccion }}</td>
+                <td>{{a.persona.telefono }}</td>
+                <td>{{a.persona.sexo }}</td>
+                <td>{{a.persona.activo }}</td> 
+                <td>
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="user1" checked>
+                    <label class="form-check-label" for="user1"></label>
+                  </div>
+                </td> 
+                <td><button class="btn btn-sm btn-primary">Editar</button></td>
+                <td><form method="post" action="{% url 'eliminar_gestion_acudientes_estudiantes' 'acudientes' a.id %}" class="d-inline">{% csrf_token %}<button type="submit" class="btn btn-sm btn-danger">Eliminar</button></form></td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregar_acudiente">
+                      + Agregar Nuevo
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="agregar_acudiente" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Nuevo Grado </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="" method="post">
+        {% csrf_token %}
+        {{form_acudientes}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" name="form" value="acudientes"  class="btn btn-primary">Guardar Cambios</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

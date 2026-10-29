@@ -1,0 +1,14 @@
+h1{
+    color: #D91E0D;
+    margin: auto;
+}
+
+.registro {
+    margin: auto;
+    padding: 1%;
+    border-radius: 10px;
+    width: 60%;
+    border: solid 2px black;
+    align-items: center;
+    /* text-align: center; */
+}

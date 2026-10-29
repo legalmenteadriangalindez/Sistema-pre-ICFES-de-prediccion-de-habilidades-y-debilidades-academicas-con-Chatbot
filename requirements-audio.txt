@@ -1,0 +1,4 @@
+-r requirements.txt
+
+# La transcripción también requiere el ejecutable FFmpeg instalado en el sistema.
+openai-whisper>=20240930

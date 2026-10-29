@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Secretos locales
+.env
+.env.*
+!.env.example
+
+# Bases locales y conversaciones
+*.sqlite3
+*.db
+*.db-shm
+*.db-wal
+ProyectoDeGrado/DATABASES/USERS/
+ProyectoDeGrado/ChromaDB/
+.local-data/
+
+# Documentos locales
+media/
+
+# Entorno
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

@@ -1,0 +1,32 @@
+{% extends "./home.html" %}
+{% block content %}
+<main class="container my-4 historial-content">
+<h1>Historial y evolución académica</h1>
+<p>Compara tus evaluaciones por materia. La variación se expresa en puntos porcentuales respecto a tu evaluación anterior de la misma materia.</p>
+{% if sin_perfil %}<div class="alert alert-warning">No tienes un perfil de estudiante asociado.</div>{% elif not series %}<div class="alert alert-info">Todavía no tienes evaluaciones registradas.</div>{% else %}
+<p><strong>Evaluaciones registradas:</strong> {{ total_intentos }}</p>
+{% for serie in series %}
+<section class="card mb-4">
+<div class="card-body">
+<h2 class="h4">{{ serie.materia }}</h2>
+<p>Último resultado: <strong>{{ serie.ultima.porcentaje }}%</strong> · {{ serie.ultima.tendencia }}
+{% if serie.ultima.cambio is not None %} ({{ serie.ultima.cambio|stringformat:"+.1f" }} puntos porcentuales){% endif %}</p>
+<div class="table-responsive">
+<table class="table table-striped">
+<thead><tr><th>Fecha</th><th>Aciertos</th><th>Resultado</th><th>Cambio</th><th>Evolución</th></tr></thead>
+<tbody>
+{% for punto in serie.puntos %}
+<tr><td>{{ punto.fecha|date:"d/m/Y H:i" }}</td><td>{{ punto.aciertos }}/{{ punto.total }}</td><td>{{ punto.porcentaje }}%</td>
+<td>{% if punto.cambio is not None %}{{ punto.cambio|stringformat:"+.1f" }} pp{% else %}—{% endif %}</td><td>{{ punto.tendencia }}</td></tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+</div>
+</section>
+{% endfor %}
+{% endif %}
+<a href="{% url 'test' %}" class="btn btn-primary">Realizar otra evaluación</a>
+<a href="{% url 'simulacros' %}" class="btn btn-outline-primary">Ir a simulacros</a>
+</main>
+{% endblock %}
