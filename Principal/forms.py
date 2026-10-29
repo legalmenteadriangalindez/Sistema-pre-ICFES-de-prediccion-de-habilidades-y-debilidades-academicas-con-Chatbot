@@ -189,6 +189,12 @@ class UserRegisterForm(UserCreationForm):
             "password1": forms.PasswordInput(attrs={"class": "input-field"})
         }
 
+    def clean_email(self):
+        email = self.cleaned_data["email"].strip().lower()
+        if User.objects.filter(email__iexact=email).exists():
+            raise forms.ValidationError("Este correo electrónico ya está registrado.")
+        return email
+
     def save(self, commit=True):
         user = super().save(commit=False)
         user.email = self.cleaned_data["email"]
