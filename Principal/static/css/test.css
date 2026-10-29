@@ -1,0 +1,93 @@
+h1{
+    color: #D91E0D;
+    margin: auto;
+}
+
+#opciones_test{
+    border: solid 2px black;
+    margin: auto;
+    width: 60%;
+    border-radius: 10px;
+    padding: 12px 24px;
+}
+
+label {
+    margin: auto;
+}
+
+.opcion{
+    display: inline;
+}
+
+.materias{
+    margin: auto;
+    width: auto;
+    height: auto;
+}
+
+.boton_Materias{
+    background-color: #D91E0D;
+    color: white;
+    padding: 12px 24px;
+    width: auto;
+    height: auto;
+}
+
+.respuesta_correcta{
+    border: solid 2px rgb(4, 200, 33);
+    width: 50%;
+    height: 20%;
+    margin: auto;
+    text-align: center;
+}
+
+.ocultar_respuesta{
+    display: none;
+}
+
+.btn-verify-container{
+    text-align: center;
+    background-color: transparent;
+    width: 100%;
+    padding: auto;
+    margin: auto;
+
+}
+
+#verificar{
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    border: solid 2px black;
+    color: white;
+    margin: auto;
+    padding: 12px 24px;
+    width: 20%;
+    height: 20%;
+    background-color: #D91E0D;    
+}
+
+
+.recommended-container{
+
+    background-color: white;
+    margin: auto;
+    border-radius: 5px;
+
+}
+
+.recommended-header{
+
+    text-align: center;
+    
+}
+
+.recommended-title{
+    font-size: 700;
+    color: #D91E0D;
+}
+
+.recommended-container li{
+    list-style: none;
+
+}

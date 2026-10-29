@@ -1,0 +1,15 @@
+.login{
+     margin: auto;
+    border: solid 2px black;
+    width: 60%;
+    padding: 1%;
+    border-radius: 10px;
+    align-items: center;
+    /* text-align: center; */
+}
+
+h1{
+    color: #D91E0D;
+    margin: auto;
+}
+

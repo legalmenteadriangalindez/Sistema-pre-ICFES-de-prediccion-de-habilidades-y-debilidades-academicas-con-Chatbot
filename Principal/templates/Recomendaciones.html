@@ -1,0 +1,107 @@
+{% extends "./home.html" %}
+{% block tittle %} recomendaciones {% endblock %} 
+
+{% block content %}  
+<br>
+<br>
+<h1>Recomendaciones</h1> 
+
+<div class="container mt-5">
+    <h2>Analisis del perfil Academico </h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID del usuario</th>
+                <th>Nombre</th>
+                <th>Ritmo de aprendizaje</th>
+                <th>Estilo de aprendizaje</th>
+                <th>Nivel general del estudiante </th>
+
+                <th>Dudas frecuentes</th>
+                <th>Areas fuertes</th>
+                <th>Areas debiles</th>
+                <th>Ultima Actualizacion del analisis cognitivo </th>               
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in perfil_pedagogico %}
+            <tr>
+                <td>{{p.id}}</td>
+                <td>{{p.estudiante.persona.nombre}}</td>
+                <td>{{p.ritmo}}</td>
+                <td>{{p.estilo}}</td>
+            {% endfor %}
+            {% for a in analisis_cognitivo %}
+                <td>{{a.nivel_general.nombre}}</td>
+                <td>{{a.dudas_frecuentes}}</td>
+                <td>{{a.areas_fuertes}}</td>
+                <td>{{a.areas_debiles}}</td>
+                <td>{{a.fecha}}</td>
+            </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+</div>
+
+<div class="container mt-5">
+    <h2>Recomendaciones Vocacionales para el perfil cognitivo del usuario</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID del usuario</th>
+                <th>Carreras</th>
+                <th>Porcentaje de compatibilidad</th>
+                <th>Conocimientos nesesarios</th>
+                <th>Puntajes nesesarios</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in recomendacion_vocacional %}
+            <tr>
+                <td>{{r.id}}</td>
+                <td>{{r.carrera}}</td>
+                <td>{{r.compatibilidad}}</td>
+                <td>{{r.conocimientos_necesarios}}</td>
+                <td>{{r.puntaje_requerido}}</td>
+                <td>{{r.fecha}}</td>
+            </tr>
+            <tr>
+                <td>Progreso</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="container mt-5">
+    <h2>Materiales de estudio recomendados</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID del usuario</th>
+                <th>Materia</th>
+                <th>Tema</th>
+                <th>Enlace</th>
+                <th>Marcar como completado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for m in material_estudio_recomendado %}
+            <tr>
+                <td>{{m.id}}</td>
+                <td>{{m.material}}</td>
+                <td>{{m.material.tema}}</td>
+                <td>{{m.material.url}}</td>
+                <td>{{m.activo}}</td>
+               
+            </tr>
+            <tr>
+                <td>Progreso</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+{% endblock %}

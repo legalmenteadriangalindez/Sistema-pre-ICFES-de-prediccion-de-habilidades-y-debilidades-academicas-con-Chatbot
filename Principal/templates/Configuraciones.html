@@ -1,0 +1,123 @@
+{% extends "./home.html" %}
+{% load static %}
+{% block tittle %} carreras {% endblock %} 
+
+{% block extra_head %}
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+     <link rel="stylesheet" href="{% static 'css/styles.css' %}">  <!-- referencia a estilos  --> 
+     <link rel="stylesheet" href="{% static 'css/configuraciones.css' %}">  <!-- referencia a estilos  -->      
+{% endblock %}
+
+{% block content %}  
+
+     <div id="containerConfiguraciones">
+
+          <h1>Configuraciones generales</h1>
+          <div class="config-generals-container">
+               <b>Privacidad y seguridad<i class="fas fa-chevron-right"></i></b>
+          </div>
+          
+          <!-- ======================================IDIOMA================================================== -->
+          <div class="language-container">
+             <div class="language-select-container" id="idioma">
+                 <b>Idioma 📖</b>
+                 <select class="language-select" name="idioma">
+                      <option value="español">Español</option>
+                      <option value="ingles">Ingles</option>
+                 </select>
+             </div>
+             <br>
+          <p>selecciona el idioma de la aplicacion</p>
+          </div>
+               
+          <!-- ======================================================================================== -->
+          <div class="notify-container">
+              <b><i class="fas fa-bell"></i>Notificaciones<i class="fas fa-chevron-right"></i></b>
+          </div>              
+     </div>
+
+<div id="containerAccesibilidad">
+<!-- ==================================MODO OSCURO=========================================== -->
+ 
+     <!-- <div> <b>Modo Oscuro 🌔</b></div>
+     
+     <input type="checkbox" id="modoOscuro" name="modoOscuro" onchange="toggleModoOscuro()"> -->
+<!-- ======================================================================================== --> 
+<!-- ==================================MODO OSCURO=========================================== -->
+     <h1>Accesibilidad</h1>
+     <div id="modoOscuroContainer" class="dark-mode-toggle">
+         <label for="modoOscuro"><b>Modo Oscuro 🌔</b></label>
+         <label for="" class="toggle-switch">
+             <input class="form-check-input mt-0" id="modoOscuro" type="checkbox" value="" onchange="toggleModoOscuro()" aria-label="Checkbox for following text input">
+             <span class="slider"></span>
+         </label>
+         <!-- <input type="checkbox" id="modoOscuro" name="modoOscuro" onchange="toggleModoOscuro()"> -->
+     </div>
+     <div class="dark-mode-container">
+          <input class="form-check-input mt-0" type="checkbox" value="" onchange="toggleModoOscuro()" aria-label="Checkbox for following text input">
+          <p>cambia el tema entre claro y oscuro</p>
+     </div>
+<!-- ======================================================================================== --> 
+
+<!-- ===============================fuente y tamaño======================== -->
+     
+     <div class="font-size-container"><b>Tamaño de la fuente 🅰️</b>  
+          <input class="slider-font-size" type="range" min="100" max="105" value="100"  name="tamañoFuente" oninput="SlideTamañoFuente(this.value)">
+          <p>ajusta eltamaño del texto en la aplicacion</p>
+     </div>
+<!-- =================================================================================== -->
+
+
+<!-- ===================================CONTRASTE ================================================= -->
+     <div class="contrast-container" > <b>Contraste 🔦</b>
+          <input class="slider-contrast" type="range" min="0" max="100" value="50"  name="contraste" oninput="SlideContraste(this.value)">
+          <p>Ajusta el contraste de colores para mejor visibilidad</p>
+     </div>
+<!-- =================================================================================== -->
+
+
+<!-- ==================================LECTURA DE PANTALLA==================================================== -->
+     <div class="screen-reading-container"><b>Lectura de pantalla 🎙️</b>
+           <input class="screen-reading-check" type="checkbox" id="lecturaPantalla" name="lecturaPantalla" onchange="toggleLecturaPantalla()">
+           <p>Activa la lectura de texto en voz alta</p>
+     </div>
+<!-- ====================================================================================== -->
+</div>
+
+<div class="other-options-container">
+     <h1>Otras opciones</h1>
+     <div class="delete-data-container"><i class="fas fa-trash-alt"></i>Borrar Datos de la cuenta<i class="fas fa-chevron-right"></i></div>
+     <div class="close-sesion-container"><i class="fas fa-sign-out-alt"></i>Cerrar sesion<i class="fas fa-chevron-right"></i></div>
+     <div class="delete-acount-container"><i class="fas fa-exclamation-triangle"></i>Eliminar Cuenta Permanentemente<i class="fas fa-chevron-right"></i></div>
+
+</div>
+
+
+<!-- ====================================AYUDA Y SOPORTE ==================================================== -->
+<div class="help-and-soport"> 
+     <h1> Ayuda y soporte ❓</h1>
+     <div class="help-center-container">
+          <i class="fas fa-question-circle"></i> Centro de ayuda<i class="fas fa-chevron-right"></i>
+     </div>
+     <div class="soport-contact-container">
+          <i class="fas fa-envelope"></i> Contactar Soporte<i class="fas fa-chevron-right"></i>
+     </div>
+     <div class="terms-conditions-container">
+          <i class="fas fa-file-alt"></i> Terminos y condiciones<i class="fas fa-chevron-right"></i>
+     </div>
+     <div class="policy-privated-container">
+          <i class="fas fa-shield-alt"></i> Politica y Privacidad<i class="fas fa-chevron-right"></i>
+     </div>
+     
+</div>
+
+<div>
+
+</div>
+<!-- ======================================================================================== -->
+
+
+
+
+{% endblock %}
