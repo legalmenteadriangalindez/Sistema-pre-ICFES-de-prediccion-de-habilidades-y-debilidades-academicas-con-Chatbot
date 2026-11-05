@@ -1,3 +1,5 @@
+param([switch]$CrearUsuariosPrueba)
+
 $ErrorActionPreference = "Stop"
 Set-Location $PSScriptRoot
 
@@ -51,6 +53,11 @@ if (-not (Test-Path ".env")) {
 
 & $venvPython manage.py migrate
 if ($LASTEXITCODE -ne 0) { throw "No se pudieron preparar las tablas de la base local." }
+
+if ($CrearUsuariosPrueba) {
+    & $venvPython manage.py crear_usuarios_prueba
+    if ($LASTEXITCODE -ne 0) { throw "No se pudieron crear los usuarios de prueba." }
+}
 
 Write-Host ""
 Write-Host "Aplicación disponible en http://127.0.0.1:8000" -ForegroundColor Green

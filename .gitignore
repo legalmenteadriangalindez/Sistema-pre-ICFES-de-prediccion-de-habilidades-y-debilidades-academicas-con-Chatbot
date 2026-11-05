@@ -29,3 +29,6 @@ media/
 Thumbs.db
 .vscode/
 .idea/
+
+# Respaldos manuales de la base de datos
+*.respaldo
