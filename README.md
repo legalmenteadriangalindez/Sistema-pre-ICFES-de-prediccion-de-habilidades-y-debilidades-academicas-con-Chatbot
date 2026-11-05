@@ -125,3 +125,59 @@ No uses los valores de `.env.example` en producción. Para desplegar el sistema 
 Cada instalación nueva crea su propia `local.sqlite3`; no se distribuye una base de datos inicial. La carpeta `media/`, las memorias del tutor y los archivos `.env` quedan locales y están excluidos de Git.
 
 Para descargar el código, usa **Code → Download ZIP** en GitHub. El ZIP de la rama `main` contiene el estado actual del proyecto, sin la historia de Git ni los datos locales de otras instalaciones. La solicitud cerrada #1 todavía puede mostrar referencias a commits anteriores. Si esos commits contenían datos personales, credenciales u otra información sensible, sigue la [guía oficial de GitHub para retirar datos sensibles](https://docs.github.com/es/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository); GitHub Support evalúa estas solicitudes caso por caso.
+
+## Reiniciar la base de datos y crear usuarios de prueba (desarrollo local)
+
+Este proyecto utiliza SQLite en `local.sqlite3`. **No elimines la carpeta `Principal/migrations/`**: las 11 migraciones que contiene son necesarias para recrear las tablas.
+
+### Copia limpia del proyecto
+
+El ZIP preparado para pruebas **no incluye** la antigua `local.sqlite3`, la configuración privada `.env` ni los archivos `__pycache__`. Conserva el código, las migraciones, las vistas, los estilos y las dependencias del proyecto original.
+
+**Windows, forma más fácil:** extrae el ZIP en una carpeta nueva y haz doble clic en `iniciar_pruebas.bat`. Ese archivo reutiliza el instalador de `run_local.bat`, crea la base SQLite con migraciones, carga los usuarios ficticios y abre el servidor en `http://127.0.0.1:8000/`. Necesitas Python 3.12 o 3.13 e Internet para instalar las dependencias la primera vez. Si usas la aplicación sin el motor de IA, algunas funciones de chatbot y generación de pruebas podrían requerir Ollama.
+
+**Windows, con terminal** (tras instalar las dependencias):
+
+```powershell
+.\.venv\Scripts\python.exe manage.py migrate
+.\.venv\Scripts\python.exe manage.py crear_usuarios_prueba
+.\.venv\Scripts\python.exe manage.py runserver 127.0.0.1:8000
+```
+
+**macOS/Linux** (tras ejecutar `./run_local.sh` para preparar el entorno, o instalar las dependencias manualmente):
+
+```bash
+.venv/bin/python manage.py migrate
+.venv/bin/python manage.py crear_usuarios_prueba
+.venv/bin/python manage.py runserver 127.0.0.1:8000
+```
+
+### Cuentas ficticias de demostración
+
+| Usuario | Rol | Contraseña inicial |
+| --- | --- | --- |
+| `admin_demo` | Administrador (superusuario Django) | `PreICFES2026!Demo` |
+| `estudiante_ana` | Estudiante | `PreICFES2026!Demo` |
+| `estudiante_luis` | Estudiante | `PreICFES2026!Demo` |
+| `acudiente_demo` | Acudiente | `PreICFES2026!Demo` |
+| `docente_demo` | Docente | `PreICFES2026!Demo` |
+
+Los usuarios están **activos** y pueden iniciar sesión sin verificación de correo. Se crean los perfiles, las personas y los sexos de prueba. Además, los dos estudiantes se matriculan en `Undécimo / 11A / 2026` y quedan relacionados con el acudiente de prueba. El rol `DOCENTE` no implica un módulo docente separado: es el rol disponible para probar el acceso existente. Todos los correos utilizan `example.test` y no pertenecen a personas reales.
+
+- Inicio de sesión: `http://127.0.0.1:8000/accounts/login/`
+- Administración de Django: `http://127.0.0.1:8000/admin/` (entrar como `admin_demo`).
+- Para restablecer las contraseñas demo si vuelves a olvidarlas: `.\.venv\Scripts\python.exe manage.py crear_usuarios_prueba --resetear-claves`.
+- Para cambiar la contraseña del administrador sin tocar las otras: `.\.venv\Scripts\python.exe manage.py changepassword admin_demo`.
+- Si vuelves a ejecutar el comando sin `--resetear-claves`, no duplica las cuentas ni les cambia sus contraseñas.
+- Opcional: establece la variable de entorno `PREICFES_DEMO_PASSWORD` con una contraseña de al menos 12 caracteres para usar otra clave de demostración. Esta función está bloqueada cuando `DEBUG=False` o `DJANGO_ENV=production`.
+
+**No utilices estas contraseñas públicas ni el usuario `admin_demo` en servidores accesibles por Internet.** El comando solo sirve para desarrollo en tu computador.
+
+### Si deseas borrar nuevamente los datos locales
+
+1. Detén Django y haz una copia de tu carpeta, especialmente si tienes evaluaciones o datos que quieres conservar.
+2. En Windows PowerShell, dentro del proyecto, usa `Rename-Item .\local.sqlite3 local.sqlite3.respaldo` (o mueve el archivo a una carpeta segura) si existe. No necesitas saber ninguna contraseña para hacerlo.
+3. Vuelve a ejecutar `iniciar_pruebas.bat` (o `manage.py migrate`, luego `manage.py crear_usuarios_prueba`). Django construirá una base nueva sin recuperar la anterior.
+4. **No borres ni regeneres las migraciones** para este procedimiento. La restauración de la base de datos anterior es posible si conservas `local.sqlite3.respaldo`.
+
+Las pruebas automatizadas específicas para estas cuentas están en `Principal/test_usuarios_prueba.py`; puedes ejecutarlas con `python manage.py test Principal.test_usuarios_prueba` en el entorno con las dependencias instaladas.
