@@ -1,0 +1,27 @@
+PRE-ICFES - REINICIO DESDE CERO CON USUARIOS DE PRUEBA
+====================================================
+
+1. Extrae todo el ZIP en una CARPETA NUEVA de tu computador.
+2. Instala Python 3.12 o 3.13 (si todavia no lo tienes).
+3. Windows: haz doble clic en iniciar_pruebas.bat
+4. El programa creara las tablas, registrara usuarios ficticios e iniciara Django.
+5. Abre http://127.0.0.1:8000/accounts/login/
+
+USUARIO            CONTRASENA            ROL
+admin_demo         PreICFES2026!Demo      Administrador
+estudiante_ana     PreICFES2026!Demo      Estudiante
+estudiante_luis    PreICFES2026!Demo      Estudiante
+acudiente_demo     PreICFES2026!Demo      Acudiente
+docente_demo       PreICFES2026!Demo      Docente
+
+Administracion Django: http://127.0.0.1:8000/admin/
+
+Si luego olvidas las contrasenas, en PowerShell dentro del proyecto:
+.\.venv\Scripts\python.exe manage.py crear_usuarios_prueba --resetear-claves
+
+ATENCION
+- El ZIP NO incluye la base de datos anterior ni archivos de configuracion privada.
+- NO borres las migraciones de Principal/migrations/.
+- Las credenciales son SOLO PARA PRUEBAS LOCALES, nunca para produccion.
+- El chatbot y la generacion IA requieren Ollama; la base de datos no.
+- Lee README.md para instrucciones ampliadas.
