@@ -89,7 +89,10 @@ def home(request):
     persona = getattr(user, "persona", None)
     estudiante = getattr(persona, "estudiante", None) if persona else None
     user_id = str(user.id)
-    chat_id = request.POST.get("chat_id") or request.GET.get("chat_id", "default")
+    chat_id = (request.POST.get("chat_id") or request.GET.get("chat_id")
+               or request.session.get("chat_id_actual") or "default")
+    if request.GET.get("chat_id"):
+        request.session["chat_id_actual"] = chat_id
     perfil = PerfilUsuario.objects.filter(user= user).first()
     persona = Persona.objects.filter(perfil_user=perfil).first()
     estudiante = Estudiante.objects.filter(persona= persona).first() if persona else None
@@ -153,13 +156,12 @@ def home(request):
     resultado = {"success": False, "response": None}
     
     if request.method == "POST" and "delete_chat" in request.POST:
-       chat_id_to_delete = request.POST.get("chat_id")
-       chatbot.memory_manager.delete_chat(chat_id_to_delete)
-
-       if chat_id_to_delete == chat_id:
-           return redirect("home")
-       
-       return redirect(f"{request.path}?chat_id={chat_id}")
+        chat_objetivo = request.POST.get("chat_id", "")
+        if chatbot.delete_chat(chat_objetivo):
+            request.session.pop("chat_id_actual", None)
+            return redirect("home")
+        contexto["chat_error"] = "No se pudo eliminar la conversación. Vuelve a intentarlo."
+        return render(request, "home.html", contexto)
 
     if request.method == "POST":
         # return render(request,"home.html",contexto) 
@@ -171,8 +173,10 @@ def home(request):
         
          # ==============borrar historial============
         if "borrarHistorial" in request.POST:
-            chatbot.clear_conversation(chat_id)
-            contexto["historial"] = []
+            if chatbot.clear_conversation(chat_id):
+                contexto["historial"] = []
+            else:
+                contexto["chat_error"] = "No se pudo vaciar la conversación."
             return render(request,"home.html",contexto)
         # **************borrar historial*************
 
@@ -183,6 +187,7 @@ def home(request):
         if "nuevo_chat" in request.POST:
             chat_id = chatbot.memory_manager.create_new_chat(prompt or "Nuevo Chat")
             contexto["chat_id"] = chat_id
+            request.session["chat_id_actual"] = chat_id
             contexto["historial"] = []
         #***************crear nuevo chat************
 
@@ -191,6 +196,11 @@ def home(request):
             # Contexto construido desde la base de datos del usuario autenticado.
             resumen = construir_contexto_academico(estudiante)
             resultado = chatbot.chat(prompt, chat_id=chat_id, academic_context=resumen)
+            # El motor puede crear un UUID cuando se usa el chat inicial "default".
+            # Conservar ese identificador para que la siguiente pregunta siga el hilo.
+            chat_id = resultado.get("chat_id") or chat_id
+            contexto["chat_id"] = chat_id
+            request.session["chat_id_actual"] = chat_id
             if resultado["success"]:
                 contexto["response"] = resultado["response"]
             else:
@@ -214,6 +224,7 @@ def home(request):
            contexto["audio_usuario"],contexto["ruta"]= procesar_audio(audio)                
         # **************procesar audio*************
             
+        contexto["chats"] = chatbot.memory_manager.get_user_chats()
         contexto["prompt"] = prompt
 
     return render(request,"home.html",contexto)       # view home 
