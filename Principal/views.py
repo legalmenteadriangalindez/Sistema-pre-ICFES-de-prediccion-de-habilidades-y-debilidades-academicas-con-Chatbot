@@ -73,6 +73,10 @@ def salir(request):
 @login_required
 def home(request):
     user = request.user
+    # El login de Django redirige a / para todos los usuarios. En ese punto,
+    # enviamos a los gestores a su panel antes de cargar el tutor estudiantil.
+    if es_gestor(user):
+        return redirect("admin_gestion_users")
     persona = getattr(user, "persona", None)
     estudiante = getattr(persona, "estudiante", None) if persona else None
     user_id = str(user.id)
