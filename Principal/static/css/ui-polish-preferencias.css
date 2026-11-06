@@ -1,0 +1,440 @@
+/* Sección 4: ajustes de otras pantallas y responsive. Continuación de la cascada. */
+.preicfes-ui .account-actions-popover label {
+  font-size:11px;
+  font-weight:800
+}
+
+/* Preferencias reales de interfaz (almacenadas localmente, no en la base). */
+.preicfes-ui .settings-grid {
+  display:grid;
+  grid-template-columns:minmax(0,1.4fr) minmax(290px,.8fr);
+  gap:20px;
+  align-items:start;
+  margin-top:22px
+}
+
+.preicfes-ui .settings-card {
+  padding:27px
+}
+
+.preicfes-ui .settings-side {
+  display:grid;
+  gap:17px
+}
+
+.preicfes-ui .settings-card-head {
+  display:flex;
+  align-items:center;
+  gap:13px;
+  padding-bottom:19px;
+  border-bottom:1px solid #e5eef9;
+  margin-bottom:7px
+}
+
+.preicfes-ui .settings-icon {
+  display:grid;
+  place-items:center;
+  width:55px;
+  height:55px;
+  flex:none;
+  border-radius:17px;
+  color:#0b56c8;
+  background:#e4f0ff;
+  font-size:21px
+}
+
+.preicfes-ui .settings-icon-green {
+  color:#078567;
+  background:#e1f9f0
+}
+
+.preicfes-ui .settings-card h2 {
+  font-size:18px;
+  margin-bottom:4px
+}
+
+.preicfes-ui .settings-card p {
+  font-size:12px;
+  color:#6a7f9b;
+  margin:0;
+  line-height:1.65
+}
+
+.preicfes-ui .settings-control {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  padding:20px 2px;
+  border-bottom:1px solid #ecf2fa
+}
+
+.preicfes-ui .settings-control:last-child {
+  border:0;
+  padding-bottom:4px
+}
+
+.preicfes-ui .settings-control strong {
+  display:block;
+  font-size:13px;
+  color:#183d6a;
+  margin-bottom:5px
+}
+
+.preicfes-ui .settings-control small {
+  display:block;
+  font-size:11px;
+  line-height:1.6;
+  color:#7389a5
+}
+
+.preicfes-ui .settings-control-stack {
+  align-items:stretch;
+  flex-direction:column;
+  gap:17px
+}
+
+.preicfes-ui .settings-switch {
+  position:relative;
+  flex:none;
+  width:49px;
+  height:29px;
+  cursor:pointer
+}
+
+.preicfes-ui .settings-switch input {
+  position:absolute;
+  opacity:0;
+  width:100%;
+  height:100%;
+  margin:0;
+  cursor:pointer
+}
+
+.preicfes-ui .settings-switch-track {
+  display:block;
+  width:100%;
+  height:100%;
+  background:#ccd9e9;
+  border-radius:40px;
+  transition:background .2s
+}
+
+.preicfes-ui .settings-switch-track:before {
+  content:'';
+  position:absolute;
+  top:4px;
+  left:4px;
+  background:var(--ds-white);
+  width:21px;
+  height:21px;
+  border-radius:50%;
+  box-shadow:0 2px 5px #1e3d5d33;
+  transition:transform .2s
+}
+
+.preicfes-ui .settings-switch input:checked+.settings-switch-track {
+  background:#095bd5
+}
+
+.preicfes-ui .settings-switch input:checked+.settings-switch-track:before {
+  transform:translateX(20px)
+}
+
+.preicfes-ui .settings-switch input:focus-visible+.settings-switch-track {
+  outline:3px solid #f5ad1e;
+  outline-offset:3px
+}
+
+.preicfes-ui .settings-range-row {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  color:#6b82a0;
+  font-size:11px
+}
+
+.preicfes-ui .settings-range-row input {
+  flex:1;
+  min-width:0;
+  accent-color:#0755cd
+}
+
+.preicfes-ui .settings-range-row output {
+  font-weight:900;
+  color:#0754c5;
+  min-width:42px
+}
+
+.preicfes-ui .settings-link {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:15px 5px;
+  border-bottom:1px solid #edf3fa;
+  color:#234874;
+  font-weight:750;
+  font-size:12px
+}
+
+.preicfes-ui .settings-link span {
+  display:flex;
+  gap:12px;
+  align-items:center
+}
+
+.preicfes-ui .settings-link>i {
+  font-size:10px;
+  color:#7795b1
+}
+
+.preicfes-ui .settings-link:hover {
+  color:#0756c6;
+  background:#f8fbff
+}
+
+.preicfes-ui .settings-hint {
+  display:flex;
+  align-items:flex-start;
+  gap:11px;
+  background:#e9f5ff;
+  border:1px solid #d6e8fa;
+  border-radius:16px;
+  padding:16px;
+  color:#4f6a88
+}
+
+.preicfes-ui .settings-hint i {
+  color:#075bc6;
+  margin-top:3px
+}
+
+.preicfes-ui .settings-hint p {
+  margin:0;
+  font-size:11px;
+  line-height:1.65
+}
+
+/* Ajustes de accesibilidad y pantalla reducida. */
+.preicfes-ui.reduce-motion,.preicfes-ui.reduce-motion *,.preicfes-ui.reduce-motion *::before,.preicfes-ui.reduce-motion *::after {
+  animation:none!important;
+  transition:none!important;
+  scroll-behavior:auto!important
+}
+
+.preicfes-ui .dash {
+  font-size:calc(1em * var(--pc-text-scale))
+}
+
+.preicfes-ui.theme-dark {
+  background:#0d1e35!important;
+  color:#d9e8f9!important
+}
+
+.preicfes-ui.theme-dark :is(.app-topbar,.app-sidebar,.ui-card,.tutor-form,.settings-card) {
+  background:#152c49!important;
+  color:#e4eefc;
+  border-color:#345173!important
+}
+
+.preicfes-ui.theme-dark :is(.page-intro,.dash-hero,.section-hero,.tutor-header) {
+  background:linear-gradient(115deg,#16365a,#1a456d)!important;
+  border-color:#39628a!important
+}
+
+.preicfes-ui.theme-dark :is(h1,h2,h3,.stat-card strong,.widget-title h2,.settings-card h2,.settings-control strong,.exam-question-text,.exam-status strong,.exam-result h2,.admin-table strong) {
+  color:#f6faff!important
+}
+
+.preicfes-ui.theme-dark :is(p,small,.widget-empty,.settings-control small,.settings-card p,.message-author) {
+  color:#adc2dc!important
+}
+
+.preicfes-ui.theme-dark :is(.tutor-area,.exam-passage,.settings-hint,.exam-summary-counters>div) {
+  background:#173753!important;
+  border-color:#3d6186;
+  color:#daeaff
+}
+
+.preicfes-ui.theme-dark #respuesta.conversation-list {
+  background:transparent!important;
+  color:#f6faff!important
+}
+
+.preicfes-ui.theme-dark :is(.message-bubble.bot-bubble,.chat-input-shell,.chat-suggestions button,.exam-question-card .answer-option,.subject-card,.career-tile,.settings-link,.admin-filters input,.admin-filters select,.account-actions-popover) {
+  background:#1b3858!important;
+  border-color:#456487!important;
+  color:#f4f8ff!important
+}
+
+.preicfes-ui.theme-dark :is(.user-bubble,.answer-option:has(input:checked)) {
+  background:#245782!important;
+  border-color:#3779ab!important;
+  color:var(--ds-white)!important
+}
+
+.preicfes-ui.theme-dark .tutor-form textarea {
+  color:#f7fbff!important;
+  background:transparent!important
+}
+
+.preicfes-ui.theme-dark .app-footer {
+  color:#a1b7d1;
+  border-color:#345173
+}
+
+@media(max-width:1280px) {
+  .preicfes-ui .admin-content-grid {
+    grid-template-columns:minmax(0,1.5fr) minmax(235px,.75fr)
+  }
+
+  .preicfes-ui .admin-feature-grid {
+    grid-template-columns:repeat(2,minmax(0,1fr))
+  }
+
+}
+
+@media(max-width:1050px) {
+  .preicfes-ui .exam-layout,.preicfes-ui .exam-intro-layout,.preicfes-ui .admin-content-grid {
+    grid-template-columns:1fr
+  }
+
+  .preicfes-ui .exam-status-row {
+    grid-template-columns:repeat(2,minmax(0,1fr))
+  }
+
+  .preicfes-ui .exam-side,.preicfes-ui .admin-side {
+    grid-template-columns:repeat(2,minmax(0,1fr))
+  }
+
+  .preicfes-ui .settings-grid {
+    grid-template-columns:1fr
+  }
+
+}
+
+@media(max-width:700px) {
+  .preicfes-ui .exam-status-row,.preicfes-ui .exam-side,.preicfes-ui .admin-side,.preicfes-ui .admin-feature-grid {
+    grid-template-columns:1fr
+  }
+
+  .preicfes-ui .exam-card-footer {
+    justify-content:stretch
+  }
+
+  .preicfes-ui .exam-card-footer .ui-btn {
+    flex:1
+  }
+
+  .preicfes-ui .exam-card-footer #finalizar-simulacro {
+    flex-basis:100%
+  }
+
+  .preicfes-ui .admin-filters {
+    flex-direction:column
+  }
+
+  .preicfes-ui .admin-filters select {
+    max-width:none
+  }
+
+  .preicfes-ui .admin-inline-form {
+    grid-template-columns:1fr
+  }
+
+  .preicfes-ui .tutor-header {
+    padding:17px
+  }
+
+  .preicfes-ui .tutor-icon {
+    height:49px;
+    width:49px
+  }
+
+  .preicfes-ui .tutor-icon img {
+    width:42px;
+    height:42px
+  }
+
+  .preicfes-ui .tutor-header h2 {
+    font-size:17px
+  }
+
+  .preicfes-ui .tutor-header p {
+    font-size:11px
+  }
+
+  .preicfes-ui .tutor-label {
+    font-size:0;
+    width:21px;
+    height:21px;
+    padding:5px
+  }
+
+  .preicfes-ui .tutor-card #respuesta.conversation-list {
+    padding:18px!important;
+    min-height:250px!important
+  }
+
+  .preicfes-ui .chat-message-group {
+    max-width:88%
+  }
+
+  .preicfes-ui .chat-suggestions {
+    padding:0 15px 15px
+  }
+
+  .preicfes-ui .chat-suggestions>span {
+    display:none
+  }
+
+  .preicfes-ui .tutor-form {
+    padding:14px
+  }
+
+  .preicfes-ui .question-navigator {
+    grid-template-columns:repeat(6,minmax(0,1fr))
+  }
+
+}
+
+@media(max-width:420px) {
+  .preicfes-ui .chat-tools {
+    gap:4px
+  }
+
+  .preicfes-ui .chat-tools :is(button,.chat-upload) {
+    width:33px;
+    height:33px;
+    min-width:33px;
+    min-height:33px
+  }
+
+  .preicfes-ui .chat-toolbar {
+    flex-wrap:wrap
+  }
+
+  .preicfes-ui .chat-toolbar>.pill-button {
+    margin-left:auto
+  }
+
+  .preicfes-ui .exam-question-card,.preicfes-ui .exam-summary,.preicfes-ui .exam-welcome,.preicfes-ui .exam-tips {
+    padding:18px
+  }
+
+  .preicfes-ui .question-navigator {
+    grid-template-columns:repeat(5,minmax(0,1fr))
+  }
+
+}
+
+@media(prefers-reduced-motion:reduce) {
+  html {
+    scroll-behavior:auto!important
+  }
+
+  .preicfes-ui * {
+    transition:none!important
+  }
+
+}

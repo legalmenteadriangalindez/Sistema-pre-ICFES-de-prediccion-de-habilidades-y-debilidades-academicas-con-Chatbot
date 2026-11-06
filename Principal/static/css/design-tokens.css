@@ -1,0 +1,69 @@
+/* Design tokens Pre-ICFES 2026.
+ * Fuente única para colores, tipografía, espacios y controles compartidos.
+ * Los tonos complementarios existentes se preservan para evitar cambios visuales.
+ * No usar los tokens claros como sustitutos de superficies del modo oscuro.
+ */
+:root {
+  /* Identidad y superficie */
+  --ds-brand: #0754c9;
+  --ds-portal-primary: #0647b4;
+  --ds-brand-strong: #042f8e;
+  --ds-brand-polish: #0753ca;
+  --ds-link: #0757ce;
+  --ds-navy: #092457;
+  --ds-ink: #243f64;
+  --ds-ink-polish: #102b58;
+  --ds-navy-polish: #08255b;
+  --ds-canvas: #f2f7ff;
+  --ds-surface: #ffffff;
+  --ds-white: #fff;
+  --ds-border: #dbe6f5;
+  --ds-border-soft: #dce8f7;
+  --ds-muted: #657c9b;
+  --ds-muted-polish: #607797;
+  --ds-sky: #edf6ff;
+  --ds-focus: #ffc234;
+
+  /* Tipografía */
+  --ds-font-body: 'DM Sans', system-ui, sans-serif;
+  --ds-font-heading: Manrope, system-ui, sans-serif;
+  --ds-font-base: 14px;
+
+  /* Ritmo espacial */
+  --ds-space-1: 4px;
+  --ds-space-2: 8px;
+  --ds-space-3: 12px;
+  --ds-space-4: 16px;
+  --ds-space-5: 20px;
+  --ds-space-6: 24px;
+  --ds-space-8: 32px;
+
+  /* Componentes */
+  --ds-button-min-height: 44px;
+  --ds-button-radius: 13px;
+  --ds-card-radius: 22px;
+  --ds-shadow-soft: 0 9px 28px rgba(12, 56, 125, .075);
+  --ds-shadow-card: 0 14px 40px rgba(12, 60, 128, .075), 0 2px 8px rgba(12, 60, 128, .035);
+  --ds-shadow-hover: 0 21px 50px rgba(12, 70, 153, .13);
+}
+
+/* Alias con valores actuales para componentes con nombres heredados. */
+.preicfes-ui {
+  --pc-navy: var(--ds-navy);
+  --pc-blue: var(--ds-brand);
+  --pc-blue-d: var(--ds-brand-strong);
+  --pc-bg: var(--ds-canvas);
+  --pc-line: var(--ds-border);
+  --pc-muted: var(--ds-muted);
+  --pc-shadow: var(--ds-shadow-soft);
+
+  --px-ink: var(--ds-ink-polish);
+  --px-navy: var(--ds-navy-polish);
+  --px-blue: var(--ds-brand-polish);
+  --px-link: var(--ds-link);
+  --px-sky: var(--ds-sky);
+  --px-border: var(--ds-border-soft);
+  --px-muted: var(--ds-muted-polish);
+  --px-shadow: var(--ds-shadow-card);
+  --px-shadow-hover: var(--ds-shadow-hover);
+}
