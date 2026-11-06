@@ -3,7 +3,7 @@
 {% block content %}
 <div class="dash portal-page">
  <section class="section-hero"><span class="eyebrow"><i class="fas fa-compass"></i> AUTOCONOCIMIENTO</span><h1>Explora tus intereses profesionales</h1><p>Responde doce afirmaciones y descubre áreas afines. La orientación es exploratoria, no una prueba psicométrica ni una predicción de admisión.</p></section>
- {% if error %}<div class="ui-alert ui-alert-warning" role="alert">{{ error }}</div>{% endif %}
+ {% if error %}{% include "components/alert.html" with tone="warning" message=error only %}{% endif %}
  <div class="portal-layout"><section class="ui-card portal-panel"><h2>Cuestionario de intereses</h2><p>¿Cuánto te identifica cada afirmación? 1 = nada; 5 = muchísimo.</p>
  <form method="post">{% csrf_token %}
  {% for codigo, area, texto in preguntas %}
