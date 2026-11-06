@@ -37,7 +37,7 @@
           <small>{{ asignacion.curso.grado.nombre }} · {{ asignacion.curso.nombre }} · {{ asignacion.anio_lectivo.anio }}</small>
         </span>
         {% if asignacion.activo %}
-          <form method="post" onsubmit="return confirm('¿Revocar el acceso a este curso?');">{% csrf_token %}
+          <form method="post" data-confirm="¿Revocar el acceso a este curso?">{% csrf_token %}
             <input type="hidden" name="accion" value="revocar"><input type="hidden" name="asignacion_id" value="{{ asignacion.pk }}">
             <button class="ui-btn ui-btn-outline" type="submit">Revocar acceso</button>
           </form>
