@@ -146,7 +146,7 @@ test('confirmación cancela formularios marcados y omite formularios normales', 
   form.getAttribute = (name) => name === 'data-confirm' ? '¿Eliminar?' : null;
   let prevented = false;
   const ctx = environment();
-  ctx.window.confirm = () => false;
+  ctx.context.window.confirm = () => false;
   ctx.load('confirmations.js');
   await ctx.document.fire('submit', {
     target: { closest: () => form },
