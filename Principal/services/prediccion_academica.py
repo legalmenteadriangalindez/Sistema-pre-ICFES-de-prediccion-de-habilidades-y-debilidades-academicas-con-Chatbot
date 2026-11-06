@@ -196,7 +196,7 @@ def entrenar_y_evaluar():
     x, y, grupos = construir_muestras(historiales)
     train_idx, test_idx = next(GroupShuffleSplit(
         n_splits=1, test_size=0.25, random_state=42
-    ).split(x, y, groups))
+    ).split(x, y, grupos))
     x_train, y_train = [x[i] for i in train_idx], [y[i] for i in train_idx]
     x_test, y_test = [x[i] for i in test_idx], [y[i] for i in test_idx]
     train_students = len({grupos[i] for i in train_idx})
