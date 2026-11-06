@@ -48,3 +48,14 @@ ATENCION
 - Estas credenciales son publicas y solo se permiten en pruebas locales.
 - Para el chatbot y la generacion IA necesitas Ollama; el sitio web no.
 - Lee README.md para mas instrucciones.
+
+NOTAS DE LAS CORRECCIONES
+- Principal/migrations/0012_*.py ya esta incluida y corregida.
+  No es necesario ejecutar el script de reparacion ni generar 0012 otra vez.
+- admin_demo entra al panel de gestion de usuarios:
+  http://127.0.0.1:8000/admin_gestion_users/
+- Estudiantes mantienen su pantalla de inicio habitual.
+- Si el tutor dice "model 'llama3:8b' not found", abre Ollama y ejecuta:
+  ollama pull llama3:8b
+- Si ya aplicaste 0012 en tu SQLite local, no borres esa base ni sus respaldos.
+  El repositorio no incluye archivos *.sqlite3 ni respaldos locales.
