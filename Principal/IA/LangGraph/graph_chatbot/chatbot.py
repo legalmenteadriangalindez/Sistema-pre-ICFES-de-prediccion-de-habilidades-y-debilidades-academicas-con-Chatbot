@@ -132,10 +132,16 @@ class ModernChatbot:
             if not messages:
                 return {}
             
-            profile = self.memory_manager.build_cognitive_profile(messages[:6],self.user_id)
-
-            if profile:
-               self.memory_manager.save_cognitive_profile(profile)
+            try:
+                profile = self.memory_manager.build_cognitive_profile(messages[:6], self.user_id)
+                if profile:
+                    self.memory_manager.save_cognitive_profile(profile)
+            except Exception as exc:
+                logging.getLogger(__name__).warning(
+                    "cognitive_profile_pipeline_failed",
+                    extra={"component": "profiles", "error_type": type(exc).__name__},
+                )
+            return {}
 
         # nodo que extrae y almacena nuevas memorias vectoriales
         def memory_extraction_node(state):
