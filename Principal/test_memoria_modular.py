@@ -179,6 +179,24 @@ class MemoriaModularTests(SimpleTestCase):
         )
         self.assertIsNone(result)
 
+    def test_fallo_de_perfil_en_grafo_no_interrumpe_los_mensajes(self):
+        bot = ModernChatbot.__new__(ModernChatbot)
+        bot.user_id = "demo1"
+        bot.memory_manager = MagicMock()
+        bot.memory_manager.user_dir = self.tmp.name
+        bot.memory_manager.build_cognitive_profile.side_effect = ConnectionError("Ollama caído")
+        with patch("Principal.IA.LangGraph.graph_chatbot.chatbot.StateGraph") as graph:
+            with patch("Principal.IA.LangGraph.graph_chatbot.chatbot.SqliteSaver"):
+                with patch("Principal.IA.LangGraph.graph_chatbot.chatbot.sqlite3.connect"):
+                    bot._create_app_graph()
+        callback = next(
+            call.args[1] for call in graph.return_value.add_node.call_args_list
+            if call.args[0] == "profile_cognitive"
+        )
+        with self.assertLogs("Principal.IA.LangGraph.graph_chatbot.chatbot", level="WARNING"):
+            self.assertEqual(callback({"messages": [HumanMessage(content="hola")]}), {})
+        bot.memory_manager.save_cognitive_profile.assert_not_called()
+
     def test_chat_sin_ollama_devuelve_error_controlado_sin_revelar_prompt(self):
         bot = ModernChatbot.__new__(ModernChatbot)
         bot.user_id = "demo1"
