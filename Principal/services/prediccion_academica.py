@@ -224,7 +224,50 @@ def entrenar_y_evaluar():
     base_probs = referencia.predict_proba(x_test)[:, list(referencia.classes_).index(1)].tolist()
     metricas_base = _metricas(y_test, base_est, base_probs)
 
+    # No extrapolar alertas a materias sin alumnos y ambas clases
+    # representados de forma independiente en entrenamiento y prueba.
+    areas_validadas = []
+    validacion_por_area = {}
+    for numero, area in enumerate(AREAS_BASE):
+        ent = [i for i in train_idx if x[i][7 + numero] == 1]
+        pru = [i for i in test_idx if x[i][7 + numero] == 1]
+        etiquetas_train = [y[i] for i in ent]
+        etiquetas_test = [y[i] for i in pru]
+        cumple = (
+            len(ent) >= 15 and len(pru) >= 6
+            and len({grupos[i] for i in ent}) >= 8
+            and len({grupos[i] for i in pru}) >= 4
+            and min(sum(etiquetas_train), len(ent) - sum(etiquetas_train)) >= 5
+            and min(sum(etiquetas_test), len(pru) - sum(etiquetas_test)) >= 2
+        )
+        if cumple:
+            posiciones = [list(test_idx).index(i) for i in pru]
+            por_area = _metricas(
+                etiquetas_test, [estimados[p] for p in posiciones],
+                [probs[p] for p in posiciones],
+            )
+            cumple = (
+                por_area["precision_riesgo"] >= 0.50
+                and por_area["recuperacion_riesgo"] >= 0.50
+                and por_area["exactitud_balanceada"] >= 0.55
+            )
+            if cumple:
+                areas_validadas.append(area)
+            validacion_por_area[area] = {
+                "ejemplos_prueba": len(pru),
+                "estudiantes_prueba": len({grupos[i] for i in pru}),
+                "aprobada": cumple, "metricas": por_area,
+            }
+        else:
+            validacion_por_area[area] = {
+                "ejemplos_prueba": len(pru),
+                "estudiantes_prueba": len({grupos[i] for i in pru}),
+                "aprobada": False,
+            }
+
     evaluacion = {
+        "areas_validadas": areas_validadas,
+        "evaluacion_por_area": validacion_por_area,
         "prueba_estudiantes": test_students,
         "entrenamiento_estudiantes": train_students,
         "prueba_ejemplos": len(y_test),
@@ -234,7 +277,8 @@ def entrenar_y_evaluar():
         "referencia_mayoritaria": metricas_base,
     }
     if (
-        metricas["exactitud_balanceada"] < metricas_base["exactitud_balanceada"] + 0.05
+        not areas_validadas
+        or metricas["exactitud_balanceada"] < metricas_base["exactitud_balanceada"] + 0.05
         or metricas["precision_riesgo"] < 0.55
         or metricas["recuperacion_riesgo"] < 0.55
     ):
@@ -256,6 +300,7 @@ def entrenar_y_evaluar():
         "coeficientes": clasificador.coef_[0].tolist(),
         "intercepto": float(clasificador.intercept_[0]),
         "auditoria": auditoria, "evaluacion": evaluacion,
+        "areas_validadas": areas_validadas,
     }
     ruta = Path(settings.PREDICCION_MODELO_PATH)
     ruta.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
@@ -281,7 +326,10 @@ def cargar_modelo():
         with ruta.open(encoding="utf-8") as archivo:
             datos = json.load(archivo)
         if (datos.get("version") != VERSION
-                or datos.get("caracteristicas") != list(CARACTERISTICAS)):
+                or datos.get("caracteristicas") != list(CARACTERISTICAS)
+                or not isinstance(datos.get("areas_validadas"), list)
+                or not datos["areas_validadas"]
+                or any(a not in AREAS_BASE for a in datos["areas_validadas"])):
             return None
         if len(datos["media"]) != len(CARACTERISTICAS):
             return None
@@ -329,7 +377,7 @@ def predicciones_estudiante(estudiante, modelo=None, historiales=None):
     resultado = []
     for area in AREAS_BASE:
         eventos = areas.get(area, [])
-        if len(eventos) < MIN_HISTORIA:
+        if area not in modelo["areas_validadas"] or len(eventos) < MIN_HISTORIA:
             continue
         prob = _probabilidad(modelo, _vector(eventos, area))
         resultado.append({
