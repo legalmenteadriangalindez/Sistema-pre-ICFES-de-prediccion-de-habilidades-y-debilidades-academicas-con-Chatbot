@@ -74,6 +74,18 @@ En GitHub Actions la misma batería se ejecuta con Python 3.12 en solicitudes de
 
 **Cuentas demo:** solo disponibles en desarrollo local; crea o verifica con `python manage.py crear_usuarios_prueba`. Nunca subas `local.sqlite3`, `.env` ni contraseñas de producción.
 
+## Refactorización de vistas Django — fase 4 (noviembre de 2026)
+
+Se separaron autenticación, chatbot, cuestionarios, perfiles, estudiantes,
+orientación, seguimiento, docentes, acudientes y administración en módulos
+propios de `Principal/view_modules/`. Las tres vistas monolíticas originales
+ahora actúan como **fachadas de compatibilidad**, preservando rutas, nombres
+públicos, decoradores de permisos y los puntos de mock de las pruebas. No
+se cambiaron modelos, migraciones ni datos de alumnos.
+
+Se añadieron pruebas de rutas, autenticación, imports y contratos históricos.
+Consulta el [mapa de responsabilidades de la fase 4](docs/REFACTORIZACION_VISTAS_FASE_4.md).
+
 ## Refactorización de HTML y componentes — fase 3 (noviembre de 2026)
 
 Se añadieron componentes Django en `Principal/templates/components/` para
