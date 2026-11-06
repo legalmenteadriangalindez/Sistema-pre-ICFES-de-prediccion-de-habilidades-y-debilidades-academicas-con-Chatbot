@@ -59,6 +59,7 @@ from .management_views import (
     gestion_acudientes_estudiantes,
     gestion_db,
     gestion_users,
+    gestion_docentes,
 )
 
 # ********************************IMPORTACIONES**************************************************
