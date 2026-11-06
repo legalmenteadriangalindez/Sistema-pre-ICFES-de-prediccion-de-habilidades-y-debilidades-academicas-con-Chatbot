@@ -5,7 +5,7 @@
   <section class="section-hero"><span class="eyebrow"><i class="fas fa-shield-halved"></i> CONTROL DE ACCESO</span>
     <h1>Asignaciones docentes</h1><p>Autoriza a cada docente únicamente en los cursos y años que le correspondan. Revocar una asignación bloquea inmediatamente nuevas operaciones en ese curso.</p>
   </section>
-  {% if error %}<div class="ui-alert ui-alert-warning" role="alert">{{ error }}</div>{% endif %}
+  {% if error %}{% include "components/alert.html" with tone="warning" message=error only %}{% endif %}
   <section class="ui-card">
     <h2><i class="fas fa-user-check"></i> Asignar curso a docente</h2>
     <form method="post" class="portal-form">{% csrf_token %}
