@@ -156,12 +156,16 @@ def plan_estudio(request):
                 if accion == "registrar":
                     try:
                         minutos = int(request.POST.get("minutos", ""))
-                        notas = request.POST.get("notas", "").strip()
-                        marcar_sesion(sesion, minutos, notas)
-                    except (ValueError, TypeError) as exc:
-                        messages.error(request, str(exc) if str(exc) else "Revisa los minutos de estudio.")
+                    except (ValueError, TypeError):
+                        messages.error(request, "Introduce una cantidad válida de minutos.")
                     else:
-                        messages.success(request, "Sesión registrada. Tu progreso se actualizó.")
+                        notas = request.POST.get("notas", "").strip()
+                        try:
+                            marcar_sesion(sesion, minutos, notas)
+                        except ValueError as exc:
+                            messages.error(request, str(exc))
+                        else:
+                            messages.success(request, "Sesión registrada. Tu progreso se actualizó.")
                 else:
                     reabrir_sesion(sesion)
                     messages.info(request, "El registro se reabrió para corregirlo.")
