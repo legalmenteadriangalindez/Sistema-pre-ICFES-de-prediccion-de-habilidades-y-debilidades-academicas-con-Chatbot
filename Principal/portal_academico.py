@@ -62,9 +62,9 @@ def orientacion_vocacional(request):
                         conocimientos_necesarios__startswith="[Autoevaluación de intereses]"
                     ).delete()
                     for dato in carreras[:5]:
-                        carrera, _ = Carrera.objects.get_or_create(
-                            nombre=dato["nombre"], defaults={"descripcion": dato["descripcion"]}
-                        )
+                        carrera = Carrera.objects.filter(nombre__iexact=dato["nombre"]).order_by("pk").first()
+                        if carrera is None:
+                            carrera = Carrera.objects.create(nombre=dato["nombre"], descripcion=dato["descripcion"])
                         RecomendacionVocacional.objects.create(
                             matricula=matricula, carrera=carrera,
                             compatibilidad=Decimal(str(dato["afinidad"])),
@@ -85,8 +85,9 @@ def comparador_carreras(request):
         if raw.isdecimal() and int(raw) not in ids:
             ids.append(int(raw))
     ids = ids[:3]
-    seleccionadas = [c for c in catalogo if c.pk in ids]
-    seleccionadas.sort(key=lambda c: ids.index(c.pk))
+    # El catálogo visible se limita, pero la selección se busca en toda la tabla.
+    por_id = {c.pk: c for c in Carrera.objects.filter(pk__in=ids)}
+    seleccionadas = [por_id[pk] for pk in ids if pk in por_id]
     estudiante = _estudiante(request.user)
     matricula = _matricula(estudiante)
     recomendaciones = {}
