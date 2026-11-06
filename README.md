@@ -54,6 +54,22 @@ Los archivos `run_local.bat`, `run_local.ps1`, `run_local.sh` e `iniciar_pruebas
 **Bases de datos existentes:** la migración `0012` elimina campos y modelos heredados; se probó el procedimiento sobre la base de desarrollo del proyecto, no como migración de datos históricos. Antes de aplicarla a una base con información real, respáldala y revisa el impacto de esos cambios. Si ya aplicaste `0012` en tu máquina con un archivo generado y corregido localmente, no necesitas recrear SQLite ni repetirla; conserva ese archivo y su respaldo al actualizar el código.
 
 
+## Nuevos flujos académicos (noviembre de 2026)
+
+La aplicación incorpora funcionalidades sin añadir tablas nuevas:
+
+- **Orientación vocacional:** `/orientacion-vocacional/` (12 afirmaciones; recomendaciones orientativas guardadas para estudiantes con matrícula).
+- **Comparador de carreras:** `/compararCarreras/` (hasta tres carreras del catálogo).
+- **Diagnóstico por competencias:** `/diagnostico-academico/` (resultados observados, sin afirmar predicciones de IA).
+- **Plan semanal:** `/plan-semanal/` (propuestas basadas en áreas por reforzar).
+- **Docentes:** `/panel-docente/` (crear y asignar actividades; se requiere rol DOCENTE).
+- **Acudientes:** `/acudiente/` (únicamente estudiantes formalmente vinculados).
+- **Simulacros:** nueva modalidad opcional «Integral ampliado» con 50 preguntas de práctica.
+
+Consulta [GUIA-FUNCIONES-2026.md](GUIA-FUNCIONES-2026.md) para detalles, límites y comandos de pruebas.
+
+**Límites actuales:** no hay un modelo predictivo ML validado, ni vínculo docente–curso para restringir acciones en despliegues multiinstitución. Estas funciones no requieren Ollama, pero el tutor con IA y los cuestionarios generados sí requieren el modelo configurado. Las 50 preguntas no constituyen un examen oficial del ICFES.
+
 ## Funciones opcionales
 
 ### Chat y generación con IA

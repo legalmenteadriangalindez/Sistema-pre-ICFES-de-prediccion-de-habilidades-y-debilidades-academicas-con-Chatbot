@@ -1,0 +1,18 @@
+{% extends 'app_shell.html' %}
+{% block title %}Orientación vocacional{% endblock %}
+{% block content %}
+<div class="dash portal-page">
+ <section class="section-hero"><span class="eyebrow"><i class="fas fa-compass"></i> AUTOCONOCIMIENTO</span><h1>Explora tus intereses profesionales</h1><p>Responde doce afirmaciones y descubre áreas afines. La orientación es exploratoria, no una prueba psicométrica ni una predicción de admisión.</p></section>
+ {% if error %}<div class="ui-alert ui-alert-warning" role="alert">{{ error }}</div>{% endif %}
+ <div class="portal-layout"><section class="ui-card portal-panel"><h2>Cuestionario de intereses</h2><p>¿Cuánto te identifica cada afirmación? 1 = nada; 5 = muchísimo.</p>
+ <form method="post">{% csrf_token %}
+ {% for codigo, area, texto in preguntas %}
+ <fieldset class="interest-question"><legend><span class="soft-chip">{{ forloop.counter }}</span> {{ texto }}</legend><div class="interest-scale">
+ {% for valor in '12345' %}<label><input type="radio" name="{{ codigo }}" value="{{ valor }}" required><span>{{ valor }}</span></label>{% endfor %}
+ </div></fieldset>{% endfor %}
+ <button class="ui-btn ui-btn-primary" type="submit"><i class="fas fa-wand-magic-sparkles"></i> Obtener orientación</button></form></section>
+ <aside class="portal-aside"><section class="ui-card"><h2><i class="fas fa-circle-info"></i> Cómo se calculan tus resultados</h2><p>Cada área recibe una puntuación entre 0 y 100 según tus propias respuestas. Se combinan áreas relacionadas para ordenar carreras a explorar.</p><p class="widget-empty">No son porcentajes de éxito, datos de salarios ni requisitos de universidades.</p>{% if not tiene_matricula %}<p class="ui-alert ui-alert-warning">Sin matrícula activa: tus resultados se mantendrán en la sesión del navegador, pero no se guardarán como recomendaciones académicas.</p>{% endif %}</section>
+ <section class="ui-card"><h2>Próximos pasos</h2><p>Compara programas, revisa planes de estudio oficiales y conversa con profesionales de las áreas que te interesan.</p><a class="ui-btn ui-btn-outline" href="{% url 'comparadorDeCarreras' %}">Comparar carreras</a></section></aside></div>
+ {% if resultado %}<section class="ui-card portal-results" id="resultados-orientacion"><h2>Tu perfil de intereses</h2><div class="portal-metrics">{% for area in resultado.areas %}<article><strong>{{ area.valor }} / 100</strong><span>{{ area.nombre }}</span><div class="portal-bar"><span style="width:{{ area.valor }}%"></span></div></article>{% endfor %}</div><h3>Carreras para explorar</h3><div class="portal-cards">{% for carrera in resultado.carreras %}<article class="career-tile"><span class="soft-chip">Afinidad orientativa {{ carrera.afinidad }}/100</span><h4>{{ carrera.nombre }}</h4><p>{{ carrera.descripcion }}</p><small>Área principal: {{ carrera.principal }}</small></article>{% endfor %}</div></section>{% endif %}
+</div>
+{% endblock %}

@@ -11,6 +11,7 @@
 {% block extra_head %}{% endblock %}
 <link href="{% static 'css/ui-2026.css' %}" rel="stylesheet">
 <link href="{% static 'css/ui-polish.css' %}" rel="stylesheet">
+<link href="{% static 'css/portal-academico.css' %}" rel="stylesheet">
 </head>
 <body class="preicfes-ui {% block theme_class %}student-mode{% endblock %}">
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -43,7 +44,19 @@
  <a class="quick-mint" href="{% url 'simulacros' %}"><i class="fas fa-play"></i> Nuevo simulacro</a>
  <a class="quick-blue" href="{% url 'home' %}#chatContainer"><i class="far fa-comment-dots"></i> Tutor con IA</a>
  <a class="quick-gold" href="{% url 'historial_academico' %}"><i class="fas fa-book-open"></i> Mis resultados</a>{% endblock %}</div>
- <a class="sidebar-settings" href="{% url 'configuraciones' %}"><i class="fas fa-gear"></i> Configuración</a>
+ <div class="quick-heading">Más herramientas</div><div class="quick-links">
+ {% if user.is_superuser %}
+ <a class="quick-blue" href="{% url 'panel_docente' %}"><i class="fas fa-chalkboard-user"></i> Panel docente</a>
+ {% else %}{% for rol in user.perfilusuario.roles.all %}
+ {% if rol.nombre == 'DOCENTE' %}<a class="quick-blue" href="{% url 'panel_docente' %}"><i class="fas fa-chalkboard-user"></i> Panel docente</a>
+ {% elif rol.nombre == 'ACUDIENTE' %}<a class="quick-blue" href="{% url 'acudiente' %}"><i class="fas fa-people-roof"></i> Seguimiento familiar</a>
+ {% elif rol.nombre == 'ESTUDIANTE' %}
+ <a class="quick-blue" href="{% url 'orientacion_vocacional' %}"><i class="fas fa-compass"></i> Orientación vocacional</a>
+ <a class="quick-mint" href="{% url 'plan_semanal' %}"><i class="fas fa-calendar-week"></i> Mi plan semanal</a>
+ <a class="quick-gold" href="{% url 'diagnostico_academico' %}"><i class="fas fa-chart-line"></i> Áreas de mejora</a>
+ {% endif %}{% endfor %}{% endif %}
+ </div>
+<a class="sidebar-settings" href="{% url 'configuraciones' %}"><i class="fas fa-gear"></i> Configuración</a>
 </aside>{% endif %}
 <main class="app-main" id="contenido">
 {% block content %}{% endblock %}

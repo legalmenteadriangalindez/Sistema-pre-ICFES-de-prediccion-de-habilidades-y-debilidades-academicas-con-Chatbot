@@ -11,6 +11,7 @@ from django.views.decorators.http import require_http_methods
 from Principal.models import Estudiante, IntentoEvaluacion, Persona, PerfilUsuario, RespuestaEvaluacion
 from Principal.services.pruebas_ingles import generar_prueba_ingles
 from Principal.services.simulacros_banco import BANCO
+from Principal.services.simulacros_extra import BANCO_EXTRA
 
 SESSION_KEY = "simulacro_activo"
 MATERIAS = ("Matemáticas", "Lectura Crítica", "Sociales y Ciudadanas", "Ciencias Naturales", "Inglés")
@@ -18,7 +19,7 @@ MATERIAS = ("Matemáticas", "Lectura Crítica", "Sociales y Ciudadanas", "Cienci
 
 def crear_preguntas(materia):
     preguntas = []
-    if materia == "Integral":
+    if materia in ("Integral", "Integral ampliado"):
         materias = MATERIAS
     else:
         materias = (materia,)
@@ -27,7 +28,7 @@ def crear_preguntas(materia):
             for p in generar_prueba_ingles():
                 preguntas.append({"materia": nombre, "competencia": p["competencia"], "contexto": p["contexto"], "pregunta": p["pregunta"], "opciones": p["opciones"], "correcta": p["respuesta_correcta"], "explicacion": p["explicacion"]})
         else:
-            for enunciado, opciones, clave, competencia, explicacion in BANCO[nombre]:
+            for enunciado, opciones, clave, competencia, explicacion in (BANCO[nombre] + (BANCO_EXTRA[nombre] if materia == "Integral ampliado" else [])):
                 preguntas.append({"materia": nombre, "competencia": competencia, "contexto": "", "pregunta": enunciado, "opciones": opciones, "correcta": clave, "explicacion": explicacion})
     random.shuffle(preguntas)
     for i, pregunta in enumerate(preguntas):
@@ -46,7 +47,7 @@ def estudiante_actual(user):
 def simulacros(request):
     if request.method == "POST" and request.POST.get("accion") == "iniciar":
         materia = request.POST.get("materia")
-        if materia not in (*MATERIAS, "Integral"):
+        if materia not in (*MATERIAS, "Integral", "Integral ampliado"):
             return render(request, "simulacros.html", {"materias": MATERIAS, "error": "Materia no válida."}, status=400)
         if not estudiante_actual(request.user):
             return render(request, "simulacros.html", {"materias": MATERIAS, "error": "Necesitas un perfil de estudiante."}, status=403)
