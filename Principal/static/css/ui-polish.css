@@ -37,7 +37,7 @@
 .preicfes-ui .ui-card {
   border:1px solid #e1ebf8;
   box-shadow:var(--px-shadow);
-  border-radius:22px;
+  border-radius:var(--ds-card-radius);
   min-width:0
 }
 
@@ -67,7 +67,7 @@
   display:inline-flex;
   justify-content:center;
   align-items:center;
-  gap:8px;
+  gap:var(--ds-space-2);
   min-height:var(--ds-button-min-height);
   padding:10px 17px;
   border-radius:var(--ds-button-radius);
