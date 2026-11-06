@@ -99,6 +99,7 @@ class ContinuidadVistaTests(TestCase):
         bot = MagicMock()
         bot.memory_manager.get_user_chats.return_value = []
         bot.memory_manager.get_cognitive_profile.return_value = {}
+        bot.memory_manager.create_new_chat.return_value = "uuid-nuevo"
         bot.get_conversation_history.return_value = []
         return bot
 
