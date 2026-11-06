@@ -30,7 +30,7 @@ jobs:
       - name: Ruff, reglas estrictas en módulos adoptados
         run: ruff check --select E,F,I tests/browser/seed_ci.py Principal/IA/LangGraph/graph_chatbot/json_storage.py
       - name: Black, formato comprobado en módulos adoptados
-        run: black --check tests/browser/seed_ci.py Principal/IA/LangGraph/graph_chatbot/json_storage.py
+        run: black --diff --check tests/browser/seed_ci.py Principal/IA/LangGraph/graph_chatbot/json_storage.py
 
   frontend:
     name: ESLint y pruebas JavaScript
