@@ -74,6 +74,18 @@ En GitHub Actions la misma batería se ejecuta con Python 3.12 en solicitudes de
 
 **Cuentas demo:** solo disponibles en desarrollo local; crea o verifica con `python manage.py crear_usuarios_prueba`. Nunca subas `local.sqlite3`, `.env` ni contraseñas de producción.
 
+## Refactorización de HTML y componentes — fase 3 (noviembre de 2026)
+
+Se añadieron componentes Django en `Principal/templates/components/` para
+tarjetas, avisos, métricas, campos, tablas y modales. Registro, gestión
+administrativa, permisos docentes, plan semanal y predicción ahora reutilizan
+esas piezas sin alterar los nombres de los formularios ni la lógica de las
+vistas. Se añadieron pruebas de renderizado, seguridad, compatibilidad HTML
+y accesibilidad básica. Las plantillas heredadas dudosas **no se borraron**:
+se documentaron para revisión específica.
+
+Consulta [mapa de componentes y revisión de HTML](docs/REFACTORIZACION_HTML_FASE_3.md).
+
 ## Refactorización de CSS — fase 2 (noviembre de 2026)
 
 Se introdujo `design-tokens.css` como fuente común para colores,
