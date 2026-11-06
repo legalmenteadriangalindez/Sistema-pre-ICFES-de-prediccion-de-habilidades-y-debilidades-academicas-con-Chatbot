@@ -12,6 +12,7 @@
   --ds-navy: #092457;
   --ds-ink: #243f64;
   --ds-ink-polish: #102b58;
+  --ds-navy-polish: #08255b;
   --ds-canvas: #f2f7ff;
   --ds-surface: #ffffff;
   --ds-white: #fff;
@@ -42,6 +43,7 @@
   --ds-card-radius: 22px;
   --ds-shadow-soft: 0 9px 28px rgba(12, 56, 125, .075);
   --ds-shadow-card: 0 14px 40px rgba(12, 60, 128, .075), 0 2px 8px rgba(12, 60, 128, .035);
+  --ds-shadow-hover: 0 21px 50px rgba(12, 70, 153, .13);
 }
 
 /* Alias con valores actuales para componentes con nombres heredados. */
@@ -55,10 +57,12 @@
   --pc-shadow: var(--ds-shadow-soft);
 
   --px-ink: var(--ds-ink-polish);
+  --px-navy: var(--ds-navy-polish);
   --px-blue: var(--ds-brand-polish);
   --px-link: var(--ds-link);
   --px-sky: var(--ds-sky);
   --px-border: var(--ds-border-soft);
   --px-muted: var(--ds-muted-polish);
   --px-shadow: var(--ds-shadow-card);
+  --px-shadow-hover: var(--ds-shadow-hover);
 }
