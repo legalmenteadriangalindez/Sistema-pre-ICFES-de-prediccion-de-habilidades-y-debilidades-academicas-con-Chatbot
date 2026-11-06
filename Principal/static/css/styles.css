@@ -1,3 +1,10 @@
+/* Compatibilidad visual con las páginas heredadas de Pre-ICFES.
+ * Este archivo sigue siendo necesario para Inicio de sesión y Registro,
+ * que no heredan app_shell.html. Evitar añadir nuevos componentes aquí.
+ * La aplicación autenticada utiliza después design-tokens.css,
+ * ui-2026.css y ui-polish.css; estilos por vista se cargan al final.
+ */
+
 html,body{
     height: 100%;
     margin: 0;
