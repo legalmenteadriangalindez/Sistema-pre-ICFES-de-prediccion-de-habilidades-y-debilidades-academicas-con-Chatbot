@@ -1,0 +1,5 @@
+{% extends 'app_shell.html' %}
+{% load static %}
+{% block title %}Editar dato académico{% endblock %}
+{% block extra_head %}<link href="{% static 'css/funcionalidades.css' %}" rel="stylesheet">{% endblock %}
+{% block content %}<div class="func-dashboard"><header class="func-hero"><div class="func-eyebrow">ADMINISTRACIÓN ACADÉMICA</div><h1>Editar {{ tipo }}</h1><p>Modifica los datos existentes sin eliminar las matrículas o referencias relacionadas.</p></header><section class="func-card func-editor"><h2>{{ objeto }}</h2><form method="post" class="func-form">{% csrf_token %}{{ form.as_p }}<button type="submit" class="func-btn">Guardar cambios</button><a href="{% url 'admin_gestion_academica' %}" class="func-btn outline">Cancelar</a></form></section></div>{% endblock %}
