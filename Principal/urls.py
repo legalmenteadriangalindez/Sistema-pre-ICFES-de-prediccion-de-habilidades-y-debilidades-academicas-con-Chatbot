@@ -14,7 +14,7 @@ urlpatterns = [
   path('panel-docente/', portal_academico.panel_docente, name='panel_docente'),
   path('privacidad/', privacy_views.privacidad, name='privacidad'),
   path('privacidad/exportar/', privacy_views.exportar_mis_datos, name='exportar_mis_datos'),
-  path('admin/asignaciones-docentes/', views.gestion_docentes, name='admin_asignaciones_docentes'),
+  path('gestion/asignaciones-docentes/', views.gestion_docentes, name='admin_asignaciones_docentes'),
     
   path('',views.home,name="home"), # url home 
   path('testDeVocacion/',views.test,name="test"), # url test
