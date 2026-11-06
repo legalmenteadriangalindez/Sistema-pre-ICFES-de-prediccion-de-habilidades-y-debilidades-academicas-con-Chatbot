@@ -1,7 +1,22 @@
-"use strict";
-document.addEventListener("DOMContentLoaded",()=>{
-const toggle=document.getElementById("app-menu-toggle"),sidebar=document.getElementById("app-sidebar");
-if(toggle&&sidebar){toggle.addEventListener("click",()=>{let on=sidebar.classList.toggle("open");toggle.setAttribute("aria-expanded",String(on));});document.addEventListener("keydown",e=>{if(e.key==="Escape"){sidebar.classList.remove("open");toggle.setAttribute("aria-expanded","false");}});sidebar.addEventListener("click",e=>{if(e.target.closest("a")){sidebar.classList.remove("open");toggle.setAttribute("aria-expanded","false");}});}
-const prompt=document.getElementById("chat-prompt"),form=document.getElementById("tutor-form"),send=document.getElementById("generar");
-if(prompt&&form&&send){function sync(){prompt.style.height="auto";prompt.style.height=Math.min(prompt.scrollHeight,180)+"px";const hasFile=Boolean(form.querySelector('input[name="archivo"]')?.files?.length||form.querySelector('input[name="audio"]')?.files?.length);send.disabled=!prompt.value.trim()&&!hasFile;}prompt.addEventListener("input",sync);prompt.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key==="Enter"&&!send.disabled){e.preventDefault();form.requestSubmit(send);}});for(const chip of document.querySelectorAll("[data-chat-suggestion]"))chip.addEventListener("click",()=>{prompt.value=chip.dataset.chatSuggestion||"";sync();prompt.focus();});form.querySelector('input[name="archivo"]')?.addEventListener("change",e=>{document.getElementById("attachment-name").textContent=e.target.files?.[0]?.name||"";sync();});form.querySelector('input[name="audio"]')?.addEventListener("change",sync);form.addEventListener("submit",()=>{send.disabled=true;send.setAttribute("aria-busy","true");});sync();const history=document.getElementById("respuesta");if(history?.querySelector(".chat-row"))history.scrollTop=history.scrollHeight;}
+/* Navegación responsive. No depende de módulos de otras pantallas. */
+'use strict';
+document.addEventListener('DOMContentLoaded', () => {
+  const toggle = document.getElementById('app-menu-toggle');
+  const sidebar = document.getElementById('app-sidebar');
+  if (!toggle || !sidebar) return;
+
+  const setOpen = (open) => {
+    sidebar.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+  };
+
+  toggle.addEventListener('click', () => {
+    setOpen(!sidebar.classList.contains('open'));
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') setOpen(false);
+  });
+  sidebar.addEventListener('click', (event) => {
+    if (event.target.closest('a')) setOpen(false);
+  });
 });
