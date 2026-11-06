@@ -1,0 +1,14 @@
+{# Tabla parametrizada. Se admiten únicamente plantillas de filas/encabezados del proyecto. #}
+<div class="table-responsive">
+  <table class="{{ table_class|default:'table' }}"{% if table_id %} id="{{ table_id }}"{% endif %}>
+    {% if caption %}<caption class="visually-hidden">{{ caption }}</caption>{% endif %}
+    <thead>{% include header_template %}</thead>
+    <tbody>
+      {% for table_item in rows %}
+        {% include row_template %}
+      {% empty %}
+        <tr><td colspan="{{ colspan|default:1 }}">{{ empty_text|default:'Sin registros disponibles.' }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

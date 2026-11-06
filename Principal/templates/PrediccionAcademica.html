@@ -9,12 +9,8 @@
   </section>
 
   {% if sin_modelo %}
-    <section class="ui-card" role="status">
-      <h2><i class="fas fa-circle-info"></i> Predicción aún no validada</h2>
-      <p>No hay un modelo predictivo aprobado disponible en esta instalación. Para protegerte de resultados poco fiables, no mostraremos predicciones inventadas ni probabilidades sin evaluación.</p>
-      <p>Puedes seguir utilizando el diagnóstico descriptivo y el plan semanal, que sí se basan en respuestas reales.</p>
-      <a class="ui-btn ui-btn-primary" href="{% url 'diagnostico_academico' %}">Consultar mis resultados reales</a>
-    </section>
+    {% url 'diagnostico_academico' as diagnostico_url %}
+    {% include "components/info_card.html" with role="status" icon="fas fa-circle-info" title="Predicción aún no validada" description="No hay un modelo predictivo aprobado disponible en esta instalación. Para protegerte de resultados poco fiables, no mostraremos predicciones inventadas ni probabilidades sin evaluación." description_secondary="Puedes seguir utilizando el diagnóstico descriptivo y el plan semanal, que sí se basan en respuestas reales." action_url=diagnostico_url action_label="Consultar mis resultados reales" only %}
   {% else %}
     <section class="ui-card">
       <div class="widget-title">
@@ -24,10 +20,8 @@
       <p class="portal-disclaimer">La predicción se basa en patrones de evaluaciones anteriores. El resultado podría fallar y debe usarse solo como apoyo para decidir qué practicar.</p>
     </section>
     {% if sin_historia %}
-      <section class="ui-card" role="status"><h2>Aún falta historial para tus materias</h2>
-        <p>El modelo está evaluado, pero necesitas al menos dos evaluaciones previas de cinco preguntas o más en una misma materia para recibir una orientación individual.</p>
-        <a class="ui-btn ui-btn-primary" href="{% url 'simulacros' %}">Practicar con simulacros</a>
-      </section>
+      {% url 'simulacros' as simulacros_url %}
+      {% include "components/info_card.html" with role="status" title="Aún falta historial para tus materias" description="El modelo está evaluado, pero necesitas al menos dos evaluaciones previas de cinco preguntas o más en una misma materia para recibir una orientación individual." action_url=simulacros_url action_label="Practicar con simulacros" only %}
     {% else %}
       <section class="ui-card">
         <h2><i class="fas fa-book-reader"></i> Orientación para tu siguiente práctica</h2>

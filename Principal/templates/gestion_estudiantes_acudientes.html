@@ -101,26 +101,7 @@ Reportes de notas y desempeño por periodo. -->
 
 
 <!-- Modal -->
-<div class="modal fade" id="agregar_estudiante" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Nuevo Grado </h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form action="" method="post">
-        {% csrf_token %}
-        {{form_estudiantes}}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" name="form" value="estudiantes" class="btn btn-primary">Guardar Cambios</button>
-      </div>
-      </form>
-    </div>
-  </div>
-</div>
+{% include "components/form_modal.html" with modal_id="agregar_estudiante" modal_title="Agregar nuevo estudiante" form=form_estudiantes submit_value="estudiantes" %}
 
 <h1> Gestion de Acudientes </h1>
 <div class="container mt-5">
@@ -177,25 +158,6 @@ Reportes de notas y desempeño por periodo. -->
 
 
 <!-- Modal -->
-<div class="modal fade" id="agregar_acudiente" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Nuevo Grado </h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form action="" method="post">
-        {% csrf_token %}
-        {{form_acudientes}}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" name="form" value="acudientes"  class="btn btn-primary">Guardar Cambios</button>
-      </div>
-      </form>
-    </div>
-  </div>
-</div>
+{% include "components/form_modal.html" with modal_id="agregar_acudiente" modal_title="Agregar nuevo acudiente" form=form_acudientes submit_value="acudientes" %}
 
 {% endblock %}

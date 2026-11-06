@@ -1,0 +1,5 @@
+{# Tarjeta resumida para métricas del panel administrativo. #}
+<article class="ui-card stat-card">
+  <span class="stat-icon {{ color|default:'blue' }}">{% if icon %}<i class="{{ icon }}" aria-hidden="true"></i>{% endif %}</span>
+  <div><p>{{ label }}</p><strong>{{ value }}</strong></div>
+</article>

@@ -1,0 +1,42 @@
+<tr>
+  <td><div class="table-user"><span class="app-avatar">{{ table_item.username|slice:':1'|upper }}</span><div><strong>{{ table_item.get_full_name|default:table_item.username }}</strong><small>@{{ table_item.username }}</small></div></div></td>
+  <td>
+    {% if table_item.is_superuser %}<span class="role-pill">Administrador</span>
+    {% else %}
+      {% for r in table_item.perfilusuario.roles.all %}<span class="role-pill secondary">{{ r.nombre }}</span>
+      {% empty %}<span class="muted">Sin rol</span>{% endfor %}
+    {% endif %}
+  </td>
+  <td>{% if table_item.is_active %}<span class="state-pill active">Activo</span>{% else %}<span class="state-pill inactive">Inactivo</span>{% endif %}</td>
+  <td>{{ table_item.email|default:'—' }}</td>
+  <td>{{ table_item.date_joined|date:'d/m/Y' }}</td>
+  <td>
+    {% if table_item.pk != user.pk %}
+      <form method="post" action="{% url 'eliminar_admin_gestion_users' 'usuarios' table_item.pk %}" data-confirm="¿Eliminar el usuario {{ table_item.username|escape }}? Esta acción no se puede deshacer.">
+        {% csrf_token %}
+        <button type="submit" class="icon-button danger" aria-label="Eliminar usuario {{ table_item.username }}"><i class="far fa-trash-can"></i></button>
+      </form>
+      <details class="account-actions">
+        <summary title="Más acciones para {{ table_item.username }}">⋮</summary>
+        <div class="account-actions-popover">
+          <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="form" value="asignar_rol">
+            <input type="hidden" name="usuario_id" value="{{ table_item.pk }}">
+            <label for="rol-{{ table_item.pk }}">Cambiar rol</label>
+            <select id="rol-{{ table_item.pk }}" class="form-select" name="rol_id" required>
+              {% for rol in roles %}<option value="{{ rol.pk }}">{{ rol.nombre }}</option>{% endfor %}
+            </select>
+            <button type="submit" class="ui-btn ui-btn-primary">Asignar</button>
+          </form>
+          <form method="post" data-confirm="¿Cambiar el estado de {{ table_item.username|escape }}?">
+            {% csrf_token %}
+            <input type="hidden" name="form" value="cambiar_estado">
+            <input type="hidden" name="usuario_id" value="{{ table_item.pk }}">
+            <button type="submit" class="ui-btn ui-btn-outline">{% if table_item.is_active %}Desactivar{% else %}Activar{% endif %} usuario</button>
+          </form>
+        </div>
+      </details>
+    {% else %}<span class="muted">Tu cuenta</span>{% endif %}
+  </td>
+</tr>

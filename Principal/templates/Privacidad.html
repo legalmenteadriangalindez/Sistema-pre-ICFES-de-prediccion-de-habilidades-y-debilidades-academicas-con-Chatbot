@@ -8,15 +8,8 @@
     <p>Controla el acceso a tu información académica y conoce qué datos conserva la plataforma.</p>
   </section>
   <div class="portal-layout">
-    <section class="ui-card">
-      <h2><i class="fas fa-file-export"></i> Exportar mi información</h2>
-      <p>Descarga un archivo JSON con tu cuenta, perfil personal, matrículas, resultados de evaluaciones, actividades y recomendaciones académicas, cuando existan.</p>
-      <p>La descarga requiere haber iniciado sesión y contiene únicamente los datos vinculados a tu propio perfil.</p>
-      <a class="ui-btn ui-btn-primary" href="{% url 'exportar_mis_datos' %}">
-        <i class="fas fa-download"></i> Descargar mis datos
-      </a>
-      <p class="portal-disclaimer">El documento incluye datos personales: guárdalo en un equipo de confianza y no lo publiques.</p>
-    </section>
+    {% url 'exportar_mis_datos' as exportacion_url %}
+    {% include "components/info_card.html" with icon="fas fa-file-export" title="Exportar mi información" description="Descarga un archivo JSON con tu cuenta, perfil personal, matrículas, resultados de evaluaciones, actividades y recomendaciones académicas, cuando existan." description_secondary="La descarga requiere haber iniciado sesión y contiene únicamente los datos vinculados a tu propio perfil." action_url=exportacion_url action_label="Descargar mis datos" action_icon="fas fa-download" disclaimer="El documento incluye datos personales: guárdalo en un equipo de confianza y no lo publiques." only %}
     <aside class="ui-card">
       <h2><i class="fas fa-user-lock"></i> Seguridad de la cuenta</h2>
       <p>Revisa la información de tu perfil y cambia tu contraseña cuando sea necesario.</p>
