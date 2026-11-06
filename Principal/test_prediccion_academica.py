@@ -188,6 +188,7 @@ class VistasPrediccionTests(TestCase):
             "coeficientes": [0] * len(CARACTERISTICAS),
             "intercepto": 2,
             "umbral_alerta": 0.5,
+            "areas_validadas": ["Matemáticas"],
             "evaluacion": {},
         }), encoding="utf-8")
         self.client.force_login(self.alumno)
