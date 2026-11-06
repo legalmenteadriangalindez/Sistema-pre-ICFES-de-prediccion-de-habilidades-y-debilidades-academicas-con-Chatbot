@@ -74,6 +74,20 @@ En GitHub Actions la misma batería se ejecuta con Python 3.12 en solicitudes de
 
 **Cuentas demo:** solo disponibles en desarrollo local; crea o verifica con `python manage.py crear_usuarios_prueba`. Nunca subas `local.sqlite3`, `.env` ni contraseñas de producción.
 
+## Refactorización de CSS — fase 2 (noviembre de 2026)
+
+Se introdujo `design-tokens.css` como fuente común para colores,
+tipografía, espacios, botones y sombras. Se corrigió la cascada en
+`app_shell.html` para que los estilos específicos se carguen **después**
+de las capas globales. Los archivos CSS comprimidos se formatearon y las
+capas grandes se distribuyeron en módulos manteniendo el orden de reglas.
+Se eliminaron cuatro `!important` redundantes, sin modificar las
+excepciones necesarias de modo oscuro ni el comportamiento del simulacro.
+
+Las hojas heredadas de Login y Registro siguen disponibles. GitHub Actions
+agrega pruebas de sintaxis y cascada CSS con TinyCSS2, además de Node y Django.
+Consulta [metodología y mapa CSS de fase 2](docs/REFACTORIZACION_CSS_FASE_2.md).
+
 ## Refactorización de JavaScript — fase 1 (noviembre de 2026)
 
 Se separaron navegación, preferencias, confirmaciones, chat, micrófono y
