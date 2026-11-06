@@ -242,6 +242,32 @@ class Nota(models.Model):
         if self.matricula:
             return f"{self.matricula.estudiante} - {self.valor}"
         return f"Nota {self.valor}"
+# Vinculación explícita de docentes con cursos por año lectivo.
+# Se utiliza tanto para filtrar las pantallas como para autorizar cada POST.
+class AsignacionDocenteCurso(models.Model):
+    docente = models.ForeignKey(
+        PerfilUsuario, on_delete=models.CASCADE, related_name="cursos_asignados"
+    )
+    curso = models.ForeignKey(
+        Curso, on_delete=models.CASCADE, related_name="docentes_asignados"
+    )
+    anio_lectivo = models.ForeignKey(
+        AnioLectivo, on_delete=models.CASCADE, related_name="docentes_asignados"
+    )
+    activo = models.BooleanField(default=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["docente", "curso", "anio_lectivo"],
+                name="unique_docente_curso_anio",
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.docente.user.username}: {self.curso} ({self.anio_lectivo})"
+
+
 # ****************** TABLA NOTA ******************
 
 
