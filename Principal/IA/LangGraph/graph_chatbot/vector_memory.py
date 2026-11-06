@@ -1,6 +1,7 @@
 """undefined"""
 import logging
 import uuid
+from typing import Optional
 from datetime import datetime
 import chromadb
 from langchain_chroma import Chroma
