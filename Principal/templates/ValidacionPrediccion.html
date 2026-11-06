@@ -1,0 +1,61 @@
+{% extends 'home_admin_academico.html' %}
+{% block title %}Validación predictiva{% endblock %}
+{% block content %}
+<div class="dash portal-page">
+  <section class="section-hero"><span class="eyebrow"><i class="fas fa-chart-line"></i> EVALUACIÓN DE MODELOS</span>
+    <h1>Predicción académica: calidad y disponibilidad</h1>
+    <p>Supervisa el número de evaluaciones utilizables y el desempeño real del modelo frente a una referencia. Nunca muestres resultados no validados como predicciones.</p>
+  </section>
+  <section class="ui-card">
+    <h2><i class="fas fa-database"></i> Datos históricos disponibles</h2>
+    <div class="portal-metrics">
+      <article><strong>{{ auditoria_actual.estudiantes }}</strong><span>Estudiantes con ejemplos</span><small>Mínimo {{ auditoria_actual.requisitos.estudiantes }}</small></article>
+      <article><strong>{{ auditoria_actual.ejemplos }}</strong><span>Ejemplos temporales</span><small>Mínimo {{ auditoria_actual.requisitos.ejemplos }}</small></article>
+      <article><strong>{{ auditoria_actual.casos_riesgo }}</strong><span>Resultados por debajo de 60 %</span><small>Mínimo {{ auditoria_actual.requisitos.casos_por_clase }}</small></article>
+      <article><strong>{{ auditoria_actual.casos_sin_riesgo }}</strong><span>Resultados de 60 % o más</span><small>Mínimo {{ auditoria_actual.requisitos.casos_por_clase }}</small></article>
+    </div>
+    <p>Se usan únicamente registros históricos de evaluaciones con al menos cinco preguntas por área. Una muestra requiere dos evaluaciones anteriores y una tercera evaluación posterior etiquetada. Se excluyen las cinco cuentas de demostración.</p>
+    {% if auditoria_actual.suficiente_para_intentar %}
+      <div class="ui-alert ui-alert-success" role="status">Los mínimos de volumen y clases están presentes. Esto <strong>no</strong> significa que el modelo ya sea válido: aún debe superar las pruebas de rendimiento.</div>
+    {% else %}
+      <div class="ui-alert ui-alert-warning" role="status">Datos insuficientes para intentar un entrenamiento fiable. Es necesario continuar recolectando evaluaciones reales; no se deben fabricar registros para alcanzar los mínimos.</div>
+    {% endif %}
+  </section>
+  {% if modelo and evaluacion %}
+    <section class="ui-card">
+      <h2><i class="fas fa-check-circle"></i> Último modelo validado</h2>
+      <p>Entrenado el {{ modelo.entrenado_en }}. El conjunto de prueba mantuvo separados estudiantes completos, no únicamente preguntas.</p>
+      <div class="portal-metrics">
+        <article><strong>{{ evaluacion.metricas.precision_riesgo|floatformat:2 }}</strong><span>Precisión de alerta</span></article>
+        <article><strong>{{ evaluacion.metricas.recuperacion_riesgo|floatformat:2 }}</strong><span>Recuperación</span></article>
+        <article><strong>{{ evaluacion.metricas.f1_riesgo|floatformat:2 }}</strong><span>F1 de riesgo</span></article>
+        <article><strong>{{ evaluacion.metricas.exactitud_balanceada|floatformat:2 }}</strong><span>Exactitud balanceada</span></article>
+        <article><strong>{{ evaluacion.metricas.auc_roc|floatformat:2 }}</strong><span>AUC ROC</span></article>
+        <article><strong>{{ evaluacion.metricas.error_brier|floatformat:2 }}</strong><span>Error Brier</span></article>
+      </div>
+      <h3>Referencia: predicción de clase mayoritaria</h3>
+      <p>Exactitud balanceada de referencia: {{ evaluacion.referencia_mayoritaria.exactitud_balanceada|floatformat:2 }}.
+         El modelo solo se publica si la supera por al menos 0,05 y consigue precisión y recuperación de alerta no inferiores a 0,55.</p>
+      <h3>Matriz de confusión: prueba independiente</h3>
+      <div class="portal-metrics">
+        <article><strong>{{ evaluacion.metricas.matriz.vp }}</strong><span>Alertas acertadas</span></article>
+        <article><strong>{{ evaluacion.metricas.matriz.fp }}</strong><span>Falsas alarmas</span></article>
+        <article><strong>{{ evaluacion.metricas.matriz.fn }}</strong><span>Alertas omitidas</span></article>
+        <article><strong>{{ evaluacion.metricas.matriz.vn }}</strong><span>Sin alerta acertadas</span></article>
+      </div>
+      <p class="portal-disclaimer">Estos valores pertenecen al último entrenamiento validado, no necesariamente a los resultados de hoy. La evaluación interna no sustituye validación externa en otros colegios y periodos.</p>
+    </section>
+  {% else %}
+    <section class="ui-card"><h2><i class="fas fa-circle-info"></i> Sin modelo publicado</h2>
+      <p>No se mostrará ninguna predicción personalizada hasta superar los requisitos de tamaño de muestra y evaluación independiente.</p>
+    </section>
+  {% endif %}
+  <section class="ui-card">
+    <h2>Comandos de auditoría y entrenamiento</h2>
+    <p>Los ejecuta un administrador con acceso al servidor, nunca un estudiante desde la web.</p>
+    <pre><code>python manage.py entrenar_prediccion
+python manage.py entrenar_prediccion --entrenar</code></pre>
+    <p class="portal-disclaimer">No subas archivos de modelos, datos privados ni exportaciones de estudiantes a GitHub.</p>
+  </section>
+</div>
+{% endblock %}
