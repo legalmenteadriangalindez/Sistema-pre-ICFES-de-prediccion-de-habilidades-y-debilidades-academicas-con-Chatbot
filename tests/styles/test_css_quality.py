@@ -68,9 +68,13 @@ class CssQualityTests(unittest.TestCase):
     def test_orden_de_cascada_y_estilos_especificos_al_final(self):
         html = (TEMPLATES / "app_shell.html").read_text(encoding="utf-8")
         orden = [
-            "css/styles.css", "css/design-tokens.css", "css/ui-2026.css",
-            "css/ui-polish.css", "css/portal-academico.css",
-            "{% block extra_head %}",
+            "css/styles.css", "css/design-tokens.css",
+            "css/ui-2026.css", "css/ui-2026-chat.css",
+            "css/ui-2026-pages.css", "css/ui-2026-academico.css",
+            "css/ui-polish.css", "css/ui-polish-evaluaciones.css",
+            "css/ui-polish-administracion.css",
+            "css/ui-polish-preferencias.css",
+            "css/portal-academico.css", "{% block extra_head %}",
         ]
         posiciones = [html.index(item) for item in orden]
         self.assertEqual(posiciones, sorted(posiciones))
@@ -92,8 +96,11 @@ class CssQualityTests(unittest.TestCase):
         }
         self.assertTrue(requeridas.issubset(definidas))
         for pagina in (
-            "ui-2026.css", "ui-polish.css", "portal-academico.css",
-            "plan-semanal.css",
+            "ui-2026.css", "ui-2026-chat.css", "ui-2026-pages.css",
+            "ui-2026-academico.css", "ui-polish.css",
+            "ui-polish-evaluaciones.css",
+            "ui-polish-administracion.css", "ui-polish-preferencias.css",
+            "portal-academico.css", "plan-semanal.css",
         ):
             contenido = (STYLES / pagina).read_text(encoding="utf-8")
             faltantes = set(re.findall(r"var\((--ds-[a-z0-9-]+)", contenido)) - definidas
@@ -102,8 +109,20 @@ class CssQualityTests(unittest.TestCase):
         self.assertIn("--px-blue: var(--ds-brand-polish)", css)
 
     def test_no_regresan_important_duplicados(self):
-        layer = (STYLES / "ui-2026.css").read_text(encoding="utf-8")
-        polish = (STYLES / "ui-polish.css").read_text(encoding="utf-8")
+        layer = "".join(
+            (STYLES / f).read_text(encoding="utf-8")
+            for f in (
+                "ui-2026.css", "ui-2026-chat.css",
+                "ui-2026-pages.css", "ui-2026-academico.css",
+            )
+        )
+        polish = "".join(
+            (STYLES / f).read_text(encoding="utf-8")
+            for f in (
+                "ui-polish.css", "ui-polish-evaluaciones.css",
+                "ui-polish-administracion.css", "ui-polish-preferencias.css",
+            )
+        )
         # Antes: 73 + 43. Después de quitar duplicaciones exactas: <= 112.
         self.assertLessEqual(layer.count("!important") + polish.count("!important"), 112)
         self.assertIn(".preicfes-ui.theme-dark", polish)
@@ -113,7 +132,13 @@ class CssQualityTests(unittest.TestCase):
     def test_hojas_antes_minificadas_son_legibles(self):
         limites = {
             "ui-2026.css": 200,
+            "ui-2026-chat.css": 200,
+            "ui-2026-pages.css": 200,
+            "ui-2026-academico.css": 200,
             "ui-polish.css": 255,
+            "ui-polish-evaluaciones.css": 255,
+            "ui-polish-administracion.css": 255,
+            "ui-polish-preferencias.css": 255,
             "portal-academico.css": 120,
             "plan-semanal.css": 120,
         }
@@ -124,8 +149,14 @@ class CssQualityTests(unittest.TestCase):
                 self.assertLessEqual(max(map(len, lineas)), limite)
 
     def test_permanecen_reglas_responsive(self):
-        basico = (STYLES / "ui-2026.css").read_text(encoding="utf-8")
-        pulido = (STYLES / "ui-polish.css").read_text(encoding="utf-8")
+        basico = "".join(
+            f.read_text(encoding="utf-8")
+            for f in sorted(STYLES.glob("ui-2026*.css"))
+        )
+        pulido = "".join(
+            f.read_text(encoding="utf-8")
+            for f in sorted(STYLES.glob("ui-polish*.css"))
+        )
         semanal = (STYLES / "plan-semanal.css").read_text(encoding="utf-8")
         portal = (STYLES / "portal-academico.css").read_text(encoding="utf-8")
         self.assertIn("@media(max-width:700px)", basico)
