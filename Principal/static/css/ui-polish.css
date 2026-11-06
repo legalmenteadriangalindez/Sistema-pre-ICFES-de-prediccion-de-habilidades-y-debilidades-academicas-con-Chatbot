@@ -1,0 +1,211 @@
+/* Pre-ICFES · Pulido UX 2026. Capa compatible con ui-2026.css.
+   Solo presentación: ni exámenes, ni permisos ni respuestas son simulados. */
+:root {
+  --px-ink:#102b58;--px-navy:#08255b;--px-blue:#0753ca;--px-link:#0757ce;
+  --px-sky:#edf6ff;--px-border:#dce8f7;--px-muted:#607797;
+  --px-shadow:0 14px 40px rgba(12,60,128,.075),0 2px 8px rgba(12,60,128,.035);
+  --px-shadow-hover:0 21px 50px rgba(12,70,153,.13);
+}
+.preicfes-ui{--pc-text-scale:1;background:radial-gradient(circle at 90% 8%,#e7f3ff 0,transparent 34%),#f2f7ff!important;font-size:calc(14px * var(--pc-text-scale))!important}
+.preicfes-ui .app-main{min-width:0}
+.preicfes-ui .app-topbar{box-shadow:0 3px 17px rgba(14,67,140,.055);border-bottom:1px solid #e4ecf8}
+.preicfes-ui .app-brand{letter-spacing:-.055em}
+.preicfes-ui .app-sidebar{background:linear-gradient(175deg,#fff 22%,#f0f7ff);scrollbar-width:thin;scrollbar-color:#bcd5ef transparent}
+.preicfes-ui .side-nav a,.preicfes-ui .top-links a,.preicfes-ui .sidebar-quick a{transition:background .2s ease,transform .2s ease,color .2s ease}
+.preicfes-ui .side-nav a:hover,.preicfes-ui .top-links a:hover{background:#e8f3ff;color:#0550bd}
+.preicfes-ui .ui-card{border:1px solid #e1ebf8;box-shadow:var(--px-shadow);border-radius:22px;min-width:0}
+.preicfes-ui .ui-card:hover{border-color:#d5e5f7}
+.preicfes-ui :is(.page-intro,.dash-hero,.section-hero){border-color:#d9eafa;border-radius:24px;box-shadow:0 12px 33px #1a61ba0c;position:relative;isolation:isolate}
+.preicfes-ui .stat-card{gap:14px;min-width:0}
+.preicfes-ui .stat-card strong{font-family:Manrope,'Segoe UI',sans-serif;letter-spacing:-.052em}
+.preicfes-ui .pill-button,.preicfes-ui .ui-btn{display:inline-flex;justify-content:center;align-items:center;gap:8px;min-height:44px;padding:10px 17px;border-radius:13px;font-weight:750;font-size:13px;text-align:center;text-decoration:none;transition:transform .17s ease,box-shadow .17s ease,background .17s ease,border .17s ease}
+.preicfes-ui .pill-button:hover:not(:disabled),.preicfes-ui .ui-btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 12px 25px #0a56ad26}
+.preicfes-ui :is(.pill-button,.ui-btn).solid,.preicfes-ui .ui-btn-primary{color:#fff;background:linear-gradient(120deg,#075edb,#05399f);border:1px solid #105fc9}
+.preicfes-ui .ui-btn-outline{background:#fff;color:#074caf;border:1px solid #bed6f5}
+.preicfes-ui .ui-btn-danger{background:#fff5f5;color:#c92138;border:1px solid #ffccd2}
+.preicfes-ui .ui-btn:disabled,.preicfes-ui .pill-button:disabled{opacity:.56;cursor:not-allowed;box-shadow:none;transform:none}
+.preicfes-ui a:focus-visible,.preicfes-ui button:focus-visible,.preicfes-ui input:focus-visible,.preicfes-ui textarea:focus-visible,.preicfes-ui select:focus-visible{outline:3px solid #ffbe2c!important;outline-offset:3px!important}
+.preicfes-ui .app-footer{margin-top:32px;padding-top:20px;font-size:11px;color:#8397b1}
+/* Tutor: mantener su historia y controles reales; eliminar los bordes negros heredados. */
+.preicfes-ui .tutor-card{border-radius:26px;overflow:hidden;box-shadow:0 17px 47px rgba(10,66,145,.09);background:#fff}
+.preicfes-ui .tutor-header{padding:24px 25px 22px;gap:14px;background:linear-gradient(112deg,#e9f5ff,#dceeff)}
+.preicfes-ui .tutor-profile{align-items:center;gap:15px}
+.preicfes-ui .tutor-icon{width:67px;height:67px;border-radius:20px;box-shadow:0 11px 21px #0862ba18;flex:none}
+.preicfes-ui .tutor-icon img{width:55px;height:55px;object-fit:contain}
+.preicfes-ui .tutor-header h2{font-size:20px;letter-spacing:-.04em}
+.preicfes-ui .tutor-header p{line-height:1.65;max-width:430px}
+.preicfes-ui .tutor-label{white-space:nowrap;background:#f5fffc;border:1px solid #c9ebe3;color:#08756a;padding:8px 11px;border-radius:99px;font-size:11px}
+.preicfes-ui .tutor-area{background:linear-gradient(165deg,#fff 2%,#f5faff 97%)}
+.preicfes-ui .tutor-card #respuesta.conversation-list{border:0!important;outline:0!important;box-shadow:none!important;min-height:300px!important;max-height:520px!important;padding:26px 25px!important;background:transparent!important;gap:19px!important}
+.preicfes-ui .chat-empty{margin:auto!important;padding:16px 14px 22px;max-width:445px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.preicfes-ui .chat-empty img{width:91px;height:91px;border:1px solid #dbebfc;background:#e7f5ff;box-shadow:0 10px 25px #236cac12;border-radius:25px;margin-bottom:19px}
+.preicfes-ui .chat-empty h3{font-size:23px;line-height:1.2;margin:7px 0 9px}
+.preicfes-ui .chat-empty p{font-size:13px;line-height:1.7}
+.preicfes-ui .chat-message-group{gap:5px;max-width:min(82%,580px)}
+.preicfes-ui .message-bubble{padding:15px 19px;border-radius:18px;line-height:1.75;font-size:13px;white-space:normal;overflow-wrap:anywhere;box-shadow:0 7px 17px rgba(12,63,122,.045)}
+.preicfes-ui .user-bubble{background:linear-gradient(110deg,#e3f3ff,#d4eaff);border:1px solid #bcdaf9;border-bottom-right-radius:5px}
+.preicfes-ui .bot-bubble{background:#fff;border:1px solid #d9e7f8;border-bottom-left-radius:5px}
+.preicfes-ui .bubble-avatar{width:34px;height:34px;border-radius:12px;box-shadow:0 3px 9px #0c58b814}
+.preicfes-ui .chat-suggestions{padding:2px 24px 19px;gap:8px}
+.preicfes-ui .chat-suggestions button{min-height:35px;padding:8px 13px;font-size:11px;border-radius:99px;background:#fff;transition:transform .17s,background .17s,border-color .17s}
+.preicfes-ui .chat-suggestions button:hover{background:#e8f5ff;border-color:#91c3f4;transform:translateY(-1px)}
+.preicfes-ui .tutor-form{padding:19px 23px 16px;background:#fff;border-top:1px solid #e7f0fc}
+.preicfes-ui .chat-input-shell{background:#fcfeff;border:1px solid #cfdff3;border-radius:17px;transition:border-color .2s,box-shadow .2s}
+.preicfes-ui .chat-input-shell:focus-within{border-color:#72b4f3;box-shadow:0 0 0 4px #e3f2ff}
+.preicfes-ui .tutor-form textarea{min-height:79px!important;padding:16px!important;line-height:1.65;font-size:13px;resize:vertical}
+.preicfes-ui .chat-toolbar{padding:10px 13px 13px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid #eef3fa}
+.preicfes-ui .chat-tools{display:flex;align-items:center;gap:9px;min-width:0}
+.preicfes-ui .chat-tools :is(button,.chat-upload){display:grid;place-items:center;min-width:36px;min-height:36px;border-radius:11px;background:#edf5ff;color:#0759ca;border:1px solid #e0ebfa;cursor:pointer}
+.preicfes-ui .chat-tools button:hover,.preicfes-ui .chat-upload:hover{background:#dceeff}
+.preicfes-ui #attachment-name{max-width:150px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:11px;color:#627997}
+.preicfes-ui .chat-disclaimer{font-size:10px;line-height:1.6;color:#8898af;margin:12px 0 0;text-align:center}
+.preicfes-ui .chat-alert{border-radius:12px;margin:0 22px 15px}
+.preicfes-ui .widget,.preicfes-ui .profile-grid .ui-card,.preicfes-ui .recommendation-grid .ui-card{padding:23px}
+.preicfes-ui .widget-title{margin-bottom:17px;gap:14px}
+.preicfes-ui .widget-title h2{font-family:Manrope,sans-serif;font-size:16px}
+.preicfes-ui .widget-empty{line-height:1.65;color:#6c809c}
+.preicfes-ui .tool-card{transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+.preicfes-ui .tool-card:hover{transform:translateY(-3px);box-shadow:var(--px-shadow-hover);border-color:#add3f7}
+/* Prácticas, historial y tarjetas secundarias. */
+.preicfes-ui .subject-card,.preicfes-ui .career-tile{border-color:#dce9f8;border-radius:21px;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.preicfes-ui .subject-card:hover,.preicfes-ui .career-tile:hover{transform:translateY(-3px);box-shadow:var(--px-shadow-hover);border-color:#9fc7f3}
+.preicfes-ui .profile-details>div{padding:13px 0;border-bottom:1px solid #eef2f9;gap:15px}
+.preicfes-ui .assigned-activity{border-radius:16px;background:#fbfdff;transition:background .2s,border-color .2s}
+.preicfes-ui .assigned-activity:hover{background:#f2f9ff;border-color:#cfe2f7}
+.preicfes-ui .empty-card{min-height:320px;padding:45px 28px;background:radial-gradient(circle at 95% 0%,#f0f8ff,transparent 40%),#fff}
+.preicfes-ui .empty-card>i{width:75px;height:75px;border-radius:23px}
+/* Simulacros: selección visible, temporizador y navegador de preguntas. */
+.preicfes-ui .exam-page{max-width:1540px;margin:auto}
+.preicfes-ui .exam-page .section-hero{padding:30px 33px;margin-bottom:22px;background:linear-gradient(115deg,#fff,#e7f4ff)}
+.preicfes-ui .exam-page .section-hero h1{font:800 clamp(27px,2.3vw,36px)/1.2 Manrope,sans-serif;letter-spacing:-.05em;margin:8px 0}
+.preicfes-ui .exam-page .section-hero p{color:#617a99;line-height:1.65;margin:0}
+.preicfes-ui .exam-intro-layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(275px,.74fr);gap:20px;align-items:stretch}
+.preicfes-ui .exam-welcome,.preicfes-ui .exam-tips{padding:30px;min-height:210px}
+.preicfes-ui .exam-welcome{background:radial-gradient(circle at 95% 0%,#e7f4ff,#fff 48%)}
+.preicfes-ui .exam-welcome>.tool-icon{width:65px;height:65px;display:grid;place-items:center;border-radius:20px;margin-bottom:17px;font-size:25px}
+.preicfes-ui .exam-welcome h2{font-size:24px;letter-spacing:-.04em;margin-bottom:9px}
+.preicfes-ui .exam-welcome>p{max-width:550px;line-height:1.7;color:#687e99;font-size:13px}
+.preicfes-ui .exam-start-form{display:grid;gap:13px;max-width:500px;margin-top:26px}
+.preicfes-ui .exam-start-form label{font-size:12px;font-weight:800;color:#24476e}
+.preicfes-ui .exam-start-form select{min-height:47px}
+.preicfes-ui .exam-tips h2{font-size:17px;margin-bottom:16px;color:#15396a}
+.preicfes-ui .exam-tips h2 i{color:#e2a01e;margin-right:7px}
+.preicfes-ui .exam-tips ul{list-style:none;padding:0;margin:0 0 18px;display:grid;gap:14px}
+.preicfes-ui .exam-tips li{display:flex;gap:12px;align-items:start;color:#647c97;line-height:1.65;font-size:12px}
+.preicfes-ui .exam-tips li::before{content:'✓';color:#0ca781;font-weight:900}
+.preicfes-ui .exam-status-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin:23px 0}
+.preicfes-ui .exam-status{display:flex;align-items:center;gap:15px;padding:20px;min-height:100px}
+.preicfes-ui .status-mark{width:54px;height:54px;flex:none;display:grid;place-items:center;border-radius:16px;background:#e3f1ff;color:#0854c6;font-size:22px}
+.preicfes-ui .status-mark.mint{background:#e4f9f1;color:#029d83}
+.preicfes-ui .status-mark.gold{background:#fff1cf;color:#cb8900}
+.preicfes-ui .exam-status small{display:block;font-size:11px;color:#6e829d;font-weight:750;margin-bottom:6px}
+.preicfes-ui .exam-status strong{font-family:Manrope,sans-serif;color:#122f60;font-size:18px}
+.preicfes-ui .exam-timer strong{font-size:25px;font-variant-numeric:tabular-nums;letter-spacing:-.04em}
+.preicfes-ui .exam-timer.timer-warning{background:#fff8e6;border-color:#ffd37b}
+.preicfes-ui .exam-progress-track{width:100%;height:7px;background:#e7effa;border-radius:30px;margin-top:10px;overflow:hidden}
+.preicfes-ui #exam-progress-fill{height:100%;width:0;background:linear-gradient(90deg,#0dbda1,#067dd9);border-radius:30px;transition:width .2s}
+.preicfes-ui .exam-layout{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(265px,.78fr);gap:19px;align-items:start}
+.preicfes-ui .exam-question-card{padding:28px;min-width:0}
+.preicfes-ui .exam-card-heading{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #eaf1fb;padding-bottom:17px;margin-bottom:19px}
+.preicfes-ui .exam-card-heading>span:first-child{display:flex;align-items:center;gap:9px;color:#0756c4}
+.preicfes-ui .soft-chip{display:inline-flex;align-items:center;background:#e8f3ff;border:1px solid #d3e6fb;color:#0753be;border-radius:99px;padding:6px 12px;font-size:11px;font-weight:800}
+.preicfes-ui .pregunta-simulacro{border:0;min-width:0;margin:0;padding:0}
+.preicfes-ui .pregunta-simulacro[hidden]{display:none!important}
+.preicfes-ui .pregunta-simulacro legend{display:flex;align-items:center;gap:10px;float:none;width:100%;margin-bottom:18px;color:#29496f;font-size:13px;font-weight:800}
+.preicfes-ui .exam-passage{background:#f0f7ff;border:1px solid #d9e9f9;border-radius:17px;padding:18px 21px;color:#24466e;line-height:1.7;margin-bottom:19px}
+.preicfes-ui .exam-passage>span{font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:#2362ae;font-weight:900}
+.preicfes-ui .exam-passage p{margin:7px 0 0;line-height:1.72}
+.preicfes-ui .exam-question-text{color:#132c58;font:800 16px/1.6 Manrope,sans-serif;margin-bottom:19px}
+.preicfes-ui .answer-choices{display:grid;gap:11px}
+.preicfes-ui .answer-option{display:flex;align-items:start;gap:12px;border:1px solid #dce7f6;border-radius:14px;padding:14px 15px;background:#fff;cursor:pointer;line-height:1.6;font-size:13px;color:#264669;transition:background .17s,border-color .17s,box-shadow .17s}
+.preicfes-ui .answer-option:hover{background:#f3f9ff;border-color:#9fc9f3}
+.preicfes-ui .answer-option:has(input:checked){border-color:#085bd7;box-shadow:0 0 0 2px #d4e9ff;background:#eaf5ff}
+.preicfes-ui .answer-option input{accent-color:#075acb;flex:none;margin-top:7px}
+.preicfes-ui .answer-letter{width:30px;height:30px;border-radius:11px;display:grid;place-items:center;flex:none;background:#e9f2ff;color:#0755c6;font-weight:900}
+.preicfes-ui .answer-option:has(input:checked) .answer-letter{background:#0a58ce;color:#fff}
+.preicfes-ui .exam-card-footer{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;align-items:center;border-top:1px solid #e9f1fa;margin-top:25px;padding-top:20px}
+.preicfes-ui .exam-card-footer #anterior{margin-right:auto}
+.preicfes-ui .exam-side{display:grid;gap:17px}
+.preicfes-ui .exam-summary{padding:25px}
+.preicfes-ui .exam-summary h2{font-size:17px;margin-bottom:16px}
+.preicfes-ui .exam-summary h3{font-size:13px;margin:17px 0 13px}
+.preicfes-ui .exam-summary-counters{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.preicfes-ui .exam-summary-counters>div{background:#ecf6ff;border-radius:13px;padding:12px 15px}
+.preicfes-ui .exam-summary-counters strong{display:block;font:800 21px Manrope,sans-serif;color:#0755ca}
+.preicfes-ui .exam-summary-counters small{font-size:11px;color:#607996}
+.preicfes-ui .question-navigator{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
+.preicfes-ui .question-navigator button{min-height:35px;border:1px solid #d8e6f5;border-radius:9px;background:#f4f8fe;color:#23446d;font-size:12px;font-weight:800}
+.preicfes-ui .question-navigator button.answered{background:#ddf6e9;border-color:#baeace;color:#047b5d}
+.preicfes-ui .question-navigator button[aria-current="step"]{background:#0b55ce;border-color:#0b55ce;color:#fff;box-shadow:0 4px 13px #075cca2d}
+.preicfes-ui .navigator-legend{display:flex;flex-wrap:wrap;gap:11px;margin-top:16px;color:#7289a5;font-size:10px}
+.preicfes-ui .legend-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;background:#e9f3ff;border:1px solid #b3d1f5}
+.preicfes-ui .legend-dot.answered{background:#9ee2bb;border-color:#64be94}.preicfes-ui .legend-dot.current{background:#0756c9}
+.preicfes-ui .exam-result{display:flex;align-items:center;gap:20px;padding:30px;margin-top:20px}
+.preicfes-ui .result-icon{width:70px;height:70px;background:#fff1cf;display:grid;place-items:center;border-radius:22px;color:#d08a08;font-size:29px}
+.preicfes-ui .exam-result h2{font-size:26px;margin:7px 0}.preicfes-ui .exam-result p{color:#677e9c}
+.preicfes-ui .review-panel{padding:25px;margin-top:20px}.preicfes-ui .review-panel h2{font-size:20px}
+.preicfes-ui .review-item{padding:18px 0;border-bottom:1px solid #e9f0f9}.preicfes-ui .review-item h3{font-size:14px;margin:9px 0}
+/* Administración: tarjetas con cifras reales y tabla adaptable. */
+.preicfes-ui .admin-dashboard{max-width:1560px}
+.preicfes-ui .admin-dashboard .section-hero{background:linear-gradient(115deg,#fff,#e4f2ff);padding:29px 32px;margin-bottom:20px}
+.preicfes-ui .admin-dashboard .section-hero h1{font:800 32px/1.25 Manrope,sans-serif;margin:7px 0}
+.preicfes-ui .admin-dashboard .section-hero p{color:#627b99;margin:0}
+.preicfes-ui .admin-dashboard .stats-grid{margin:20px 0}
+.preicfes-ui .admin-feature-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:20px}
+.preicfes-ui .admin-feature-grid .tool-card{padding:18px;min-height:105px;display:flex;align-items:center;gap:13px;background:linear-gradient(115deg,#fff,#f2f8ff)}
+.preicfes-ui .admin-feature-grid .tool-icon{width:45px;height:45px;flex:none;border-radius:15px;display:grid;place-items:center;font-size:19px}
+.preicfes-ui .admin-feature-grid strong{display:block;font-size:13px;color:#173869}.preicfes-ui .admin-feature-grid small{display:block;color:#6c809d;font-size:10px;line-height:1.5}
+.preicfes-ui .admin-content-grid{display:grid;grid-template-columns:minmax(0,1.85fr) minmax(260px,.78fr);gap:20px;align-items:start;margin-bottom:19px}
+.preicfes-ui .admin-users-card,.preicfes-ui .admin-actions,.preicfes-ui .admin-form-section{padding:25px}
+.preicfes-ui .card-title-row{display:flex;align-items:start;justify-content:space-between;gap:14px;margin-bottom:17px}
+.preicfes-ui .card-title-row h2{font-size:18px}.preicfes-ui .card-title-row p{color:#7a8da5;margin:4px 0 0;font-size:11px}
+.preicfes-ui .admin-filters{display:flex;gap:11px;margin-bottom:17px}
+.preicfes-ui .admin-filters input,.preicfes-ui .admin-filters select{min-width:0;min-height:42px;background:#fff;border:1px solid #ccdef3;border-radius:12px;padding:10px 13px;font-size:12px;color:#2d476b}
+.preicfes-ui .admin-filters input{flex:1}.preicfes-ui .admin-filters select{max-width:170px}
+.preicfes-ui .admin-table{border-color:#e9eff8;margin:0;min-width:600px;font-size:11px}
+.preicfes-ui .admin-table th{background:#eaf4ff;color:#315678;font-size:10px;letter-spacing:.4px;text-transform:uppercase;white-space:nowrap}
+.preicfes-ui .admin-table td{vertical-align:middle;padding:13px 10px;word-break:break-word}
+.preicfes-ui .admin-table tbody tr:hover{background:#f5faff}
+.preicfes-ui .admin-table tbody tr[hidden]{display:none!important}
+.preicfes-ui .table-user{display:flex;align-items:center;gap:10px}.preicfes-ui .table-user .app-avatar{width:34px;height:34px;flex:none;border-radius:12px}
+.preicfes-ui .table-user strong,.preicfes-ui .table-user small{display:block;overflow-wrap:anywhere}.preicfes-ui .table-user strong{color:#173869}.preicfes-ui .table-user small{color:#8595a9;font-size:10px}
+.preicfes-ui .role-pill,.preicfes-ui .state-pill{display:inline-flex;align-items:center;background:#e6f0ff;border-radius:99px;color:#0b51b5;padding:6px 10px;font-size:10px;font-weight:800;white-space:nowrap}
+.preicfes-ui .role-pill.secondary{background:#e3f9f1;color:#007c62}.preicfes-ui .state-pill.active{background:#dcf8eb;color:#08764e}.preicfes-ui .state-pill.inactive{background:#fff0f0;color:#be3551}
+.preicfes-ui .table-footer{margin:15px 0 0;color:#6f829d;font-size:11px}
+.preicfes-ui .admin-side{display:grid;gap:18px}.preicfes-ui .admin-actions h2{font-size:16px;margin-bottom:15px}.preicfes-ui .admin-actions p{font-size:12px;color:#7587a1;line-height:1.65}
+.preicfes-ui .action-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.preicfes-ui .action-grid a{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;background:#eaf4ff;color:#0754c4;border-radius:13px;padding:15px 10px;font-size:11px;font-weight:800}.preicfes-ui .action-grid a:hover{background:#dceeff}
+.preicfes-ui .action-grid i{font-size:20px}.preicfes-ui .admin-form-section{margin-top:19px}.preicfes-ui .admin-form-section summary{font-weight:850;color:#20476d;cursor:pointer}
+.preicfes-ui .admin-inline-form{margin-top:15px;display:grid;gap:12px;grid-template-columns:repeat(2,minmax(0,1fr));align-items:end}.preicfes-ui .admin-inline-form p{margin:0}
+.preicfes-ui .admin-inline-form label{font-size:11px;font-weight:800;color:#436386;display:block;margin-bottom:5px}.preicfes-ui .admin-inline-form :is(input,select,textarea){max-width:100%;width:100%;min-height:41px;border:1px solid #cddff2;border-radius:10px;padding:8px 10px}
+.preicfes-ui .admin-inline-form>button{justify-self:start}.preicfes-ui .account-actions{position:relative}.preicfes-ui .account-actions summary{list-style:none;cursor:pointer;padding:5px 8px;border-radius:9px;font-size:20px;color:#0754c4}.preicfes-ui .account-actions-popover{position:absolute;right:0;top:100%;z-index:10;min-width:230px;padding:14px;background:#fff;border:1px solid #cfe0f4;border-radius:14px;box-shadow:0 14px 36px #003f8c24;display:grid;gap:13px}.preicfes-ui .account-actions-popover form{display:grid;gap:9px}.preicfes-ui .account-actions-popover label{font-size:11px;font-weight:800}
+/* Preferencias reales de interfaz (almacenadas localmente, no en la base). */
+.preicfes-ui .settings-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(290px,.8fr);gap:20px;align-items:start;margin-top:22px}
+.preicfes-ui .settings-card{padding:27px}.preicfes-ui .settings-side{display:grid;gap:17px}
+.preicfes-ui .settings-card-head{display:flex;align-items:center;gap:13px;padding-bottom:19px;border-bottom:1px solid #e5eef9;margin-bottom:7px}
+.preicfes-ui .settings-icon{display:grid;place-items:center;width:55px;height:55px;flex:none;border-radius:17px;color:#0b56c8;background:#e4f0ff;font-size:21px}.preicfes-ui .settings-icon-green{color:#078567;background:#e1f9f0}
+.preicfes-ui .settings-card h2{font-size:18px;margin-bottom:4px}.preicfes-ui .settings-card p{font-size:12px;color:#6a7f9b;margin:0;line-height:1.65}
+.preicfes-ui .settings-control{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px 2px;border-bottom:1px solid #ecf2fa}.preicfes-ui .settings-control:last-child{border:0;padding-bottom:4px}.preicfes-ui .settings-control strong{display:block;font-size:13px;color:#183d6a;margin-bottom:5px}.preicfes-ui .settings-control small{display:block;font-size:11px;line-height:1.6;color:#7389a5}
+.preicfes-ui .settings-control-stack{align-items:stretch;flex-direction:column;gap:17px}
+.preicfes-ui .settings-switch{position:relative;flex:none;width:49px;height:29px;cursor:pointer}.preicfes-ui .settings-switch input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer}.preicfes-ui .settings-switch-track{display:block;width:100%;height:100%;background:#ccd9e9;border-radius:40px;transition:background .2s}.preicfes-ui .settings-switch-track:before{content:'';position:absolute;top:4px;left:4px;background:#fff;width:21px;height:21px;border-radius:50%;box-shadow:0 2px 5px #1e3d5d33;transition:transform .2s}.preicfes-ui .settings-switch input:checked+.settings-switch-track{background:#095bd5}.preicfes-ui .settings-switch input:checked+.settings-switch-track:before{transform:translateX(20px)}.preicfes-ui .settings-switch input:focus-visible+.settings-switch-track{outline:3px solid #f5ad1e;outline-offset:3px}
+.preicfes-ui .settings-range-row{display:flex;align-items:center;gap:12px;color:#6b82a0;font-size:11px}.preicfes-ui .settings-range-row input{flex:1;min-width:0;accent-color:#0755cd}.preicfes-ui .settings-range-row output{font-weight:900;color:#0754c5;min-width:42px}
+.preicfes-ui .settings-link{display:flex;align-items:center;justify-content:space-between;padding:15px 5px;border-bottom:1px solid #edf3fa;color:#234874;font-weight:750;font-size:12px}.preicfes-ui .settings-link span{display:flex;gap:12px;align-items:center}.preicfes-ui .settings-link>i{font-size:10px;color:#7795b1}.preicfes-ui .settings-link:hover{color:#0756c6;background:#f8fbff}
+.preicfes-ui .settings-hint{display:flex;align-items:flex-start;gap:11px;background:#e9f5ff;border:1px solid #d6e8fa;border-radius:16px;padding:16px;color:#4f6a88}.preicfes-ui .settings-hint i{color:#075bc6;margin-top:3px}.preicfes-ui .settings-hint p{margin:0;font-size:11px;line-height:1.65}
+/* Ajustes de accesibilidad y pantalla reducida. */
+.preicfes-ui.reduce-motion,.preicfes-ui.reduce-motion *,.preicfes-ui.reduce-motion *::before,.preicfes-ui.reduce-motion *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+.preicfes-ui .dash{font-size:calc(1em * var(--pc-text-scale))}
+.preicfes-ui.theme-dark{background:#0d1e35!important;color:#d9e8f9!important}
+.preicfes-ui.theme-dark :is(.app-topbar,.app-sidebar,.ui-card,.tutor-form,.settings-card){background:#152c49!important;color:#e4eefc;border-color:#345173!important}
+.preicfes-ui.theme-dark :is(.page-intro,.dash-hero,.section-hero,.tutor-header){background:linear-gradient(115deg,#16365a,#1a456d)!important;border-color:#39628a!important}
+.preicfes-ui.theme-dark :is(h1,h2,h3,.stat-card strong,.widget-title h2,.settings-card h2,.settings-control strong,.exam-question-text,.exam-status strong,.exam-result h2,.admin-table strong){color:#f6faff!important}
+.preicfes-ui.theme-dark :is(p,small,.widget-empty,.settings-control small,.settings-card p,.message-author){color:#adc2dc!important}
+.preicfes-ui.theme-dark :is(.tutor-area,.exam-passage,.settings-hint,.exam-summary-counters>div){background:#173753!important;border-color:#3d6186;color:#daeaff}
+.preicfes-ui.theme-dark #respuesta.conversation-list{background:transparent!important;color:#f6faff!important}
+.preicfes-ui.theme-dark :is(.message-bubble.bot-bubble,.chat-input-shell,.chat-suggestions button,.exam-question-card .answer-option,.subject-card,.career-tile,.settings-link,.admin-filters input,.admin-filters select,.account-actions-popover){background:#1b3858!important;border-color:#456487!important;color:#f4f8ff!important}
+.preicfes-ui.theme-dark :is(.user-bubble,.answer-option:has(input:checked)){background:#245782!important;border-color:#3779ab!important;color:#fff!important}
+.preicfes-ui.theme-dark .tutor-form textarea{color:#f7fbff!important;background:transparent!important}
+.preicfes-ui.theme-dark .app-footer{color:#a1b7d1;border-color:#345173}
+@media(max-width:1280px){.preicfes-ui .admin-content-grid{grid-template-columns:minmax(0,1.5fr) minmax(235px,.75fr)}.preicfes-ui .admin-feature-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:1050px){.preicfes-ui .exam-layout,.preicfes-ui .exam-intro-layout,.preicfes-ui .admin-content-grid{grid-template-columns:1fr}.preicfes-ui .exam-status-row{grid-template-columns:repeat(2,minmax(0,1fr))}.preicfes-ui .exam-side,.preicfes-ui .admin-side{grid-template-columns:repeat(2,minmax(0,1fr))}.preicfes-ui .settings-grid{grid-template-columns:1fr}}
+@media(max-width:700px){.preicfes-ui .exam-status-row,.preicfes-ui .exam-side,.preicfes-ui .admin-side,.preicfes-ui .admin-feature-grid{grid-template-columns:1fr}.preicfes-ui .exam-card-footer{justify-content:stretch}.preicfes-ui .exam-card-footer .ui-btn{flex:1}.preicfes-ui .exam-card-footer #finalizar-simulacro{flex-basis:100%}.preicfes-ui .admin-filters{flex-direction:column}.preicfes-ui .admin-filters select{max-width:none}.preicfes-ui .admin-inline-form{grid-template-columns:1fr}.preicfes-ui .tutor-header{padding:17px}.preicfes-ui .tutor-icon{height:49px;width:49px}.preicfes-ui .tutor-icon img{width:42px;height:42px}.preicfes-ui .tutor-header h2{font-size:17px}.preicfes-ui .tutor-header p{font-size:11px}.preicfes-ui .tutor-label{font-size:0;width:21px;height:21px;padding:5px}.preicfes-ui .tutor-card #respuesta.conversation-list{padding:18px!important;min-height:250px!important}.preicfes-ui .chat-message-group{max-width:88%}.preicfes-ui .chat-suggestions{padding:0 15px 15px}.preicfes-ui .chat-suggestions>span{display:none}.preicfes-ui .tutor-form{padding:14px}.preicfes-ui .question-navigator{grid-template-columns:repeat(6,minmax(0,1fr))}}
+@media(max-width:420px){.preicfes-ui .chat-tools{gap:4px}.preicfes-ui .chat-tools :is(button,.chat-upload){width:33px;height:33px;min-width:33px;min-height:33px}.preicfes-ui .chat-toolbar{flex-wrap:wrap}.preicfes-ui .chat-toolbar>.pill-button{margin-left:auto}.preicfes-ui .exam-question-card,.preicfes-ui .exam-summary,.preicfes-ui .exam-welcome,.preicfes-ui .exam-tips{padding:18px}.preicfes-ui .question-navigator{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}.preicfes-ui *{transition:none!important}}

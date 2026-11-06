@@ -1,165 +1,17 @@
-{% extends "home_admin_academico.html" %}
-{% load static %}
-{% block title %} registro {% endblock %}
-    
-{% block extra_head %}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">  <!-- referencia a estilos  --> 
-    <link rel="stylesheet" href="{% static 'css/register.css' %}">  <!-- referencia a estilos  -->      
-{% endblock %}
-
-{% block content %}  
-
-
-<h1>Gestión de usuarios:</h1> 
-
-<div class="container mt-5">
-    <h2>Usuarios registrados en el sistema</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID del usuario</th>
-                <th>Nombre de usuario </th>
-                <th>Correo electronico </th>
-                <th>Rol del Usuario</th>
-                <th>Registrado</th>
-                <th>Estado</th>
-                <th>editar</th>
-                <th>Eliminar</th>
-                <th>Activar/Desactivar</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for u in usuarios %}
-            <tr>
-                <td>{{u.id}}</td>
-                <td>{{u.username}}</td>
-                <td>{{u.email}}</td>
-                <td>{{u.PerfilUsuario.Rol.nombre}}</td>
-                <td>{{u.date_joined}}</td>
-                <td>{{u.is_active}}</td>
-                <!-- <td>{{u.activo}}</td> -->
-                <td><button class="btn btn-sm btn-primary">Editar</button></td>
-                <td><form method="post" action="{% url 'eliminar_admin_gestion_users' 'usuarios' u.id %}" class="d-inline">{% csrf_token %}<button type="submit"  class="btn btn-sm btn-danger">Eliminar</button></form></td>
-                <td>
-                  <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="user1" checked>
-                    <label class="form-check-label" for="user1"></label>
-                  </div>
-                </td>
-            </tr>
-            {% endfor %}
-            <tr>
-                <td>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregar_usuario">
-                      + Agregar Nuevo
-                    </button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="agregar_usuario" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Nuevo Usuario </h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form action="" method="post">
-        {% csrf_token %}
-        {{form_usuarios}}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" name="form" value="usuarios" class="btn btn-primary">Guardar Cambios</button>
-      </div>
-      </form>
-    </div>
+{% extends 'home_admin_academico.html' %}
+{% block title %}Gestión de usuarios{% endblock %}
+{% block content %}
+<div class="dash admin-dashboard">
+  <section class="section-hero"><span class="eyebrow"><i class="fas fa-gear"></i> Panel administrativo</span><h1>Gestión administrativa</h1><p>Administra usuarios, estudiantes, cursos y la operación académica de Pre-ICFES.</p></section>
+  {% if error_admin %}<div class="ui-alert ui-alert-warning" role="alert">{{ error_admin }}</div>{% endif %}
+  <section class="stats-grid admin-stats" aria-label="Resumen administrativo"><article class="ui-card stat-card"><span class="stat-icon blue"><i class="fas fa-users"></i></span><div><p>Usuarios</p><strong>{{ total_usuarios|default:0 }}</strong></div></article><article class="ui-card stat-card"><span class="stat-icon mint"><i class="fas fa-user-graduate"></i></span><div><p>Estudiantes</p><strong>{{ total_estudiantes|default:0 }}</strong></div></article><article class="ui-card stat-card"><span class="stat-icon sky"><i class="fas fa-book-open"></i></span><div><p>Cursos</p><strong>{{ total_cursos|default:0 }}</strong></div></article><article class="ui-card stat-card"><span class="stat-icon gold"><i class="fas fa-clipboard-check"></i></span><div><p>Evaluaciones</p><strong>{{ total_evaluaciones|default:0 }}</strong></div></article></section>
+  <section class="admin-feature-grid"><a class="ui-card tool-card" href="{% url 'admin_gestion_academica' %}"><span class="tool-icon sky"><i class="fas fa-graduation-cap"></i></span><span><strong>Gestión académica</strong><small>Cursos, materias y años lectivos.</small></span><i class="fas fa-arrow-right"></i></a><a class="ui-card tool-card" href="#usuarios"><span class="tool-icon blue"><i class="fas fa-users"></i></span><span><strong>Usuarios</strong><small>Consulta y administra cuentas.</small></span><i class="fas fa-arrow-right"></i></a><a class="ui-card tool-card" href="{% url 'gestion_acudientes_estudiantes' %}"><span class="tool-icon mint"><i class="fas fa-user-graduate"></i></span><span><strong>Estudiantes y acudientes</strong><small>Consulta vínculos académicos.</small></span><i class="fas fa-arrow-right"></i></a><a class="ui-card tool-card" href="{% url 'admin_gestion_db' %}"><span class="tool-icon gold"><i class="fas fa-database"></i></span><span><strong>Base de datos</strong><small>Catálogos y datos básicos.</small></span><i class="fas fa-arrow-right"></i></a></section>
+  <div class="admin-content-grid"><section class="ui-card admin-users-card" id="usuarios"><div class="card-title-row"><div><h2><i class="fas fa-users"></i> Gestión de usuarios</h2><p>Consulta las cuentas registradas en la plataforma</p></div><a class="ui-btn ui-btn-primary" href="#form-crear-usuario"><i class="fas fa-plus"></i> Crear usuario</a></div>
+    <div class="admin-filters"><label for="user-search" class="visually-hidden">Buscar usuarios</label><input id="user-search" type="search" placeholder="Buscar por nombre, correo o rol..." aria-label="Buscar usuarios"><label for="role-filter" class="visually-hidden">Filtrar por rol</label><select id="role-filter" aria-label="Filtrar por rol"><option value="">Todos los roles</option>{% for rol in roles %}<option value="{{ rol.nombre|lower }}">{{ rol.nombre }}</option>{% endfor %}</select></div>
+    <div class="table-responsive"><table class="table admin-table" id="users-table"><thead><tr><th>Usuario</th><th>Rol</th><th>Estado</th><th>Correo</th><th>Registro</th><th>Acción</th></tr></thead><tbody>{% for u in usuarios %}<tr><td><div class="table-user"><span class="app-avatar">{{ u.username|slice:':1'|upper }}</span><div><strong>{{ u.get_full_name|default:u.username }}</strong><small>@{{ u.username }}</small></div></div></td><td>{% if u.is_superuser %}<span class="role-pill">Administrador</span>{% else %}{% for r in u.perfilusuario.roles.all %}<span class="role-pill secondary">{{ r.nombre }}</span>{% empty %}<span class="muted">Sin rol</span>{% endfor %}{% endif %}</td><td>{% if u.is_active %}<span class="state-pill active">Activo</span>{% else %}<span class="state-pill inactive">Inactivo</span>{% endif %}</td><td>{{ u.email|default:'—' }}</td><td>{{ u.date_joined|date:'d/m/Y' }}</td><td>{% if u.pk != user.pk %}<form method="post" action="{% url 'eliminar_admin_gestion_users' 'usuarios' u.pk %}" onsubmit="return confirm('¿Eliminar el usuario {{ u.username|escapejs }}? Esta acción no se puede deshacer.');">{% csrf_token %}<button type="submit" class="icon-button danger" aria-label="Eliminar usuario {{ u.username }}"><i class="far fa-trash-can"></i></button></form><details class="account-actions"><summary title="Más acciones para {{ u.username }}">⋮</summary><div class="account-actions-popover"><form method="post">{% csrf_token %}<input type="hidden" name="form" value="asignar_rol"><input type="hidden" name="usuario_id" value="{{ u.pk }}"><label for="rol-{{ u.pk }}">Cambiar rol</label><select id="rol-{{ u.pk }}" class="form-select" name="rol_id" required>{% for rol in roles %}<option value="{{ rol.pk }}">{{ rol.nombre }}</option>{% endfor %}</select><button type="submit" class="ui-btn ui-btn-primary">Asignar</button></form><form method="post" onsubmit="return confirm('¿Cambiar el estado de {{ u.username|escapejs }}?');">{% csrf_token %}<input type="hidden" name="form" value="cambiar_estado"><input type="hidden" name="usuario_id" value="{{ u.pk }}"><button type="submit" class="ui-btn ui-btn-outline">{% if u.is_active %}Desactivar{% else %}Activar{% endif %} usuario</button></form></div></details>{% else %}<span class="muted">Tu cuenta</span>{% endif %}</td></tr>{% empty %}<tr><td colspan="6">No hay usuarios registrados.</td></tr>{% endfor %}</tbody></table></div><p class="table-footer" id="table-count">{{ usuarios|length }} usuarios registrados</p></section>
+    <aside class="admin-side"><section class="ui-card admin-actions"><h2><i class="fas fa-bolt"></i> Acciones rápidas</h2><div class="action-grid"><a href="#form-crear-usuario"><i class="fas fa-user-plus"></i><span>Crear usuario</span></a><a href="{% url 'admin_gestion_academica' %}"><i class="fas fa-graduation-cap"></i><span>Gestionar cursos</span></a><a href="{% url 'gestion_acudientes_estudiantes' %}"><i class="fas fa-users"></i><span>Estudiantes</span></a><a href="{% url 'admin_gestion_db' %}"><i class="fas fa-database"></i><span>Base de datos</span></a></div></section><section class="ui-card admin-actions"><h2><i class="far fa-circle-check"></i> Estado del sistema</h2><p>Estás usando el panel de gestión con los datos disponibles de tu base local.</p><span class="state-pill active">Sesión autenticada</span></section></aside>
   </div>
+  <section class="ui-card admin-form-section" id="form-crear-usuario"><div class="card-title-row"><h2><i class="fas fa-user-plus"></i> Registrar usuario</h2></div><p>Registra una cuenta nueva. Los roles y perfiles se gestionan por separado en las secciones del sistema.</p><form method="post" class="admin-inline-form">{% csrf_token %}{{ form_usuarios.as_p }}<label class="admin-role-label" for="nuevo-usuario-rol">Rol inicial</label><select id="nuevo-usuario-rol" name="rol_id" class="form-select"><option value="">Sin rol asignado</option>{% for r in roles %}<option value="{{ r.pk }}">{{ r.nombre }}</option>{% endfor %}</select><button type="submit" name="form" value="usuarios" class="ui-btn ui-btn-primary">Guardar usuario</button></form></section>
+  <section class="ui-card admin-form-section"><details><summary>Administrar personas registradas</summary><div class="table-responsive"><table class="table"><thead><tr><th>Persona</th><th>Documento</th><th>Acción</th></tr></thead><tbody>{% for p in personas %}<tr><td>{{ p.nombre }} {{ p.apellido }}</td><td>{{ p.documento }}</td><td><form method="post" action="{% url 'eliminar_admin_gestion_users' 'personas' p.id %}" onsubmit="return confirm('¿Eliminar a esta persona y sus datos relacionados?');">{% csrf_token %}<button type="submit" class="ui-btn ui-btn-danger">Eliminar</button></form></td></tr>{% endfor %}</tbody></table></div><form method="post" class="admin-inline-form">{% csrf_token %}{{ form_personas.as_p }}<button type="submit" name="form" value="personas" class="ui-btn ui-btn-primary">Registrar persona</button></form></details></section>
 </div>
-
-<div class="container mt-5">
-    <h2>Personas registradas en el sistema</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID del usuario</th>
-                <th>Nombre de usuario</th>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Documento</th>
-                <th>Fecha de nacimiento</th>
-                <th>Direccion</th>
-                <th>Telefono</th>
-                <th>Sexo</th>
-                <th>editar</th>
-                <th>Eliminar</th>
-                <th>Activar/Desactivar</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for p in personas %}
-            <tr>
-                <td>{{p.id}}</td>
-                <td>{{p.user}}</td>
-                <td>{{p.nombre}}</td>
-                <td>{{p.apellido}}</td>
-                <td>{{p.documento}}</td>
-                <td>{{p.fecha_nacimiento}}</td>
-                <td>{{p.direccion}}</td>
-                <td>{{p.telefono}}</td>
-                <td>{{p.sexo.descripcion}}</td>
-                <td><button class="btn btn-sm btn-primary">Editar</button></td>
-                <td><form method="post" action="{% url 'eliminar_admin_gestion_users' 'personas' p.id %}" class="d-inline">{% csrf_token %}<button type="submit"  class="btn btn-sm btn-danger">Eliminar</button></form></td>
-                <td>
-                  <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="user1" checked>
-                    <label class="form-check-label" for="user1"></label>
-                  </div>
-                </td>
-            </tr>
-            {%endfor%}
-            <tr>
-                <td>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregar_persona">
-                      + Agregar Nuevo
-                    </button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="agregar_persona" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Nueva Persona</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form action="" method="post">
-        {% csrf_token %}
-        {{form_personas}}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" name="form" value="personas"  class="btn btn-primary">Guardar Cambios</button>
-      </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-<!-- 
-
-Asignar roles a los usuarios.
-
-Activar/desactivar cuentas. -->
-
 {% endblock %}
