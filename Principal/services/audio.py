@@ -7,10 +7,10 @@ from .files import guardar_audio
 
 
 #======================================PROCESAR AUDIOS=============================================
-def procesar_audio(audio):
+def procesar_audio(audio, user_id=None):
     if not audio:
         return None,None
-    ruta = guardar_audio(audio)
+    ruta = guardar_audio(audio, user_id=user_id)
     texto = get_texto_de_audio(ruta)
     return texto,ruta
 #**************************************PROCESAR AUDIOS**********************************************

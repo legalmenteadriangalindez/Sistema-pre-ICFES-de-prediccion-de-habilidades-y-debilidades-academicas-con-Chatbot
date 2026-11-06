@@ -1,6 +1,7 @@
 # ================================IMPORTACIONES===============================================
 from django.contrib.auth import logout
 from django.core import signing
+from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from Principal.services.verificacion_correo import enviar_verificacion, validar_token
@@ -8,7 +9,7 @@ from django.db import transaction
 from django.shortcuts import render, redirect
 import logging
 import unicodedata
-from Principal.services.files import guardar_PDFs
+from Principal.services.files import guardar_PDFs, validar_pdf, validar_audio
 from Principal.services.audio import procesar_audio
 from Principal.services.gestion_view_test import generar_quizes,generar_material,agrupar_historial_por_turnos
 from Principal.services.pruebas_ingles import generar_prueba_ingles
@@ -58,6 +59,7 @@ from .management_views import (
     gestion_acudientes_estudiantes,
     gestion_db,
     gestion_users,
+    gestion_docentes,
 )
 
 # ********************************IMPORTACIONES**************************************************
@@ -169,6 +171,15 @@ def home(request):
         prompt= request.POST.get("prompt","").strip()
         pdf = request.FILES.get("archivo")
         audio=request.FILES.get("audio")
+        # Validar antes de llamar al LLM y antes de escribir a disco.
+        try:
+            if pdf:
+                validar_pdf(pdf)
+            if audio:
+                validar_audio(audio)
+        except ValidationError as exc:
+            contexto["chat_error"] = " ".join(exc.messages)
+            return render(request, "home.html", contexto)
 
         
          # ==============borrar historial============
@@ -216,12 +227,22 @@ def home(request):
 
         # ==============guardar pdf============
         if pdf:
-           guardar_PDFs(pdf)
+            try:
+                guardar_PDFs(pdf, user_id=request.user.pk)
+            except (ValidationError, OSError):
+                logging.getLogger(__name__).exception("No se pudo guardar el PDF del usuario %s", request.user.pk)
+                contexto["chat_error"] = "No se pudo guardar el PDF. Intenta nuevamente."
         # **************guardar pdf*************
     
         # ==============procesar audio============
         if audio:
-           contexto["audio_usuario"],contexto["ruta"]= procesar_audio(audio)                
+            try:
+                contexto["audio_usuario"], contexto["ruta"] = procesar_audio(
+                    audio, user_id=request.user.pk
+                )
+            except Exception:
+                logging.getLogger(__name__).exception("Error al procesar audio del usuario %s", request.user.pk)
+                contexto["chat_error"] = "No se pudo transcribir el audio. Verifica el formato y vuelve a intentarlo."                
         # **************procesar audio*************
             
         contexto["chats"] = chatbot.memory_manager.get_user_chats()

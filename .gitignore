@@ -23,6 +23,7 @@ ProyectoDeGrado/ChromaDB/
 
 # Documentos locales
 media/
+.private-media/
 
 # Entorno
 .DS_Store

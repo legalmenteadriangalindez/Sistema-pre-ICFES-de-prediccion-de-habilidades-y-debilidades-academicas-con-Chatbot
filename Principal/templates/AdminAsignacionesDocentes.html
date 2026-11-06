@@ -1,0 +1,50 @@
+{% extends 'home_admin_academico.html' %}
+{% block title %}Permisos docentes{% endblock %}
+{% block content %}
+<div class="dash portal-page">
+  <section class="section-hero"><span class="eyebrow"><i class="fas fa-shield-halved"></i> CONTROL DE ACCESO</span>
+    <h1>Asignaciones docentes</h1><p>Autoriza a cada docente únicamente en los cursos y años que le correspondan. Revocar una asignación bloquea inmediatamente nuevas operaciones en ese curso.</p>
+  </section>
+  {% if error %}<div class="ui-alert ui-alert-warning" role="alert">{{ error }}</div>{% endif %}
+  <section class="ui-card">
+    <h2><i class="fas fa-user-check"></i> Asignar curso a docente</h2>
+    <form method="post" class="portal-form">{% csrf_token %}
+      <input type="hidden" name="accion" value="asignar">
+      <label for="id-docente">Docente</label>
+      <select id="id-docente" name="docente" class="form-select" required>
+        <option value="">Seleccionar docente</option>
+        {% for perfil in docentes %}<option value="{{ perfil.user_id }}">{{ perfil.user.username }}</option>{% endfor %}
+      </select>
+      <label for="id-curso">Curso</label>
+      <select id="id-curso" name="curso" class="form-select" required>
+        <option value="">Seleccionar curso</option>
+        {% for curso in cursos %}<option value="{{ curso.pk }}">{{ curso.grado.nombre }} · {{ curso.nombre }}</option>{% endfor %}
+      </select>
+      <label for="id-anio">Año lectivo</label>
+      <select id="id-anio" name="anio_lectivo" class="form-select" required>
+        <option value="">Seleccionar año</option>
+        {% for anio in anios %}<option value="{{ anio.pk }}">{{ anio.anio }}</option>{% endfor %}
+      </select>
+      <button type="submit" class="ui-btn ui-btn-primary">Guardar autorización</button>
+    </form>
+  </section>
+  <section class="ui-card">
+    <h2>Permisos concedidos</h2>
+    <div class="portal-list">
+    {% for asignacion in asignaciones %}
+      <div class="portal-list-row">
+        <span><strong>{{ asignacion.docente.user.username }}</strong>
+          <small>{{ asignacion.curso.grado.nombre }} · {{ asignacion.curso.nombre }} · {{ asignacion.anio_lectivo.anio }}</small>
+        </span>
+        {% if asignacion.activo %}
+          <form method="post" onsubmit="return confirm('¿Revocar el acceso a este curso?');">{% csrf_token %}
+            <input type="hidden" name="accion" value="revocar"><input type="hidden" name="asignacion_id" value="{{ asignacion.pk }}">
+            <button class="ui-btn ui-btn-outline" type="submit">Revocar acceso</button>
+          </form>
+        {% else %}<span class="soft-chip">Revocada</span>{% endif %}
+      </div>
+    {% empty %}<p class="widget-empty">Todavía no hay cursos asignados a docentes.</p>{% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

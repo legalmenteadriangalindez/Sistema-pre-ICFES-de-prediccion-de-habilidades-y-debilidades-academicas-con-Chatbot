@@ -2,6 +2,8 @@
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
+from django.db import transaction
+from .services.privacidad import eliminar_archivos_al_confirmar_cuenta
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
 
@@ -11,7 +13,7 @@ from .forms import (
     UserRegisterForm,
 )
 from .models import (
-    Acudiente, AnioLectivo, Curso, Estudiante, Grado, Materia, IntentoEvaluacion, PerfilUsuario,
+    Acudiente, AnioLectivo, AsignacionDocenteCurso, Curso, Estudiante, Grado, Materia, IntentoEvaluacion, PerfilUsuario,
     Persona, RelacionAcudiente, Rol, Sexo,
 )
 
@@ -23,6 +25,56 @@ def es_gestor(request_user):
     return PerfilUsuario.objects.filter(
         user=request_user, roles__nombre__iexact="ADMIN"
     ).exists()
+
+
+@login_required
+@user_passes_test(es_gestor, login_url='/accounts/login/')
+def gestion_docentes(request):
+    """Solo administradores conceden y revocan acceso a cursos docentes."""
+    error = None
+    if request.method == "POST":
+        accion = request.POST.get("accion", "")
+        if accion == "revocar":
+            raw = request.POST.get("asignacion_id", "")
+            if raw.isdecimal():
+                AsignacionDocenteCurso.objects.filter(pk=int(raw)).update(activo=False)
+                return redirect("admin_asignaciones_docentes")
+            error = "Selecciona una asignación válida."
+        elif accion == "asignar":
+            raw_usuario = request.POST.get("docente", "")
+            raw_curso = request.POST.get("curso", "")
+            raw_anio = request.POST.get("anio_lectivo", "")
+            if all(c.isdecimal() for c in (raw_usuario, raw_curso, raw_anio)):
+                docente = PerfilUsuario.objects.filter(
+                    user_id=int(raw_usuario), user__is_active=True,
+                    roles__nombre__iexact="DOCENTE"
+                ).first()
+                curso = Curso.objects.filter(pk=int(raw_curso), activo=True).first()
+                anio = AnioLectivo.objects.filter(pk=int(raw_anio)).first()
+                if docente and curso and anio:
+                    asignacion, creada = AsignacionDocenteCurso.objects.get_or_create(
+                        docente=docente, curso=curso, anio_lectivo=anio,
+                        defaults={"activo": True},
+                    )
+                    if not creada and not asignacion.activo:
+                        asignacion.activo = True
+                        asignacion.save(update_fields=["activo"])
+                    return redirect("admin_asignaciones_docentes")
+            error = "Selecciona un docente activo, curso activo y año lectivo válidos."
+        else:
+            error = "Acción no permitida."
+
+    return render(request, "AdminAsignacionesDocentes.html", {
+        "error": error,
+        "docentes": PerfilUsuario.objects.filter(
+            user__is_active=True, roles__nombre__iexact="DOCENTE"
+        ).select_related("user").distinct().order_by("user__username"),
+        "cursos": Curso.objects.filter(activo=True).select_related("grado").order_by("grado__nombre", "nombre"),
+        "anios": AnioLectivo.objects.all().order_by("-anio"),
+        "asignaciones": AsignacionDocenteCurso.objects.select_related(
+            "docente__user", "curso__grado", "anio_lectivo"
+        ).order_by("-activo", "docente__user__username", "-anio_lectivo__anio"),
+    })
 
 @login_required
 @user_passes_test(es_gestor, login_url='/accounts/login/')
@@ -178,15 +230,26 @@ def gestion_users(request):
 @user_passes_test(es_gestor, login_url='/accounts/login/')
 @require_POST
 def eliminar_gestion_users(request,tipo,id):
-    if tipo =="usuarios":
-        cuenta = User.objects.filter(id=id).first()
-        # Nunca eliminar por este panel la misma cuenta administrativa en sesión.
-        if cuenta and cuenta.pk != request.user.pk:
+    """Borrado administrativo coherente: cuenta y datos dependientes.
+
+    Antes se podía borrar solo Persona y dejar una cuenta huérfana.
+    La limpieza de carpetas privadas ocurre al confirmarse el commit.
+    """
+    cuenta = None
+    if tipo == "usuarios":
+        cuenta = User.objects.filter(pk=id).first()
+    elif tipo == "personas":
+        persona = Persona.objects.filter(pk=id).select_related(
+            "perfil_user__user"
+        ).first()
+        cuenta = persona.perfil_user.user if persona else None
+
+    if cuenta and cuenta.pk != request.user.pk:
+        identificador = cuenta.pk
+        with transaction.atomic():
             cuenta.delete()
-    if tipo == "personas":
-        persona = Persona.objects.get(id=id)
-        persona.delete()
-    return redirect('admin_gestion_users')
+            eliminar_archivos_al_confirmar_cuenta(identificador)
+    return redirect("admin_gestion_users")
 
 @login_required # @user_passes_test(es_coordinador)
 def acudiente(request):

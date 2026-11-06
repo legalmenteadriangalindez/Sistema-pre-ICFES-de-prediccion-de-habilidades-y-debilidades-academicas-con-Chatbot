@@ -147,6 +147,8 @@ STATIC_URL = 'static/'
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / "media"
+# Adjuntos privados: nunca publicar esta ubicación con MEDIA_URL.
+PRIVATE_UPLOAD_ROOT = BASE_DIR / ".private-media"
 
 STATICFILES_DIRS = [
     BASE_DIR / "Principal" / "static",

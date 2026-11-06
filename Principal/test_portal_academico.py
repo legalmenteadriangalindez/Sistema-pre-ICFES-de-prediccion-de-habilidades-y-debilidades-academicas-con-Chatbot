@@ -6,7 +6,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from .models import (
-    Actividad, ActividadAsignada, Acudiente, AnioLectivo, Carrera, Curso,
+    Actividad, ActividadAsignada, Acudiente, AnioLectivo, AsignacionDocenteCurso, Carrera, Curso,
     Estudiante, EstudianteAcudiente, Grado, IntentoEvaluacion, Matricula,
     Materia, NivelAprendizaje, PerfilUsuario, Persona, RelacionAcudiente,
     RespuestaEvaluacion, RecomendacionVocacional, Rol, Sexo, Tema,
@@ -27,6 +27,7 @@ class PortalAcademicoTests(TestCase):
         self.docente = User.objects.create_user("docente_portal", password="ClaveSegura!2026")
         perfil = PerfilUsuario.objects.create(user=self.docente)
         perfil.roles.add(Rol.objects.get_or_create(nombre="DOCENTE")[0])
+        AsignacionDocenteCurso.objects.create(docente=perfil, curso=curso, anio_lectivo=anio)
         self.acudiente_usuario = User.objects.create_user("acudiente_portal", password="ClaveSegura!2026")
         perfil_acudiente = PerfilUsuario.objects.create(user=self.acudiente_usuario)
         perfil_acudiente.roles.add(Rol.objects.get_or_create(nombre="ACUDIENTE")[0])
