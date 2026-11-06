@@ -169,3 +169,6 @@ EMAIL_BACKEND = os.environ.get(
     "django.core.mail.backends.console.EmailBackend" if DEBUG else "django.core.mail.backends.smtp.EmailBackend",
 )
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "Pre-ICFES <local@pre-icfes.test>")
+
+# Artefacto ML privado y local. Nunca exponer vía STATIC_URL o MEDIA_URL.
+PREDICCION_MODELO_PATH = BASE_DIR / ".local-data" / "prediccion" / "modelo.json"
