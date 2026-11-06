@@ -6,7 +6,7 @@
   margin-bottom: var(--ds-space-3, 12px);
 }
 
-.preicfes-ui .app-notifications:empty {
+.preicfes-ui .app-notifications[hidden] {
   display: none;
 }
 
