@@ -34,6 +34,10 @@ from .forms import (
 )
 from .models import (
     AnalisisCognitivo,
+    ActividadAsignada,
+    EstudianteAcudiente,
+    Carrera,
+    IntentoEvaluacion,
     Estudiante,
     MaterialAsignado,
     Matricula,
@@ -83,7 +87,19 @@ def home(request):
     chat_id = request.POST.get("chat_id") or request.GET.get("chat_id", "default")
     perfil = PerfilUsuario.objects.filter(user= user).first()
     persona = Persona.objects.filter(perfil_user=perfil).first()
-    estudiante = Estudiante.objects.filter(persona= persona).first()
+    estudiante = Estudiante.objects.filter(persona= persona).first() if persona else None
+    # Las estadísticas provienen de los registros del usuario, nunca del mockup.
+    intentos = list(IntentoEvaluacion.objects.filter(estudiante=estudiante).order_by("-fecha")) if estudiante else []
+    porcentajes = [intento.porcentaje for intento in intentos]
+    matricula = Matricula.objects.filter(estudiante=estudiante, activa=True).order_by("-anio_lectivo__anio").first() if estudiante else None
+    tareas = ActividadAsignada.objects.filter(matricula=matricula).select_related("actividad").order_by("-fecha_asignacion") if matricula else ActividadAsignada.objects.none()
+    inicio_stats = {
+        "inicio_intentos": len(intentos),
+        "inicio_promedio": round(sum(porcentajes) / len(porcentajes), 1) if porcentajes else 0,
+        "inicio_mejor": max(porcentajes) if porcentajes else 0,
+        "inicio_pendientes": tareas.filter(completada=False).count(),
+        "inicio_actividades": list(tareas[:5]),
+    }
     chatbot = chatbotManager.get_chatbot(user_id)
     raw_historial = chatbot.get_conversation_history(chat_id, limit=50)
     chats = chatbot.memory_manager.get_user_chats()
@@ -93,10 +109,12 @@ def home(request):
         "audio_usuario": None,
         "historial":  agrupar_historial_por_turnos(raw_historial),
         "response": None,
+        "chat_error": None,
         "chat_id": chat_id,
         "chats" : chats,
         "profile": chatbot.memory_manager.get_cognitive_profile()
     } 
+    contexto.update(inicio_stats)
     # Utilizar el perfil del gestor de memoria; no depender de rutas de Windows.
     registro = contexto["profile"]
     if isinstance(registro, list):
@@ -171,7 +189,7 @@ def home(request):
             if resultado["success"]:
                 contexto["response"] = resultado["response"]
             else:
-                contexto["response"] = f"Error: {resultado['error']}"
+                contexto["chat_error"] = f"No pudimos generar una respuesta: {resultado['error']}"
         #***********enviar mensaje al chatbot*******
 
         # ==actualizar historial después de enviar mensaje==
@@ -323,22 +341,38 @@ def recomendaciones(request):
 # =============================CARRERAS======================================
 @login_required
 def actividadesUsuario(request):
-    return render(request,"actividadesUsuario.html")     # view Carreras Profesionales
-# # ********************************CARRERAS**************************************************
+    perfil = PerfilUsuario.objects.filter(user=request.user).first()
+    persona = Persona.objects.filter(perfil_user=perfil).first() if perfil else None
+    estudiante = Estudiante.objects.filter(persona=persona).first() if persona else None
+    matricula = Matricula.objects.filter(estudiante=estudiante, activa=True).first() if estudiante else None
+    if not matricula:
+        return render(request, "actividadesUsuario.html", {
+            "error": "No existe una matrícula activa asociada a esta cuenta.",
+            "actividades": [], "total_actividades": 0, "total_completadas": 0
+        })
+    if request.method == "POST" and request.POST.get("marcar_completada"):
+        identificador = request.POST.get("actividad_id")
+        if identificador and identificador.isdigit():
+            # Filtrar por la matrícula evita editar actividades de otros estudiantes.
+            ActividadAsignada.objects.filter(
+                pk=int(identificador), matricula=matricula
+            ).update(completada=True)
+        return redirect("actividadesUsuario")
+    actividades = ActividadAsignada.objects.filter(matricula=matricula).select_related(
+        "actividad__tema__materia", "actividad__nivel"
+    ).order_by("-fecha_asignacion")
+    return render(request, "actividadesUsuario.html", {
+        "actividades": actividades,
+        "total_actividades": actividades.count(),
+        "total_completadas": actividades.filter(completada=True).count()
+    })
 
-
-
-
-# =============================COMPARADOR DE CARRERAS======================================
 @login_required
 def comparadorDeCarreras(request):
-    return render(request,"ComparadorDeCarreras.html")     # view Comparador de carreras 
-# ********************************COPARADOR DE CARRERAS**************************************************
+    return render(request, "ComparadorDeCarreras.html", {
+        "carreras": Carrera.objects.all().order_by("nombre")
+    })
 
-
-
-
-# =============================CONFIGURACIONES======================================
 @login_required
 def configuraciones(request):
     return render(request,"Configuraciones.html")     # view Cnfiguraciones
@@ -349,29 +383,20 @@ def configuraciones(request):
 # =============================PERFIL DE USUARIO======================================
 @login_required
 def perfil(request):
-    
-    user = request.user
-    persona = getattr(user, "persona", None)
-    estudiante = None
-    # docente = None
-    acudiente = None
-    if persona:
-       estudiante = getattr(persona, "estudiante", None) if persona else None
-    #    docente = getattr(persona, "docente", None) if persona else None
-       if estudiante:
-          acudiente = getattr(estudiante, "acudiente", None) if estudiante else None
-
-    contexto ={
-        "user": user,
-        "persona": persona,
-        "estudiante": estudiante,
-        # "docente": docente,
-        "acudiente": acudiente,
-        }
-    
-    return render(request,"PerfilDeUsuarios.html",contexto)     # view Perfil de usuario
-    
-# ********************************PERFIL DE USUARIO**************************************************
+    perfil_usuario = PerfilUsuario.objects.filter(user=request.user).first()
+    persona = Persona.objects.filter(perfil_user=perfil_usuario).select_related("sexo").first() if perfil_usuario else None
+    estudiante = Estudiante.objects.filter(persona=persona).first() if persona else None
+    matricula = Matricula.objects.filter(estudiante=estudiante, activa=True).select_related(
+        "curso__grado", "anio_lectivo"
+    ).first() if estudiante else None
+    vinculos = EstudianteAcudiente.objects.filter(estudiante=estudiante).select_related(
+        "acudiente__persona", "relacion"
+    ) if estudiante else EstudianteAcudiente.objects.none()
+    return render(request, "PerfilDeUsuarios.html", {
+        "persona": persona, "estudiante": estudiante,
+        "matricula": matricula, "vinculos": vinculos,
+        "perfil_usuario": perfil_usuario
+    })
 
 @login_required
 def editarPerfil(request):

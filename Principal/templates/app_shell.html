@@ -1,0 +1,55 @@
+{% load static %}
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0647b4">
+<title>{% block title %}Pre-ICFES{% endblock %} · Pre-ICFES</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="{% static 'css/styles.css' %}" rel="stylesheet">
+{% block extra_head %}{% endblock %}
+<link href="{% static 'css/ui-2026.css' %}" rel="stylesheet">
+</head>
+<body class="preicfes-ui {% block theme_class %}student-mode{% endblock %}">
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<header class="app-topbar">
+ <a class="app-brand" href="{% url 'home' %}" aria-label="Inicio de Pre-ICFES"><i class="fas fa-graduation-cap"></i><span>Pre-ICFES</span><small aria-hidden="true"></small></a>
+ <button class="menu-toggle" id="app-menu-toggle" aria-label="Abrir menú" aria-controls="app-sidebar" aria-expanded="false" type="button"><i class="fas fa-bars"></i></button>
+ <nav class="top-links" aria-label="Navegación principal">{% block nav_top %}
+  <a href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' %}aria-current="page"{% endif %}><i class="fas fa-house"></i> Inicio</a>
+  <a href="{% url 'simulacros' %}" {% if request.resolver_match.url_name == 'simulacros' %}aria-current="page"{% endif %}><i class="far fa-calendar-check"></i> Simulacros</a>
+  <a href="{% url 'recomendaciones' %}" {% if request.resolver_match.url_name == 'recomendaciones' %}aria-current="page"{% endif %}><i class="far fa-star"></i> Recomendaciones</a>
+  <a href="{% url 'actividadesUsuario' %}" {% if request.resolver_match.url_name == 'actividadesUsuario' %}aria-current="page"{% endif %}><i class="far fa-calendar"></i> Actividades</a>
+  <a href="{% url 'historial_academico' %}" {% if request.resolver_match.url_name == 'historial_academico' %}aria-current="page"{% endif %}><i class="fas fa-chart-column"></i> Historial</a>
+ {% endblock %}</nav>
+ <div class="user-actions">{% if user.is_authenticated %}
+  <a class="user-link" href="{% url 'perfil' %}"><span class="user-initial">{{ user.username|slice:":1"|upper }}</span><span>{{ user.first_name|default:user.username|truncatechars:18 }}</span></a>
+  <a class="logout-link" href="{% url 'salir' %}" aria-label="Cerrar sesión" title="Cerrar sesión"><i class="fas fa-right-from-bracket"></i></a>
+ {% else %}<a class="pill-button outline" href="{% url 'login' %}">Iniciar sesión</a>{% endif %}</div>
+</header>
+<div class="app-layout">
+{% if user.is_authenticated %}
+<aside class="app-sidebar" id="app-sidebar"><nav aria-label="Menú lateral" class="side-nav">{% block nav_side %}
+ <a href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' %}aria-current="page"{% endif %}><i class="fas fa-house"></i> Inicio</a>
+ <a href="{% url 'simulacros' %}" {% if request.resolver_match.url_name == 'simulacros' %}aria-current="page"{% endif %}><i class="far fa-calendar-check"></i> Simulacros</a>
+ <a href="{% url 'test' %}" {% if request.resolver_match.url_name == 'test' %}aria-current="page"{% endif %}><i class="far fa-clipboard"></i> Cuestionarios</a>
+ <a href="{% url 'recomendaciones' %}" {% if request.resolver_match.url_name == 'recomendaciones' %}aria-current="page"{% endif %}><i class="far fa-star"></i> Recomendaciones</a>
+ <a href="{% url 'actividadesUsuario' %}" {% if request.resolver_match.url_name == 'actividadesUsuario' %}aria-current="page"{% endif %}><i class="far fa-calendar"></i> Actividades</a>
+ <a href="{% url 'historial_academico' %}" {% if request.resolver_match.url_name == 'historial_academico' %}aria-current="page"{% endif %}><i class="fas fa-chart-column"></i> Historial</a>
+ <a href="{% url 'perfil' %}" {% if request.resolver_match.url_name == 'perfil' %}aria-current="page"{% endif %}><i class="far fa-user"></i> Perfil</a>{% endblock %}</nav>
+ <div class="quick-heading">Accesos rápidos</div><div class="quick-links">{% block sidebar_quick %}
+ <a class="quick-mint" href="{% url 'simulacros' %}"><i class="fas fa-play"></i> Nuevo simulacro</a>
+ <a class="quick-blue" href="{% url 'home' %}#chatContainer"><i class="far fa-comment-dots"></i> Tutor con IA</a>
+ <a class="quick-gold" href="{% url 'historial_academico' %}"><i class="fas fa-book-open"></i> Mis resultados</a>{% endblock %}</div>
+ <a class="sidebar-settings" href="{% url 'configuraciones' %}"><i class="fas fa-gear"></i> Configuración</a>
+</aside>{% endif %}
+<main class="app-main" id="contenido">
+{% block content %}{% endblock %}
+<footer class="app-footer"><span>Pre-ICFES · Preparación académica Saber 11</span><span>Prácticas educativas no oficiales del ICFES</span></footer>
+</main></div>
+<script src="{% static 'js/script.js' %}" defer></script>
+<script src="{% static 'js/ui-2026.js' %}" defer></script>
+{% block extra_js %}{% endblock %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" defer></script>
+</body></html>
