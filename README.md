@@ -74,6 +74,28 @@ En GitHub Actions la misma batería se ejecuta con Python 3.12 en solicitudes de
 
 **Cuentas demo:** solo disponibles en desarrollo local; crea o verifica con `python manage.py crear_usuarios_prueba`. Nunca subas `local.sqlite3`, `.env` ni contraseñas de producción.
 
+## Seguridad y privacidad (noviembre de 2026)
+
+**Cambios de esta versión (requiere migración `0013`):**
+
+- **Permisos docentes:** los administradores conceden y revocan permisos en `/admin/asignaciones-docentes/`. El panel `/panel-docente/` muestra **solo las matrículas** de los pares curso/año autorizados. Los POST también validan permisos, incluso si alguien envía identificadores manipulados. Un docente sin asignaciones no puede crear ni asignar actividades; el comando de usuarios demo otorga únicamente 11A/2026 a `docente_demo`. El control es por curso y año, **no sustituye un aislamiento multicolegio**.
+- **Archivos privados:** adjuntos del tutor bajo `.private-media/<id de usuario>/pdfs|audios/`, fuera de MEDIA_URL. Extensiones/cabeceras y límites validados: **PDF de hasta 10 MiB** y **audio de hasta 25 MiB** (WAV, MP3, OGG, OPUS, M4A y WEBM). Se asignan nombres aleatorios para evitar sobreescritura. Los formatos de Office no están admitidos en el formulario.
+- **Medios antiguos:** se deshabilitó servir `MEDIA_URL` desde Django en modo desarrollo. Los archivos PDF/audio almacenados antes de esta actualización pueden permanecer en `media/`; **no se movieron ni eliminaron automáticamente** porque no existe un vínculo fiable con el propietario. Requieren un plan de migración y limpieza manual.
+- **Privacidad:** la ruta autenticada `/privacidad/` da acceso a `/privacidad/exportar/`: un JSON sin caché con **solo datos de perfil y registros académicos propios**, sin contraseña ni información de usuarios ajenos. **No es una exportación completa**: quedan fuera datos de ChromaDB/LangGraph, archivos adjuntos y copias de seguridad.
+- **Borrado de cuentas desde administración:** elimina cuenta y relaciones Django en transacción, y después del commit intenta limpiar las carpetas privadas nuevas y la carpeta de conversaciones de esa cuenta. Si falla la limpieza se registra el error en logs para intervención; los backups y medios legacy deben gestionarse aparte. Eliminar una persona vinculada ahora elimina también su cuenta, para no dejar accesos huérfanos.
+- **Pruebas:** `Principal.test_seguridad_privacidad` cubre formatos inválidos, permisos docentes revocados, acceso cruzado, exportación y limpieza. No se accede a bases locales en GitHub Actions.
+
+**Después de actualizar el código y antes de levantar la app:**
+
+```powershell
+python manage.py migrate
+python manage.py check
+python manage.py test Principal
+python manage.py runserver
+```
+
+Haz copia de `local.sqlite3` y de las carpetas de datos personales antes de ejecutar la migración. No elimines ni regeneres la migración `0012` ya aplicada en tu instalación. Verifica las asignaciones docentes existentes desde el panel de administración después de migrar: el nuevo modelo inicia vacío en instalaciones reales, por diseño de seguridad.
+
 ## Nuevos flujos académicos (noviembre de 2026)
 
 La aplicación incorpora funcionalidades sin añadir tablas nuevas:
