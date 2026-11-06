@@ -1,0 +1,10 @@
+{# Centro de avisos común: Django escapa automáticamente el contenido de cada mensaje. #}
+<div id="app-notifications" class="app-notifications" aria-live="polite" aria-relevant="additions text">
+  {% for message in messages %}
+    <div class="app-notice {% if 'error' in message.tags or 'warning' in message.tags %}app-notice--warning{% elif 'success' in message.tags %}app-notice--success{% else %}app-notice--info{% endif %}"
+         data-notice role="{% if 'error' in message.tags or 'warning' in message.tags %}alert{% else %}status{% endif %}">
+      <span class="app-notice__text">{{ message }}</span>
+      <button type="button" class="app-notice__close" data-notice-dismiss aria-label="Cerrar notificación">×</button>
+    </div>
+  {% endfor %}
+</div>
