@@ -2,52 +2,46 @@
 
 Aplicación web para preparación académica Saber 11, con gestión de estudiantes, evaluaciones, simulacros y tutor con IA.
 
-## Arranque rápido
+## Ejecución normal con Python (recomendada)
 
-Requisitos: Python 3.12 o 3.13. El primer arranque crea el entorno virtual, instala las dependencias, crea `.env`, prepara una base SQLite vacía y levanta el sitio.
+Requiere Python **3.12 o 3.13**. No necesitas ejecutar archivos `.bat` ni `.ps1` para iniciar el proyecto: utiliza los comandos habituales de Django en la terminal de VS Code, situada en la carpeta donde está `manage.py`.
 
-### Windows
+### Primera ejecución
 
-1. Descarga y extrae el ZIP del repositorio, o clónalo con Git.
-2. Instala Python 3.12 y activa la opción para agregarlo al `PATH`.
-3. Haz doble clic en `run_local.bat`.
-4. Abre [http://127.0.0.1:8000](http://127.0.0.1:8000).
+Si todavía no has instalado las dependencias, puedes crear y activar un entorno virtual (recomendado):
 
-También puedes abrir PowerShell en la carpeta del proyecto y ejecutar `.\run_local.ps1`.
-
-### macOS y Linux
-
-1. Descarga y extrae el ZIP, o clona el repositorio.
-2. Instala Python 3.12 o 3.13.
-3. En la terminal, entra a la carpeta del proyecto y ejecuta:
-
-   ```bash
-   chmod +x run_local.sh
-   ./run_local.sh
-   ```
-
-4. Abre [http://127.0.0.1:8000](http://127.0.0.1:8000).
-
-El servidor se detiene con `Ctrl+C`. La base de datos local y los archivos cargados se guardan dentro de la carpeta del proyecto y no se suben a Git.
-
-## Qué prepara el script
-
-- Crea el entorno aislado `.venv` e instala `requirements.txt`.
-- Copia `.env.example` a `.env` solo si todavía no existe.
-- Ejecuta las migraciones para crear `local.sqlite3`.
-- Arranca Django en `127.0.0.1:8000`.
-
-Al volver a ejecutarlo, no reinstala las dependencias mientras `requirements.txt` siga igual. No borres `.venv` si quieres conservarlas.
-
-Para crear un usuario administrador, abre otra terminal en la carpeta del proyecto y ejecuta:
-
-```bash
-# Windows
-.venv\Scripts\python manage.py createsuperuser
-
-# macOS / Linux
-.venv/bin/python manage.py createsuperuser
+```powershell
+python -m venv .venv
 ```
+
+Actívalo en **CMD** con `.venv\Scripts\activate.bat`, o en **PowerShell** con `.\.venv\Scripts\Activate.ps1`. Si PowerShell bloquea el script, utiliza CMD o ejecuta `Set-ExecutionPolicy -Scope Process Bypass` solo en esa terminal y vuelve a activarlo.
+
+Con el entorno activado, ejecuta:
+
+```powershell
+python -m pip install -r requirements.txt
+python manage.py migrate
+python manage.py crear_usuarios_prueba
+python manage.py runserver
+```
+
+- `migrate` crea automáticamente `local.sqlite3` y todas las tablas a partir de las migraciones **existentes**.
+- `crear_usuarios_prueba` agrega cinco cuentas ficticias con roles y perfiles para pruebas locales. **Opcional:** omite este comando si no quieres datos de demostración y crea cuentas mediante la aplicación o con `python manage.py createsuperuser`.
+- `runserver` levanta el sitio en [http://127.0.0.1:8000/](http://127.0.0.1:8000/) y se detiene con `Ctrl+C`.
+
+### Cada vez que vuelvas a abrir el proyecto
+
+Activa el mismo entorno virtual en la terminal y ejecuta **únicamente**:
+
+```powershell
+python manage.py runserver
+```
+
+No es necesario volver a instalar dependencias ni recrear usuarios; tampoco se pierde la base de datos al detener el servidor. Cuando descargues cambios que incluyen migraciones nuevas, ejecuta `python manage.py migrate` una vez antes de iniciar. Si aparece `ModuleNotFoundError: No module named 'django'`, asegúrate de que el entorno esté activado e instala `requirements.txt` con ese mismo Python.
+
+### Scripts auxiliares opcionales
+
+Los archivos `run_local.bat`, `run_local.ps1`, `run_local.sh` e `iniciar_pruebas.bat` se conservan por compatibilidad, **pero no son necesarios**. El inicio habitual sigue siendo `python manage.py runserver`.
 
 ## Funciones opcionales
 
@@ -134,7 +128,7 @@ Este proyecto utiliza SQLite en `local.sqlite3`. **No elimines la carpeta `Princ
 
 El ZIP preparado para pruebas **no incluye** la antigua `local.sqlite3`, la configuración privada `.env` ni los archivos `__pycache__`. Conserva el código, las migraciones, las vistas, los estilos y las dependencias del proyecto original.
 
-**Windows, forma más fácil:** extrae el ZIP en una carpeta nueva y haz doble clic en `iniciar_pruebas.bat`. Ese archivo reutiliza el instalador de `run_local.bat`, crea la base SQLite con migraciones, carga los usuarios ficticios y abre el servidor en `http://127.0.0.1:8000/`. Necesitas Python 3.12 o 3.13 e Internet para instalar las dependencias la primera vez. Si usas la aplicación sin el motor de IA, algunas funciones de chatbot y generación de pruebas podrían requerir Ollama.
+**Inicio recomendado:** usa los cuatro comandos de la sección «Ejecución normal con Python»; el archivo `iniciar_pruebas.bat` queda como una alternativa opcional para Windows. Si usas la aplicación sin el motor de IA, algunas funciones de chatbot y generación de pruebas podrían requerir Ollama.
 
 **Windows, con terminal** (tras instalar las dependencias):
 
@@ -177,7 +171,7 @@ Los usuarios están **activos** y pueden iniciar sesión sin verificación de co
 
 1. Detén Django y haz una copia de tu carpeta, especialmente si tienes evaluaciones o datos que quieres conservar.
 2. En Windows PowerShell, dentro del proyecto, usa `Rename-Item .\local.sqlite3 local.sqlite3.respaldo` (o mueve el archivo a una carpeta segura) si existe. No necesitas saber ninguna contraseña para hacerlo.
-3. Vuelve a ejecutar `iniciar_pruebas.bat` (o `manage.py migrate`, luego `manage.py crear_usuarios_prueba`). Django construirá una base nueva sin recuperar la anterior.
+3. Ejecuta `python manage.py migrate` y `python manage.py crear_usuarios_prueba`; después inicia con `python manage.py runserver`. Django construirá una base nueva sin recuperar la anterior.
 4. **No borres ni regeneres las migraciones** para este procedimiento. La restauración de la base de datos anterior es posible si conservas `local.sqlite3.respaldo`.
 
 Las pruebas automatizadas específicas para estas cuentas están en `Principal/test_usuarios_prueba.py`; puedes ejecutarlas con `python manage.py test Principal.test_usuarios_prueba` en el entorno con las dependencias instaladas.
