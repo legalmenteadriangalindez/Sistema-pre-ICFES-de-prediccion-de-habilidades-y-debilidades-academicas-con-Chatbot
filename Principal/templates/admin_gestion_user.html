@@ -1,24 +1,126 @@
 {% extends 'home_admin_academico.html' %}
 {% load static %}
 {% block title %}Gestión de usuarios{% endblock %}
+
 {% block content %}
 <div class="dash admin-dashboard">
-  <section class="section-hero"><span class="eyebrow"><i class="fas fa-gear"></i> Panel administrativo</span><h1>Gestión administrativa</h1><p>Administra usuarios, estudiantes, cursos y la operación académica de Pre-ICFES.</p></section>
-  {% if error_admin %}{% include "components/alert.html" with tone="warning" message=error_admin only %}{% endif %}
+  <section class="section-hero">
+    <span class="eyebrow"><i class="fas fa-gear"></i> Panel administrativo</span>
+    <h1>Gestión administrativa</h1>
+    <p>Administra usuarios, estudiantes, cursos y la operación académica de Pre-ICFES.</p>
+  </section>
+
+  {% if error_admin %}
+    {% include "components/alert.html" with tone="warning" message=error_admin only %}
+  {% endif %}
+
   <section class="stats-grid admin-stats" aria-label="Resumen administrativo">
     {% include "components/metric_card.html" with color="blue" icon="fas fa-users" label="Usuarios" value=total_usuarios|default:0 only %}
     {% include "components/metric_card.html" with color="mint" icon="fas fa-user-graduate" label="Estudiantes" value=total_estudiantes|default:0 only %}
     {% include "components/metric_card.html" with color="sky" icon="fas fa-book-open" label="Cursos" value=total_cursos|default:0 only %}
     {% include "components/metric_card.html" with color="gold" icon="fas fa-clipboard-check" label="Evaluaciones" value=total_evaluaciones|default:0 only %}
   </section>
-  <section class="admin-feature-grid"><a class="ui-card tool-card" href="{% url 'admin_gestion_academica' %}"><span class="tool-icon sky"><i class="fas fa-graduation-cap"></i></span><span><strong>Gestión académica</strong><small>Cursos, materias y años lectivos.</small></span><i class="fas fa-arrow-right"></i></a><a class="ui-card tool-card" href="#usuarios"><span class="tool-icon blue"><i class="fas fa-users"></i></span><span><strong>Usuarios</strong><small>Consulta y administra cuentas.</small></span><i class="fas fa-arrow-right"></i></a><a class="ui-card tool-card" href="{% url 'gestion_acudientes_estudiantes' %}"><span class="tool-icon mint"><i class="fas fa-user-graduate"></i></span><span><strong>Estudiantes y acudientes</strong><small>Consulta vínculos académicos.</small></span><i class="fas fa-arrow-right"></i></a><a class="ui-card tool-card" href="{% url 'admin_gestion_db' %}"><span class="tool-icon gold"><i class="fas fa-database"></i></span><span><strong>Base de datos</strong><small>Catálogos y datos básicos.</small></span><i class="fas fa-arrow-right"></i></a></section>
-  <div class="admin-content-grid"><section class="ui-card admin-users-card" id="usuarios"><div class="card-title-row"><div><h2><i class="fas fa-users"></i> Gestión de usuarios</h2><p>Consulta las cuentas registradas en la plataforma</p></div><a class="ui-btn ui-btn-primary" href="#form-crear-usuario"><i class="fas fa-plus"></i> Crear usuario</a></div>
-    <div class="admin-filters"><label for="user-search" class="visually-hidden">Buscar usuarios</label><input id="user-search" type="search" placeholder="Buscar por nombre, correo o rol..." aria-label="Buscar usuarios"><label for="role-filter" class="visually-hidden">Filtrar por rol</label><select id="role-filter" aria-label="Filtrar por rol"><option value="">Todos los roles</option>{% for rol in roles %}<option value="{{ rol.nombre|lower }}">{{ rol.nombre }}</option>{% endfor %}</select></div>
-    {% include "components/table.html" with table_class="table admin-table" table_id="users-table" caption="Cuentas registradas" colspan=6 rows=usuarios header_template="components/tables/users_header.html" row_template="components/tables/user_row.html" empty_text="No hay usuarios registrados." %}<p class="table-footer" id="table-count">{{ usuarios|length }} usuarios registrados</p></section>
-    <aside class="admin-side"><section class="ui-card admin-actions"><h2><i class="fas fa-bolt"></i> Acciones rápidas</h2><div class="action-grid"><a href="#form-crear-usuario"><i class="fas fa-user-plus"></i><span>Crear usuario</span></a><a href="{% url 'admin_gestion_academica' %}"><i class="fas fa-graduation-cap"></i><span>Gestionar cursos</span></a><a href="{% url 'gestion_acudientes_estudiantes' %}"><i class="fas fa-users"></i><span>Estudiantes</span></a><a href="{% url 'admin_gestion_db' %}"><i class="fas fa-database"></i><span>Base de datos</span></a></div></section><section class="ui-card admin-actions"><h2><i class="far fa-circle-check"></i> Estado del sistema</h2><p>Estás usando el panel de gestión con los datos disponibles de tu base local.</p><span class="state-pill active">Sesión autenticada</span></section></aside>
+
+  <section class="admin-feature-grid">
+    <a class="ui-card tool-card" href="{% url 'admin_gestion_academica' %}">
+      <span class="tool-icon sky"><i class="fas fa-graduation-cap"></i></span>
+      <span><strong>Gestión académica</strong><small>Cursos, materias y años lectivos.</small></span>
+      <i class="fas fa-arrow-right"></i>
+    </a>
+    <a class="ui-card tool-card" href="#usuarios">
+      <span class="tool-icon blue"><i class="fas fa-users"></i></span>
+      <span><strong>Usuarios</strong><small>Consulta y administra cuentas.</small></span>
+      <i class="fas fa-arrow-right"></i>
+    </a>
+    <a class="ui-card tool-card" href="{% url 'gestion_acudientes_estudiantes' %}">
+      <span class="tool-icon mint"><i class="fas fa-user-graduate"></i></span>
+      <span><strong>Estudiantes y acudientes</strong><small>Consulta vínculos académicos.</small></span>
+      <i class="fas fa-arrow-right"></i>
+    </a>
+    <a class="ui-card tool-card" href="{% url 'admin_gestion_db' %}">
+      <span class="tool-icon gold"><i class="fas fa-database"></i></span>
+      <span><strong>Base de datos</strong><small>Catálogos y datos básicos.</small></span>
+      <i class="fas fa-arrow-right"></i>
+    </a>
+  </section>
+
+  <div class="admin-content-grid">
+    <section class="ui-card admin-users-card" id="usuarios">
+      <div class="card-title-row">
+        <div>
+          <h2><i class="fas fa-users"></i> Gestión de usuarios</h2>
+          <p>Consulta las cuentas registradas en la plataforma</p>
+        </div>
+        <a class="ui-btn ui-btn-primary" href="#form-crear-usuario">
+          <i class="fas fa-plus"></i> Crear usuario
+        </a>
+      </div>
+
+      <div class="admin-filters">
+        <label for="user-search" class="visually-hidden">Buscar usuarios</label>
+        <input id="user-search" type="search" placeholder="Buscar por nombre, correo o rol..." aria-label="Buscar usuarios">
+        <label for="role-filter" class="visually-hidden">Filtrar por rol</label>
+        <select id="role-filter" aria-label="Filtrar por rol">
+          <option value="">Todos los roles</option>
+          {% for rol in roles %}
+            <option value="{{ rol.nombre|lower }}">{{ rol.nombre }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      {% include "components/table.html" with table_class="table admin-table" table_id="users-table" caption="Cuentas registradas" colspan=6 rows=usuarios header_template="components/tables/users_header.html" row_template="components/tables/user_row.html" empty_text="No hay usuarios registrados." %}
+      <p class="table-footer" id="table-count">{{ usuarios|length }} usuarios registrados</p>
+    </section>
+
+    <aside class="admin-side">
+      <section class="ui-card admin-actions">
+        <h2><i class="fas fa-bolt"></i> Acciones rápidas</h2>
+        <div class="action-grid">
+          <a href="#form-crear-usuario"><i class="fas fa-user-plus"></i><span>Crear usuario</span></a>
+          <a href="{% url 'admin_gestion_academica' %}"><i class="fas fa-graduation-cap"></i><span>Gestionar cursos</span></a>
+          <a href="{% url 'gestion_acudientes_estudiantes' %}"><i class="fas fa-users"></i><span>Estudiantes</span></a>
+          <a href="{% url 'admin_gestion_db' %}"><i class="fas fa-database"></i><span>Base de datos</span></a>
+        </div>
+      </section>
+
+      <section class="ui-card admin-actions">
+        <h2><i class="far fa-circle-check"></i> Estado del sistema</h2>
+        <p>Estás usando el panel de gestión con los datos disponibles de tu base local.</p>
+        <span class="state-pill active">Sesión autenticada</span>
+      </section>
+    </aside>
   </div>
-  <section class="ui-card admin-form-section" id="form-crear-usuario"><div class="card-title-row"><h2><i class="fas fa-user-plus"></i> Registrar usuario</h2></div><p>Registra una cuenta nueva. Los roles y perfiles se gestionan por separado en las secciones del sistema.</p><form method="post" class="admin-inline-form">{% csrf_token %}{{ form_usuarios.as_p }}<label class="admin-role-label" for="nuevo-usuario-rol">Rol inicial</label><select id="nuevo-usuario-rol" name="rol_id" class="form-select"><option value="">Sin rol asignado</option>{% for r in roles %}<option value="{{ r.pk }}">{{ r.nombre }}</option>{% endfor %}</select><button type="submit" name="form" value="usuarios" class="ui-btn ui-btn-primary">Guardar usuario</button></form></section>
-  <section class="ui-card admin-form-section"><details><summary>Administrar personas registradas</summary>{% include "components/table.html" with table_class="table" caption="Personas registradas" colspan=3 rows=personas header_template="components/tables/people_header.html" row_template="components/tables/person_row.html" empty_text="No hay personas registradas." %}<form method="post" class="admin-inline-form">{% csrf_token %}{{ form_personas.as_p }}<button type="submit" name="form" value="personas" class="ui-btn ui-btn-primary">Registrar persona</button></form></details></section>
+
+  <section class="ui-card admin-form-section" id="form-crear-usuario">
+    <div class="card-title-row">
+      <h2><i class="fas fa-user-plus"></i> Registrar usuario</h2>
+    </div>
+    <p>Registra una cuenta nueva. Los roles y perfiles se gestionan por separado en las secciones del sistema.</p>
+    <form method="post" class="admin-inline-form">
+      {% csrf_token %}
+      {{ form_usuarios.as_p }}
+      <label class="admin-role-label" for="nuevo-usuario-rol">Rol inicial</label>
+      <select id="nuevo-usuario-rol" name="rol_id" class="form-select">
+        <option value="">Sin rol asignado</option>
+        {% for r in roles %}
+          <option value="{{ r.pk }}">{{ r.nombre }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" name="form" value="usuarios" class="ui-btn ui-btn-primary">Guardar usuario</button>
+    </form>
+  </section>
+
+  <section class="ui-card admin-form-section">
+    <details>
+      <summary>Administrar personas registradas</summary>
+      {% include "components/table.html" with table_class="table" caption="Personas registradas" colspan=3 rows=personas header_template="components/tables/people_header.html" row_template="components/tables/person_row.html" empty_text="No hay personas registradas." %}
+      <form method="post" class="admin-inline-form">
+        {% csrf_token %}
+        {{ form_personas.as_p }}
+        <button type="submit" name="form" value="personas" class="ui-btn ui-btn-primary">Registrar persona</button>
+      </form>
+    </details>
+  </section>
 </div>
 {% endblock %}
 
