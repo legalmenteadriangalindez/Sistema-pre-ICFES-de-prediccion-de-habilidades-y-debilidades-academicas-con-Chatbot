@@ -81,6 +81,12 @@ def home(request):
     # enviamos a los gestores a su panel antes de cargar el tutor estudiantil.
     if es_gestor(user):
         return redirect("admin_gestion_users")
+    # Acceso principal por rol, sin cargar el tutor IA para personal y acudientes.
+    from .portales import tiene_rol
+    if tiene_rol(user, "DOCENTE"):
+        return redirect("panel_docente")
+    if tiene_rol(user, "ACUDIENTE"):
+        return redirect("panel_acudiente")
     persona = getattr(user, "persona", None)
     estudiante = getattr(persona, "estudiante", None) if persona else None
     user_id = str(user.id)
@@ -312,7 +318,7 @@ def recomendaciones(request):
     if not estudiante:
         return render(request,"Recomendaciones.html",{"error": "este perfil no tiene estudiante asociado"})
     
-    print(estudiante)
+    # No mostrar datos personales en la consola del servidor.
     matricula = Matricula.objects.filter(estudiante=estudiante,activa=True).first()
     perfil_pedagogico = None
     analisis_cognitivo = None

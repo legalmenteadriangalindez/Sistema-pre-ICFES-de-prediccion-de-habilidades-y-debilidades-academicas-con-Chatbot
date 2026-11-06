@@ -11,7 +11,7 @@
 {% block content %}  
 
 
-<h1>Gestión de Academica:</h1> 
+<h1>Gestión de Academica:</h1><p><a class="btn btn-primary" href="{% url 'gestion_docentes' %}">Asignación de docentes y preparación de temario</a></p> 
 
 <div class="container mt-5">
     <h2>Gestion de Grados</h2>
@@ -32,7 +32,7 @@
                 <td>{{g.id}}</td>
                 <td>{{g.nombre}}</td>
                 <td>{{g.activo}}</td>
-                <td><button class="btn btn-sm btn-primary">Editar</button></td>
+                <td><a class="btn btn-sm btn-primary" href="{% url 'editar_catalogo' 'grados' g.id %}">Editar</a></td>
                 <td><form method="post" action="{% url 'eliminar_admin_gestion_academico' 'grados' g.id %}" class="d-inline">{% csrf_token %}<button type="submit"  class="btn btn-sm btn-danger">Eliminar</button></form></td>
                 <td>
                   <div class="form-check form-switch">
@@ -105,7 +105,7 @@
                 <td>{{c.cupo_maximo}}</td>
                 <td>{{c.activo}}</td>
 
-                <td><button class="btn btn-sm btn-primary">Editar</button></td>
+                <td><a class="btn btn-sm btn-primary" href="{% url 'editar_catalogo' 'cursos' c.id %}">Editar</a></td>
                 <td><form method="post" action="{% url 'eliminar_admin_gestion_academico' 'cursos' c.id %}" class="d-inline">{% csrf_token %}<button type="submit"  class="btn btn-sm btn-danger">Eliminar</button></form></td>
                 <td>
                   <div class="form-check form-switch">
@@ -174,7 +174,7 @@
                 <td>{{anio.fecha_inico}}</td>
                 <td>{{anio.fecha_fin}}</td>
                 <td>{{anio.activo}}</td>
-                <td><button class="btn btn-sm btn-primary">Editar</button></td>
+                <td><a class="btn btn-sm btn-primary" href="{% url 'editar_catalogo' 'anios' anio.id %}">Editar</a></td>
                 <td><form method="post" action="{% url 'eliminar_admin_gestion_academico' 'anios' anio.id %}" class="d-inline">{% csrf_token %}<button type="submit"  class="btn btn-sm btn-danger">Eliminar</button></form></td>
                 <td>
                   <div class="form-check form-switch">
@@ -238,7 +238,7 @@
                 <td>{{m.id}}</td>
                 <td>{{m.nombre}}</td>
                 <td>{{m.activo}}</td>
-                <td><button class="btn btn-sm btn-primary">Editar</button></td>
+                <td><a class="btn btn-sm btn-primary" href="{% url 'editar_catalogo' 'materias' m.id %}">Editar</a></td>
                 <td><form method="post" action="{% url 'eliminar_admin_gestion_academico' 'materias' m.id %}" class="d-inline">{% csrf_token %}<button type="submit"  class="btn btn-sm btn-danger">Eliminar</button></form></td>
                 <td>
                   <div class="form-check form-switch">

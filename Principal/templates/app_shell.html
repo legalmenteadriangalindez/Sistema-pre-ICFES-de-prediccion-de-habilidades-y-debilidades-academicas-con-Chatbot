@@ -18,12 +18,19 @@
  <a class="app-brand" href="{% url 'home' %}" aria-label="Inicio de Pre-ICFES"><i class="fas fa-graduation-cap"></i><span>Pre-ICFES</span><small aria-hidden="true"></small></a>
  <button class="menu-toggle" id="app-menu-toggle" aria-label="Abrir menú" aria-controls="app-sidebar" aria-expanded="false" type="button"><i class="fas fa-bars"></i></button>
  <nav class="top-links" aria-label="Navegación principal">{% block nav_top %}
+{% if menu_admin %}<a href="{% url 'admin_gestion_users' %}"><i class="fas fa-gauge-high"></i> Administración</a><a href="{% url 'gestion_docentes' %}"><i class="fas fa-chalkboard-user"></i> Docentes</a>
+{% elif menu_docente %}<a href="{% url 'panel_docente' %}"><i class="fas fa-chalkboard-teacher"></i> Mi panel docente</a>
+{% elif menu_acudiente %}<a href="{% url 'panel_acudiente' %}"><i class="fas fa-users"></i> Seguimiento familiar</a>
+{% else %}
+
   <a href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' %}aria-current="page"{% endif %}><i class="fas fa-house"></i> Inicio</a>
   <a href="{% url 'simulacros' %}" {% if request.resolver_match.url_name == 'simulacros' %}aria-current="page"{% endif %}><i class="far fa-calendar-check"></i> Simulacros</a>
   <a href="{% url 'recomendaciones' %}" {% if request.resolver_match.url_name == 'recomendaciones' %}aria-current="page"{% endif %}><i class="far fa-star"></i> Recomendaciones</a>
   <a href="{% url 'actividadesUsuario' %}" {% if request.resolver_match.url_name == 'actividadesUsuario' %}aria-current="page"{% endif %}><i class="far fa-calendar"></i> Actividades</a>
   <a href="{% url 'historial_academico' %}" {% if request.resolver_match.url_name == 'historial_academico' %}aria-current="page"{% endif %}><i class="fas fa-chart-column"></i> Historial</a>
- {% endblock %}</nav>
+ 
+{% endif %}
+{% endblock %}</nav>
  <div class="user-actions">{% if user.is_authenticated %}
   <a class="user-link" href="{% url 'perfil' %}"><span class="user-initial">{{ user.username|slice:":1"|upper }}</span><span>{{ user.first_name|default:user.username|truncatechars:18 }}</span></a>
   <a class="logout-link" href="{% url 'salir' %}" aria-label="Cerrar sesión" title="Cerrar sesión"><i class="fas fa-right-from-bracket"></i></a>
@@ -32,17 +39,32 @@
 <div class="app-layout">
 {% if user.is_authenticated %}
 <aside class="app-sidebar" id="app-sidebar"><nav aria-label="Menú lateral" class="side-nav">{% block nav_side %}
+{% if menu_admin %}<a href="{% url 'admin_gestion_users' %}"><i class="fas fa-gauge"></i> Usuarios</a><a href="{% url 'admin_gestion_academica' %}"><i class="fas fa-school"></i> Gestión académica</a><a href="{% url 'gestion_docentes' %}"><i class="fas fa-chalkboard-user"></i> Asignar docentes</a>
+{% elif menu_docente %}<a href="{% url 'panel_docente' %}"><i class="fas fa-chalkboard"></i> Mis cursos y actividades</a>
+{% elif menu_acudiente %}<a href="{% url 'panel_acudiente' %}"><i class="fas fa-users"></i> Estudiantes vinculados</a>
+{% else %}
+
  <a href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' %}aria-current="page"{% endif %}><i class="fas fa-house"></i> Inicio</a>
  <a href="{% url 'simulacros' %}" {% if request.resolver_match.url_name == 'simulacros' %}aria-current="page"{% endif %}><i class="far fa-calendar-check"></i> Simulacros</a>
  <a href="{% url 'test' %}" {% if request.resolver_match.url_name == 'test' %}aria-current="page"{% endif %}><i class="far fa-clipboard"></i> Cuestionarios</a>
  <a href="{% url 'recomendaciones' %}" {% if request.resolver_match.url_name == 'recomendaciones' %}aria-current="page"{% endif %}><i class="far fa-star"></i> Recomendaciones</a>
  <a href="{% url 'actividadesUsuario' %}" {% if request.resolver_match.url_name == 'actividadesUsuario' %}aria-current="page"{% endif %}><i class="far fa-calendar"></i> Actividades</a>
  <a href="{% url 'historial_academico' %}" {% if request.resolver_match.url_name == 'historial_academico' %}aria-current="page"{% endif %}><i class="fas fa-chart-column"></i> Historial</a>
- <a href="{% url 'perfil' %}" {% if request.resolver_match.url_name == 'perfil' %}aria-current="page"{% endif %}><i class="far fa-user"></i> Perfil</a>{% endblock %}</nav>
+ <a href="{% url 'perfil' %}" {% if request.resolver_match.url_name == 'perfil' %}aria-current="page"{% endif %}><i class="far fa-user"></i> Perfil</a>
+ <a href="{% url 'orientacion_vocacional' %}"><i class="fas fa-compass"></i> Test vocacional</a><a href="{% url 'comparadorDeCarreras' %}"><i class="fas fa-scale-balanced"></i> Comparar carreras</a><a href="{% url 'plan_estudio' %}"><i class="fas fa-calendar-days"></i> Plan semanal</a>
+{% endif %}
+{% endblock %}</nav>
  <div class="quick-heading">Accesos rápidos</div><div class="quick-links">{% block sidebar_quick %}
+{% if menu_admin %}<a class="quick-blue" href="{% url 'gestion_docentes' %}"><i class="fas fa-users-gear"></i> Docentes y cursos</a>
+{% elif menu_docente %}<a class="quick-blue" href="{% url 'panel_docente' %}"><i class="fas fa-list-check"></i> Asignar actividad</a>
+{% elif menu_acudiente %}<a class="quick-blue" href="{% url 'panel_acudiente' %}"><i class="fas fa-users"></i> Ver avances</a>
+{% else %}
+
  <a class="quick-mint" href="{% url 'simulacros' %}"><i class="fas fa-play"></i> Nuevo simulacro</a>
  <a class="quick-blue" href="{% url 'home' %}#chatContainer"><i class="far fa-comment-dots"></i> Tutor con IA</a>
- <a class="quick-gold" href="{% url 'historial_academico' %}"><i class="fas fa-book-open"></i> Mis resultados</a>{% endblock %}</div>
+ <a class="quick-gold" href="{% url 'historial_academico' %}"><i class="fas fa-book-open"></i> Mis resultados</a>
+{% endif %}
+{% endblock %}</div>
  <a class="sidebar-settings" href="{% url 'configuraciones' %}"><i class="fas fa-gear"></i> Configuración</a>
 </aside>{% endif %}
 <main class="app-main" id="contenido">

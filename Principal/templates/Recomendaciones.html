@@ -1,5 +1,6 @@
 {% extends 'app_shell.html' %}
-{% block title %}Recomendaciones{% endblock %}
+{% block title %}Recomendaciones<section class="ui-card" style="margin-top:22px;padding:25px"><h2>Tu orientación y plan personal</h2><p>Explora tus intereses y organiza un plan semanal a partir de los resultados de tus prácticas.</p><div style="display:flex;gap:12px;flex-wrap:wrap"><a class="pill-button solid" href="{% url 'orientacion_vocacional' %}">Realizar orientación vocacional</a><a class="pill-button outline" href="{% url 'comparadorDeCarreras' %}">Comparar carreras</a><a class="pill-button outline" href="{% url 'plan_estudio' %}">Ver plan semanal</a></div></section>
+{% endblock %}
 {% block content %}
 <div class="dash recommendations-page"><section class="page-intro"><span class="eyebrow"><i class="fas fa-sparkles"></i> ORIENTACIÓN PERSONALIZADA</span><h1>Recomendaciones para {{ user.first_name|default:user.username|capfirst }}</h1><p>Descubre qué estudiar y cómo mejorar tu preparación con los registros de tu perfil académico.</p></section>
 {% if error %}<div class="alert alert-warning" role="alert">{{ error }}</div>{% endif %}

@@ -186,3 +186,18 @@ Los usuarios están **activos** y pueden iniciar sesión sin verificación de co
 4. **No borres ni regeneres las migraciones** para este procedimiento. La restauración de la base de datos anterior es posible si conservas `local.sqlite3.respaldo`.
 
 Las pruebas automatizadas están en `Principal/test_usuarios_prueba.py` y `Principal/test_redireccion_roles.py`; ejecútalas con `python manage.py test Principal.test_usuarios_prueba Principal.test_redireccion_roles` desde el entorno con las dependencias instaladas.
+
+
+## Funciones académicas y familiares añadidas (noviembre de 2026)
+
+- `/gestion-docentes/`: administradores asignan cursos a docentes con rol `DOCENTE`; solo esos cursos serán visibles al docente. También permite registrar temas y niveles básicos.
+- `/panel-docente/`: docentes autorizados consultan matrículas de sus cursos, crean y asignan actividades. No acceden a estudiantes de otros cursos.
+- `/panel-acudiente/`: acudientes ven solamente estudiantes asociados mediante `EstudianteAcudiente`, sus evaluaciones observadas y actividades.
+- `/orientacion-vocacional/`: cuestionario exploratorio de 12 afirmaciones, con respuestas de 1 a 5 y afinidad indicativa para cuatro campos profesionales; guarda resultados en `RecomendacionVocacional`. No es psicometría validada.
+- `/compararCarreras/`: comparación de hasta tres carreras con descripciones reales y, cuando existe, afinidad del usuario; no se inventan salarios ni puntajes de ingreso.
+- `/plan-semanal/`: propuesta semanal basada en aciertos y errores observados por materia, sin afirmar capacidades predictivas validadas.
+- `/gestion/editar/<tipo>/<id>/`: edición administrativa de grados, cursos, materias y años lectivos sin eliminar matrículas.
+
+**Después de actualizar el código**, haz copia de seguridad de `local.sqlite3` y ejecuta `python manage.py migrate` para aplicar la migración aditiva `0013_docentecurso`. No recrees la base existente. Las cuentas demo `docente_demo` y `acudiente_demo` permiten explorar los paneles; asigna cursos desde la cuenta admin. Ejecuta `python manage.py test Principal.test_portales_completos` para validar los nuevos permisos y flujos.
+
+**Límites conocidos:** el banco de simulacros de práctica sigue siendo inicial y no equivale al examen oficial; el tutor y cuestionarios generados con IA dependen de Ollama. El porcentaje de respuestas correctas y la afinidad vocacional son descriptivos y exploratorios; no constituyen modelos predictivos calibrados. La versión debe revisarse con pruebas integrales y controles de despliegue antes de un uso institucional real.

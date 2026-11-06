@@ -651,3 +651,16 @@ class RespuestaEvaluacion(models.Model):
 
     class Meta:
         constraints = [models.UniqueConstraint(fields=["intento", "numero"], name="unique_respuesta_intento_numero")]
+
+
+class DocenteCurso(models.Model):
+    """Autorización explícita para docentes sobre sus cursos asignados."""
+    docente = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cursos_docentes')
+    curso = models.ForeignKey(Curso, on_delete=models.CASCADE, related_name='docentes_asignados')
+    creado = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=['docente', 'curso'], name='unique_docente_curso_actual')]
+
+    def __str__(self):
+        return f'{self.docente.username} - {self.curso}'

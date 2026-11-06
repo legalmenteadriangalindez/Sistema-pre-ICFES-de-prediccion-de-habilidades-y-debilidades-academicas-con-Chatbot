@@ -1,10 +1,17 @@
 from django.urls import path
 from . import views # import de la vista
 from .simulacros_views import simulacros
+from . import portales, orientacion_views
 from .historial_views import historial_academico 
 from django.urls import path, include  # librerias nesesarias para hacer la referencia desde url.py del proyecto 
 
 urlpatterns = [
+  path('panel-docente/', portales.panel_docente, name='panel_docente'),
+  path('panel-acudiente/', portales.panel_acudiente, name='panel_acudiente'),
+  path('gestion-docentes/', portales.gestion_docentes, name='gestion_docentes'),
+  path('gestion/editar/<str:tipo>/<int:pk>/', portales.editar_catalogo, name='editar_catalogo'),
+  path('orientacion-vocacional/', orientacion_views.orientacion_vocacional, name='orientacion_vocacional'),
+  path('plan-semanal/', orientacion_views.plan_estudio, name='plan_estudio'),
   path('historial-academico/', historial_academico, name='historial_academico'),
   path('simulacros/', simulacros, name='simulacros'),
     
@@ -12,7 +19,7 @@ urlpatterns = [
   path('testDeVocacion/',views.test,name="test"), # url test
   path('recomendaciones/',views.recomendaciones,name="recomendaciones"), # url recomendaciones
   path('actividadesUsuario/',views.actividadesUsuario,name="actividadesUsuario"), # url recomendaciones
-  path('compararCarreras/',views.comparadorDeCarreras,name="comparadorDeCarreras"), # url comparar carreras
+  path('compararCarreras/',orientacion_views.comparador_carreras,name="comparadorDeCarreras"), # url comparar carreras
   path('configuraciones/',views.configuraciones,name="configuraciones"), # configuraciones
   path('perfil/',views.perfil,name="perfil"), # url perfil de usuario
   path('registro/',views.registro,name="registro"),
@@ -22,7 +29,7 @@ urlpatterns = [
   path('admin_gestion_academica/',views.gestion_academica,name="admin_gestion_academica"), # url gestion academica 
   path('admin_gestion_db/',views.gestion_db,name="admin_gestion_db"), # url gestion academica 
   # path('docentes/',views.docentes,name="docentes"), # url docentes 
-  path('acudiente/',views.acudiente,name="acudiente"), # url acudiente 
+  path('acudiente/',portales.panel_acudiente,name="acudiente"), # url acudiente 
   path('salir/', views.salir, name='salir'), # url logout 
   path('eliminar_admin_gestion_db/<tipo>/<id>',views.eliminar_admin_gestion_db,name="eliminar_admin_gestion_db"),
   path('eliminar_admin_gestion_academico/<tipo>/<id>',views.eliminar_gestion_academica,name="eliminar_admin_gestion_academico"),
