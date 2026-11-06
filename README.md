@@ -43,6 +43,17 @@ No es necesario volver a instalar dependencias ni recrear usuarios; tampoco se p
 
 Los archivos `run_local.bat`, `run_local.ps1`, `run_local.sh` e `iniciar_pruebas.bat` se conservan por compatibilidad, **pero no son necesarios**. El inicio habitual sigue siendo `python manage.py runserver`.
 
+
+## Correcciones integradas de noviembre de 2026
+
+- **Migración `0012` corregida:** primero elimina las restricciones de las tablas antiguas y después sus campos; así evita errores como `NewAsignacionDocente has no field named 'anio_lectivo'` y `Principal_curso.jornada_id` al preparar una base nueva.
+- **Acceso según rol:** el administrador (`is_superuser` o rol `ADMIN`) que entra al inicio `/` es redirigido a `/admin_gestion_users/` antes de cargar el tutor de estudiantes. El inicio estudiantil sigue disponible para los usuarios ordinarios.
+- **Usuarios ficticios:** `python manage.py crear_usuarios_prueba` crea cinco cuentas de desarrollo sin duplicarlas; no es un requisito para usar `python manage.py runserver`.
+- **Respaldos privados:** se ignoran los archivos `*.sqlite3`, `*.respaldo-*` y `*.original.bak` para evitar subir bases y copias de migraciones a Git.
+
+**Bases de datos existentes:** la migración `0012` elimina campos y modelos heredados; se probó el procedimiento sobre la base de desarrollo del proyecto, no como migración de datos históricos. Antes de aplicarla a una base con información real, respáldala y revisa el impacto de esos cambios. Si ya aplicaste `0012` en tu máquina con un archivo generado y corregido localmente, no necesitas recrear SQLite ni repetirla; conserva ese archivo y su respaldo al actualizar el código.
+
+
 ## Funciones opcionales
 
 ### Chat y generación con IA
@@ -110,7 +121,7 @@ No uses los valores de `.env.example` en producción. Para desplegar el sistema 
 
 - **`python` no se reconoce:** instala Python 3.12 y reinicia la terminal. En Windows también puedes ejecutar `py -3.12`.
 - **No se pueden instalar dependencias:** confirma que tienes conexión a Internet y espacio disponible. El conjunto de IA instala bibliotecas de aprendizaje automático y puede tomar varios minutos.
-- **El tutor no responde:** instala/abre Ollama y confirma que `ollama list` muestre el modelo configurado en `.env`.
+- **El tutor no responde:** instala/abre Ollama, verifica que el servidor esté disponible con `ollama list` y descarga el modelo configurado en `.env` (por defecto `ollama pull llama3:8b`). El error `model 'llama3:8b' not found (404)` indica que falta descargar ese modelo; no es un fallo de Django.
 - **No aparece el correo de verificación:** revisa la terminal del servidor Django. En modo local el mensaje se imprime allí.
 - **Error de FFmpeg:** confirma que instalaste FFmpeg para tu sistema y que `ffmpeg -version` funciona desde una terminal nueva.
 
@@ -122,7 +133,7 @@ Para descargar el código, usa **Code → Download ZIP** en GitHub. El ZIP de la
 
 ## Reiniciar la base de datos y crear usuarios de prueba (desarrollo local)
 
-Este proyecto utiliza SQLite en `local.sqlite3`. **No elimines la carpeta `Principal/migrations/`**: las 11 migraciones que contiene son necesarias para recrear las tablas.
+Este proyecto utiliza SQLite en `local.sqlite3`. **No elimines la carpeta `Principal/migrations/`**: sus 12 migraciones (`0001`–`0012`) son necesarias para recrear las tablas.
 
 ### Copia limpia del proyecto
 
@@ -174,4 +185,4 @@ Los usuarios están **activos** y pueden iniciar sesión sin verificación de co
 3. Ejecuta `python manage.py migrate` y `python manage.py crear_usuarios_prueba`; después inicia con `python manage.py runserver`. Django construirá una base nueva sin recuperar la anterior.
 4. **No borres ni regeneres las migraciones** para este procedimiento. La restauración de la base de datos anterior es posible si conservas `local.sqlite3.respaldo`.
 
-Las pruebas automatizadas específicas para estas cuentas están en `Principal/test_usuarios_prueba.py`; puedes ejecutarlas con `python manage.py test Principal.test_usuarios_prueba` en el entorno con las dependencias instaladas.
+Las pruebas automatizadas están en `Principal/test_usuarios_prueba.py` y `Principal/test_redireccion_roles.py`; ejecútalas con `python manage.py test Principal.test_usuarios_prueba Principal.test_redireccion_roles` desde el entorno con las dependencias instaladas.

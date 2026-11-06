@@ -30,5 +30,9 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Respaldos manuales de la base de datos
+# Respaldos manuales de la base de datos y migraciones
 *.respaldo
+*.respaldo-*
+*.sqlite3-shm
+*.sqlite3-wal
+*.original.bak
