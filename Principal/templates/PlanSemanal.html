@@ -14,7 +14,7 @@
   </section>
 
   {% if messages %}{% for mensaje in messages %}
-    <div class="ui-alert {% if mensaje.tags == 'error' %}ui-alert-warning{% else %}ui-alert-success{% endif %}" role="status">{{ mensaje }}</div>
+    {% if mensaje.tags == "error" %}{% include "components/alert.html" with tone="warning" role="status" message=mensaje only %}{% else %}{% include "components/alert.html" with tone="success" role="status" message=mensaje only %}{% endif %}
   {% endfor %}{% endif %}
 
   {% if plan_guardado %}
@@ -32,7 +32,7 @@
       <p class="weekly-time-note">Tiempo registrado frente a la meta de esta semana: <strong>{{ progreso.porcentaje_tiempo }}%</strong>. Los minutos reales se conservan aunque superen el objetivo.</p>
     </section>
 
-    {% if not es_semana_actual %}<div class="ui-alert ui-alert-warning" role="status">Estás consultando una semana anterior. Sus resultados se conservan como historial y ya no se pueden modificar.</div>{% endif %}
+    {% if not es_semana_actual %}{% include "components/alert.html" with tone="warning" role="status" message="Estás consultando una semana anterior. Sus resultados se conservan como historial y ya no se pueden modificar." only %}{% endif %}
 
     <section class="ui-card weekly-sessions-section">
       <div class="widget-title"><div><h2><i class="far fa-calendar-check"></i> Mis sesiones de estudio</h2><p>Marca las actividades que completaste y registra los minutos dedicados.</p></div>
@@ -82,7 +82,7 @@
       </div>
     </section>
   {% elif es_semana_actual %}
-    {% if not resumen.con_datos %}<div class="ui-alert ui-alert-warning" role="status">Aún no hay evaluaciones calificadas. Te proponemos un plan general para comenzar; cuando tengas resultados, las nuevas semanas se ajustarán a tus áreas de mejora.</div>{% endif %}
+    {% if not resumen.con_datos %}{% include "components/alert.html" with tone="warning" role="status" message="Aún no hay evaluaciones calificadas. Te proponemos un plan general para comenzar; cuando tengas resultados, las nuevas semanas se ajustarán a tus áreas de mejora." only %}{% endif %}
     <section class="ui-card weekly-start">
       <div><span class="weekly-kicker">UNA SEMANA PARA AVANZAR</span><h2>Tu semana está lista para organizarse</h2>
         <p>Revisa la propuesta y guárdala. Podrás registrar las sesiones y sus minutos sin perder el historial.</p></div>
