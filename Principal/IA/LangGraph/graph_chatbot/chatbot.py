@@ -132,10 +132,16 @@ class ModernChatbot:
             if not messages:
                 return {}
             
-            profile = self.memory_manager.build_cognitive_profile(messages[:6],self.user_id)
-
-            if profile:
-               self.memory_manager.save_cognitive_profile(profile)
+            try:
+                profile = self.memory_manager.build_cognitive_profile(messages[:6], self.user_id)
+                if profile:
+                    self.memory_manager.save_cognitive_profile(profile)
+            except Exception as exc:
+                logging.getLogger(__name__).warning(
+                    "cognitive_profile_pipeline_failed",
+                    extra={"component": "profiles", "error_type": type(exc).__name__},
+                )
+            return {}
 
         # nodo que extrae y almacena nuevas memorias vectoriales
         def memory_extraction_node(state):
@@ -224,7 +230,6 @@ class ModernChatbot:
             )
              
             assistant_response = result['messages'][-1].content
-            print(assistant_response)
             return{
                 "success": True,
                 "response": assistant_response,
@@ -234,11 +239,15 @@ class ModernChatbot:
                 "context_optimized": True
             }
         except Exception as e:
+            logging.getLogger(__name__).warning(
+                "chat_inference_failed",
+                extra={"component": "ollama", "error_type": type(e).__name__},
+            )
             return {
                 "success": False,
                 "response": None,
                 "chat_id": chat_id,
-                "error": str(e),
+                "error": "El tutor no está disponible en este momento. Verifica Ollama e inténtalo nuevamente.",
                 "memory_used": 0,
                 "context_optimized": False
             }
@@ -264,7 +273,10 @@ class ModernChatbot:
                                      })
             return history
         except Exception as e:
-            print("Error retrieving conversation history:", e)
+            logging.getLogger(__name__).warning(
+                "chat_history_unavailable",
+                extra={"component": "langgraph", "error_type": type(e).__name__},
+            )
             return []
     
     # limpiar el historial de conversaciones para un chat especifico
