@@ -2,6 +2,7 @@
 from langgraph.graph import StateGraph, START, END
 
 import sqlite3
+import logging
 
 from langgraph.checkpoint.sqlite import SqliteSaver
 
@@ -195,8 +196,8 @@ class ModernChatbot:
         )    
     
         conn = sqlite3.connect(db_path, check_same_thread=False)
-        checkpointer = SqliteSaver(conn)       
-        return workflow.compile(checkpointer=checkpointer)
+        self.checkpointer = SqliteSaver(conn)
+        return workflow.compile(checkpointer=self.checkpointer)
 
     # enviar u n mensaje al chatbot y obtener la respuesta del chatbot
     def chat(self, user_message: str, chat_id: str = "default", academic_context: str = ""):
@@ -227,6 +228,7 @@ class ModernChatbot:
             return{
                 "success": True,
                 "response": assistant_response,
+                "chat_id": chat_id,
                 "error": None,
                 "memory_used": len(result.get('vector_memories', [])),
                 "context_optimized": True
@@ -235,6 +237,7 @@ class ModernChatbot:
             return {
                 "success": False,
                 "response": None,
+                "chat_id": chat_id,
                 "error": str(e),
                 "memory_used": 0,
                 "context_optimized": False
@@ -266,41 +269,34 @@ class ModernChatbot:
     
     # limpiar el historial de conversaciones para un chat especifico
     def clear_conversation(self, chat_id: str = "default") -> bool:
-        try:
-            config = {"configurable": {"thread_id": f"user_chat_{self.user_id}_{chat_id}"}}
-            
-            # Crear un estado vacío para "resetear" la conversación
-            self.app_graph.invoke({"messages": []}, config)
-            return True
-        
-        except Exception as e:
-            print(f"Error clean conversation: {e}")
-            return False
-    
-    # eliminar un chat específico de langgraph
+        """Vacía un hilo persistido sin borrar su entrada de la lista de chats."""
+        return self.delete_chat_from_langgraph(chat_id)
+
     def delete_chat_from_langgraph(self, chat_id: str) -> bool:
-    
-        try:
-            thread_id = f"user_chat_{self.user_id}_{chat_id}" 
-            # Crear un estado vacío para "limpiar" el thread
-            config = {"configurable": {"thread_id": thread_id}}
-            
-            # Obtener al estado actual para vantificar el existe
-            try: 
-                current_state = self.app_graph.get_state(config)
-                if not current_state.values:
-                    return True  # Ya no existe
-            except:
-                return True  # No existe o error accediendo
-            
-            # No hay una API pública para eliminar threads en LangGraph
-            # Por ahora, simplemente reportamos éxito
-            # La eliminación real sería manejada por la base de datos con una consulta directa por ejemplo (SQL DELETE)
-            return True
-        
-        except Exception as e:
-            print(f"Error eliminando chat de LangGraph: {e}")
+        """Elimina checkpoints y escrituras del hilo aislado de este usuario.
+
+        No borra memorias vectoriales transversales generadas a partir de
+        distintas conversaciones; esas memorias requieren gestión independiente.
+        """
+        if not chat_id:
             return False
+        try:
+            thread_id = f"user_chat_{self.user_id}_{chat_id}"
+            self.checkpointer.delete_thread(thread_id)
+            return True
+        except Exception:
+            logging.getLogger(__name__).exception(
+                "No se pudo eliminar el hilo de conversación del usuario %s", self.user_id
+            )
+            return False
+
+    def delete_chat(self, chat_id: str) -> bool:
+        """Borra primero el estado persistido y luego la entrada del historial."""
+        if not chat_id or not self.memory_manager.get_chat_info(chat_id):
+            return False
+        if not self.delete_chat_from_langgraph(chat_id):
+            return False
+        return self.memory_manager.delete_chat(chat_id)
 
 
 class chatbotManager:

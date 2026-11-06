@@ -137,8 +137,10 @@ class ModernMemoryManager:
             chats_meta_file = os.path.join(self.user_dir, "chats_meta.json")
             with open(chats_meta_file, "w", encoding="utf-8") as f:
                 json.dump(chats_data, f, indent=2,ensure_ascii=False)
+            return True
         except Exception as e:
             print(f"Error saving chats meta: {e}")
+            return False
     
 
     # crear un nuevo chat
@@ -194,8 +196,7 @@ class ModernMemoryManager:
         try:
             chats_data = self.get_user_chats()
             chats_data = [chat for chat in chats_data if chat["chat_id"] != chat_id] 
-            self.save_chats_metadata(chats_data)
-            return True
+            return self.save_chats_metadata(chats_data)
         except Exception as e:
             print(f"Error deleting chat: {e}")
             return False

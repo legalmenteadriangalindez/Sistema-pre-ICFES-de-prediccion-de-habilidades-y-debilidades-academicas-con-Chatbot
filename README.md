@@ -54,6 +54,26 @@ Los archivos `run_local.bat`, `run_local.ps1`, `run_local.sh` e `iniciar_pruebas
 **Bases de datos existentes:** la migración `0012` elimina campos y modelos heredados; se probó el procedimiento sobre la base de desarrollo del proyecto, no como migración de datos históricos. Antes de aplicarla a una base con información real, respáldala y revisa el impacto de esos cambios. Si ya aplicaste `0012` en tu máquina con un archivo generado y corregido localmente, no necesitas recrear SQLite ni repetirla; conserva ese archivo y su respaldo al actualizar el código.
 
 
+## Correcciones de regresión del chat y seguimiento (noviembre 2026)
+
+- **Continuidad:** al crear la primera conversación el motor devuelve su UUID real; la interfaz lo conserva en la sesión y en el formulario. Al seguir preguntando se utiliza ese hilo, incluso después de recargar el inicio.
+- **Eliminación de conversaciones:** borrar un chat elimina primero sus checkpoints y escrituras del almacenamiento SQLite de LangGraph mediante `SqliteSaver.delete_thread`, y después retira su entrada del listado. Si falla el borrado del checkpoint, el chat no se oculta como si se hubiese eliminado. «Vaciar conversación» elimina igualmente el estado del hilo y conserva su entrada en el listado.
+- **Alcance del borrado:** la eliminación retira los registros activos de ese hilo, **pero no borra las memorias vectoriales transversales, los perfiles cognitivos o las copias de seguridad**, que tienen un ciclo de vida distinto. Tampoco garantiza que los bytes antiguos hayan sido purgados físicamente del archivo SQLite o su WAL. No describirlo como «olvido total» de datos personales.
+- **Seguimiento:** `Simulacro: Integral ampliado` atribuye cada respuesta a su materia, igual que el modo integral básico.
+- **Regresiones:** `Principal.test_regresiones_chat_y_demo` incluye 13 pruebas de flujos y de las cinco cuentas locales. Usan dobles de prueba para la IA; no descargan Ollama.
+
+Para verificar en tu instalación:
+
+```powershell
+python manage.py check
+python manage.py makemigrations --check --dry-run
+python manage.py test Principal --verbosity 2
+```
+
+En GitHub Actions la misma batería se ejecuta con Python 3.12 en solicitudes de cambio y al actualizar `main`. Verifica que el resultado del workflow sea verde. Para validar respuestas reales de la IA, inicia Ollama con el modelo configurado y prueba una conversación de dos mensajes desde el navegador: los tests automatizados usan mocks y **no sustituyen esa comprobación manual**.
+
+**Cuentas demo:** solo disponibles en desarrollo local; crea o verifica con `python manage.py crear_usuarios_prueba`. Nunca subas `local.sqlite3`, `.env` ni contraseñas de producción.
+
 ## Nuevos flujos académicos (noviembre de 2026)
 
 La aplicación incorpora funcionalidades sin añadir tablas nuevas:
