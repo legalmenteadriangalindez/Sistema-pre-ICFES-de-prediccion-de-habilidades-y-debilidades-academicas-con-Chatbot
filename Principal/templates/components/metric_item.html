@@ -1,6 +1,6 @@
 {# Elemento reutilizable de los paneles portal-metrics. #}
 <article>
-  <strong>{{ value }}</strong>
+  <strong>{{ value }}{{ suffix }}</strong>
   <span>{{ label }}</span>
-  {% if detail %}<small>{{ detail }}</small>{% endif %}
+  {% if detail or detail_value != None %}<small>{{ detail_prefix }}{{ detail }}{{ detail_value }}{{ detail_suffix }}</small>{% endif %}
 </article>
