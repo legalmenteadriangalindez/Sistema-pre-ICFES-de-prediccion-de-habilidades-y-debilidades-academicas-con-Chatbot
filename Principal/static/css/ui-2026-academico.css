@@ -1,0 +1,329 @@
+/* Sección 4: ajustes de otras pantallas y responsive. Continuación de la cascada. */
+/* Acabados consistentes para perfiles, actividades y orientación vocacional. */
+.preicfes-ui .profile-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:20px;
+  margin-top:20px;
+  align-items:stretch
+}
+
+.preicfes-ui .profile-grid .ui-card {
+  padding:27px
+}
+
+.preicfes-ui .profile-identity {
+  display:flex;
+  align-items:center;
+  gap:15px;
+  padding-bottom:19px;
+  border-bottom:1px solid #e6eef9
+}
+
+.preicfes-ui .profile-identity .user-initial {
+  width:55px;
+  height:55px;
+  font-size:20px
+}
+
+.preicfes-ui .profile-identity h3 {
+  font-size:16px
+}
+
+.preicfes-ui .profile-identity p {
+  margin:3px 0 0;
+  color:#7589a4;
+  font-size:12px
+}
+
+.preicfes-ui .profile-details {
+  margin:13px 0 20px
+}
+
+.preicfes-ui .profile-details>div {
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:15px;
+  padding:14px 0;
+  border-bottom:1px solid #edf2f9
+}
+
+.preicfes-ui .profile-details dt {
+  font-size:12px;
+  color:#697f9b;
+  font-weight:800
+}
+
+.preicfes-ui .profile-details dd {
+  font-size:12px;
+  color:#24456c;
+  text-align:right;
+  overflow-wrap:anywhere;
+  max-width:64%;
+  margin:0;
+  font-weight:700
+}
+
+.preicfes-ui .subsection-title,.preicfes-ui .section-small-title {
+  font-size:15px;
+  margin:18px 0 12px
+}
+
+.preicfes-ui .guardian {
+  background:#f2f8ff;
+  border-radius:12px;
+  padding:12px;
+  margin:8px 0;
+  color:#40648f;
+  font-size:12px
+}
+
+.preicfes-ui .guardian i {
+  color:#0758bf;
+  margin-right:9px
+}
+
+.preicfes-ui .guardian small {
+  color:#7c8ca1
+}
+
+.preicfes-ui .empty-card.inline {
+  min-height:175px;
+  padding:28px 18px;
+  box-shadow:none
+}
+
+.preicfes-ui .empty-card.inline h2 {
+  font-size:16px
+}
+
+.preicfes-ui .compact-stats {
+  grid-template-columns:repeat(2,minmax(0,250px));
+  margin:20px 0
+}
+
+.preicfes-ui .activity-list-card {
+  margin-top:18px
+}
+
+.preicfes-ui .assigned-activity {
+  display:flex;
+  align-items:center;
+  gap:16px;
+  border:1px solid #e6eff9;
+  background:#fbfdff;
+  border-radius:16px;
+  padding:15px;
+  margin-top:11px
+}
+
+.preicfes-ui .assigned-activity>div {
+  min-width:0;
+  flex:1
+}
+
+.preicfes-ui .assigned-activity h3 {
+  font-size:14px;
+  margin-bottom:4px
+}
+
+.preicfes-ui .assigned-activity p,.preicfes-ui .assigned-activity small {
+  font-size:11px;
+  color:#7086a0;
+  margin:0
+}
+
+.preicfes-ui .assigned-activity small {
+  display:block;
+  margin-top:5px
+}
+
+.preicfes-ui .assigned-activity form {
+  flex:none
+}
+
+.preicfes-ui .recommendation-grid {
+  display:grid;
+  grid-template-columns:minmax(220px,.8fr) minmax(0,2fr);
+  gap:19px;
+  align-items:start
+}
+
+.preicfes-ui .recommendation-side,.preicfes-ui .recommendation-content {
+  display:grid;
+  gap:18px;
+  align-content:start
+}
+
+.preicfes-ui .recommendation-side .ui-card h2,.preicfes-ui .recommendation-content .ui-card h2 {
+  font-size:16px
+}
+
+.preicfes-ui .profile-tip {
+  border:1px solid #deebf8;
+  border-radius:14px;
+  padding:15px;
+  margin-top:10px;
+  background:#f3faff
+}
+
+.preicfes-ui .profile-tip.mint {
+  background:#e5f8f2;
+  border-color:#d0f0e5
+}
+
+.preicfes-ui .profile-tip.gold {
+  background:#fff5db;
+  border-color:#f5e6be
+}
+
+.preicfes-ui .profile-tip strong {
+  display:block;
+  color:#163c6a;
+  font-size:12px
+}
+
+.preicfes-ui .profile-tip p {
+  font-size:12px;
+  color:#537390;
+  margin:6px 0 0
+}
+
+.preicfes-ui .learning-steps {
+  padding:0 0 0 20px;
+  color:#516c8c;
+  font-size:12px;
+  line-height:1.8
+}
+
+.preicfes-ui .learning-steps li {
+  padding:7px 0
+}
+
+.preicfes-ui .career-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:15px
+}
+
+.preicfes-ui .career-tile {
+  background:#fbfdff;
+  border:1px solid #e0eaf8;
+  border-radius:17px;
+  padding:19px
+}
+
+.preicfes-ui .career-tile .stat-icon {
+  margin-bottom:12px
+}
+
+.preicfes-ui .career-tile h3,.preicfes-ui .career-tile h2 {
+  font-size:15px!important;
+  margin:8px 0
+}
+
+.preicfes-ui .career-tile p {
+  font-size:11px;
+  color:#65809e;
+  line-height:1.65;
+  margin:9px 0 17px
+}
+
+.preicfes-ui .career-affinity {
+  display:inline-block;
+  border-radius:99px;
+  background:#e2f7ed;
+  color:#04896a;
+  padding:5px 9px;
+  font-size:10px;
+  font-weight:900
+}
+
+.preicfes-ui .material-row {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:13px;
+  border-bottom:1px solid #ebf2f9
+}
+
+.preicfes-ui .material-row>i {
+  color:#0756c5
+}
+
+.preicfes-ui .material-row>div {
+  flex:1;
+  min-width:0
+}
+
+.preicfes-ui .material-row strong,.preicfes-ui .material-row small {
+  display:block;
+  font-size:12px
+}
+
+.preicfes-ui .material-row small {
+  font-size:10px;
+  color:#7d90a6
+}
+
+.preicfes-ui .practice-header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-top:21px
+}
+
+.preicfes-ui .practice-header h2 {
+  font-size:20px;
+  margin-top:6px
+}
+
+.preicfes-ui .practice-info {
+  font-size:12px;
+  border-radius:14px;
+  border:1px solid #d3e5fc;
+  background:#ebf6ff;
+  padding:15px;
+  color:#43668c
+}
+
+.preicfes-ui .practice-info i {
+  margin-right:10px;
+  color:#0754b9
+}
+
+.preicfes-ui .history-summary {
+  margin:18px 0
+}
+
+@media(max-width:900px) {
+  .preicfes-ui .profile-grid,.preicfes-ui .recommendation-grid {
+    grid-template-columns:1fr
+  }
+
+}
+
+@media(max-width:700px) {
+  .preicfes-ui .career-grid {
+    grid-template-columns:1fr
+  }
+
+  .preicfes-ui .compact-stats {
+    grid-template-columns:repeat(2,minmax(0,1fr))
+  }
+
+  .preicfes-ui .assigned-activity {
+    flex-wrap:wrap
+  }
+
+  .preicfes-ui .assigned-activity form {
+    width:100%
+  }
+
+  .preicfes-ui .assigned-activity .pill-button {
+    width:100%
+  }
+
+}
