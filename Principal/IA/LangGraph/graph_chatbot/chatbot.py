@@ -224,7 +224,6 @@ class ModernChatbot:
             )
              
             assistant_response = result['messages'][-1].content
-            print(assistant_response)
             return{
                 "success": True,
                 "response": assistant_response,
@@ -238,7 +237,7 @@ class ModernChatbot:
                 "success": False,
                 "response": None,
                 "chat_id": chat_id,
-                "error": str(e),
+                "error": "El tutor no está disponible en este momento. Verifica Ollama e inténtalo nuevamente.",
                 "memory_used": 0,
                 "context_optimized": False
             }
@@ -264,7 +263,10 @@ class ModernChatbot:
                                      })
             return history
         except Exception as e:
-            print("Error retrieving conversation history:", e)
+            logging.getLogger(__name__).warning(
+                "chat_history_unavailable",
+                extra={"component": "langgraph", "error_type": type(e).__name__},
+            )
             return []
     
     # limpiar el historial de conversaciones para un chat especifico
