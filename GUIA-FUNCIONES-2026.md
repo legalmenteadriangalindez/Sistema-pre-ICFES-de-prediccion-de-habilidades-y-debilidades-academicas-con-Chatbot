@@ -13,15 +13,16 @@
 
 ## Consideraciones técnicas
 
-- Sin migraciones nuevas: se reutilizan las tablas actuales. Mantén y respalda las migraciones 0001–0012.
+- **Seguridad 2026:** incorpora migración `0013` para la asignación docente por curso y año. Mantén y respalda las migraciones 0001–0013; ejecuta `python manage.py migrate` al actualizar.
 - El proyecto sigue necesitando Ollama y el modelo configurado para tutor IA y generación LLM de cuestionarios. Las nuevas rutas no dependen de Ollama.
-- El esquema no tiene una relación Docente–Curso o Colegio–Usuario. El panel docente está destinado **únicamente a una instalación de una sola institución**. No es adecuado para despliegues multiinstitución sin permisos adicionales.
+- El esquema tiene asignación **Docente–Curso–Año**, administrada por gestores, que limita la lectura y escritura de matrículas. **No hay aislamiento por colegio/institución**, así que un despliegue multiinstitución todavía requiere ampliar el modelo de autorizaciones.
 - No se implementó un predictor ML validado. La clasificación de áreas por reforzar usa estadísticas descriptivas y debe etiquetarse como tal.
 - El conjunto de preguntas es de práctica, **no es un simulacro oficial del ICFES** ni reproduce un examen completo oficial.
 
 ## Pruebas
 
 ```powershell
+python manage.py migrate
 python manage.py check
 python manage.py makemigrations --check --dry-run
 python manage.py test Principal.test_portal_academico Principal.tests Principal.test_ui_premium Principal.test_ui_polish
