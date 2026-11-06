@@ -32,7 +32,12 @@ class ConversationStoreMixin:
         try:
             if not isinstance(chats_data, list):
                 raise ValueError("Se esperaba una lista de conversaciones")
-            save_json_atomic(self._chat_metadata_path(), chats_data)
+            existing = self._chat_metadata_path()
+            if existing.exists():
+                stored = load_json(existing)
+                if not isinstance(stored, list) or not all(isinstance(item, dict) for item in stored):
+                    raise ValueError("No sobrescribir metadatos corruptos")
+            save_json_atomic(existing, chats_data)
             return True
         except (OSError, ValueError, TypeError):
             logger.error("chat_metadata_write_failed", extra={"component": "conversation_store"})
