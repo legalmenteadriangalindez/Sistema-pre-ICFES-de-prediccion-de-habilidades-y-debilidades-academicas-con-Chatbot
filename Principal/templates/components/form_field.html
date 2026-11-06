@@ -1,0 +1,7 @@
+{# Campo Django vinculado. Mantiene nombre, widget, valor y errores del formulario original. #}
+<div class="{{ wrapper_class|default:'mb-3' }}">
+  <label class="form-label" for="{{ field.id_for_label }}">{{ label_text|default:field.label }}</label>
+  {{ field }}
+  {% if field.errors %}<div class="invalid-feedback d-block">{{ field.errors }}</div>{% endif %}
+  {% if field.help_text %}<small class="form-text text-muted">{{ field.help_text }}</small>{% endif %}
+</div>
