@@ -74,7 +74,7 @@ jobs:
         run: python -m unittest discover -s tests/styles -p 'test_*.py' -v
 
   django:
-    name: Django: pruebas y migraciones
+    name: "Django: pruebas y migraciones"
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
