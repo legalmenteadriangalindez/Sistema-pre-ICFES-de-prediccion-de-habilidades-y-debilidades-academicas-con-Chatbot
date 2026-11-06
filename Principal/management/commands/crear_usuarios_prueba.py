@@ -19,6 +19,7 @@ from django.db import transaction
 from Principal.models import (
     Acudiente,
     AnioLectivo,
+    AsignacionDocenteCurso,
     Curso,
     Estudiante,
     EstudianteAcudiente,
@@ -189,6 +190,12 @@ class Command(BaseCommand):
                 )
             elif datos["rol"] == "ACUDIENTE":
                 Acudiente.objects.get_or_create(persona=persona)
+
+        docente_demo = PerfilUsuario.objects.get(user__username="docente_demo")
+        AsignacionDocenteCurso.objects.get_or_create(
+            docente=docente_demo, curso=curso, anio_lectivo=anio,
+            defaults={"activo": True},
+        )
 
         acudiente = Acudiente.objects.get(persona=personas["acudiente_demo"])
         for username in ("estudiante_ana", "estudiante_luis"):
