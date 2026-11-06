@@ -48,7 +48,7 @@ def _area(materia, competencia):
     return nombre if nombre in AREAS_BASE else None
 
 
-def extraer_eventos():
+def extraer_eventos(estudiante_id=None):
     """Agrega respuestas por (estudiante, intento, área) sin datos demográficos.
 
     Un integral produce eventos separados por área. Se descartan áreas con
@@ -60,6 +60,8 @@ def extraer_eventos():
         "intento__estudiante_id", "intento_id", "intento__fecha",
         "intento__materia", "competencia", "es_correcta",
     ).order_by("intento__fecha", "intento_id", "numero")
+    if estudiante_id is not None:
+        filas = filas.filter(intento__estudiante_id=estudiante_id)
     agregados = {}
     for alumno, intento, fecha, materia, competencia, correcta in filas.iterator(chunk_size=2000):
         area = _area(materia, competencia)
@@ -322,7 +324,7 @@ def predicciones_estudiante(estudiante, modelo=None, historiales=None):
     modelo = cargar_modelo() if modelo is None else modelo
     if not modelo:
         return []
-    historiales = extraer_eventos() if historiales is None else historiales
+    historiales = extraer_eventos(estudiante.pk) if historiales is None else historiales
     areas = historiales.get(estudiante.pk, {})
     resultado = []
     for area in AREAS_BASE:
