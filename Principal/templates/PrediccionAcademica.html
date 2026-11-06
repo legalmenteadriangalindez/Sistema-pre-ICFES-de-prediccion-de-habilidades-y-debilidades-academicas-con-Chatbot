@@ -1,0 +1,57 @@
+{% extends 'app_shell.html' %}
+{% block title %}Predicción académica{% endblock %}
+{% block content %}
+<div class="dash portal-page">
+  <section class="section-hero">
+    <span class="eyebrow"><i class="fas fa-chart-line"></i> PREPARACIÓN PERSONALIZADA</span>
+    <h1>Predicción de áreas que podrían necesitar refuerzo</h1>
+    <p>Cuando existe un modelo evaluado, usamos únicamente tus resultados anteriores para orientar qué materias conviene practicar antes de tu próxima evaluación.</p>
+  </section>
+
+  {% if sin_modelo %}
+    <section class="ui-card" role="status">
+      <h2><i class="fas fa-circle-info"></i> Predicción aún no validada</h2>
+      <p>No hay un modelo predictivo aprobado disponible en esta instalación. Para protegerte de resultados poco fiables, no mostraremos predicciones inventadas ni probabilidades sin evaluación.</p>
+      <p>Puedes seguir utilizando el diagnóstico descriptivo y el plan semanal, que sí se basan en respuestas reales.</p>
+      <a class="ui-btn ui-btn-primary" href="{% url 'diagnostico_academico' %}">Consultar mis resultados reales</a>
+    </section>
+  {% else %}
+    <section class="ui-card">
+      <div class="widget-title">
+        <div><h2><i class="fas fa-shield-halved"></i> Modelo evaluado</h2><p>Versión {{ modelo.version }} · Evaluado con estudiantes distintos de los utilizados para entrenar.</p></div>
+      </div>
+      <p>Estas señales intentan anticipar un <strong>resultado inferior al 60 % en la próxima evaluación de una materia</strong>. No representan tu capacidad intelectual, un diagnóstico, una calificación oficial del ICFES ni una certeza sobre el futuro.</p>
+      <p class="portal-disclaimer">La predicción se basa en patrones de evaluaciones anteriores. El resultado podría fallar y debe usarse solo como apoyo para decidir qué practicar.</p>
+    </section>
+    {% if sin_historia %}
+      <section class="ui-card" role="status"><h2>Aún falta historial para tus materias</h2>
+        <p>El modelo está evaluado, pero necesitas al menos dos evaluaciones previas de cinco preguntas o más en una misma materia para recibir una orientación individual.</p>
+        <a class="ui-btn ui-btn-primary" href="{% url 'simulacros' %}">Practicar con simulacros</a>
+      </section>
+    {% else %}
+      <section class="ui-card">
+        <h2><i class="fas fa-book-reader"></i> Orientación para tu siguiente práctica</h2>
+        <div class="portal-cards">
+          {% for fila in predicciones %}
+            <article>
+              {% if fila.alerta %}<span class="soft-chip">Reforzar</span>{% else %}<span class="soft-chip">En seguimiento</span>{% endif %}
+              <h3>{{ fila.area }}</h3>
+              <p><strong>{{ fila.mensaje }}</strong></p>
+              <p>Última evaluación: {{ fila.ultimo_porcentaje }} % de aciertos · {{ fila.evaluaciones_previas }} evaluaciones previas.</p>
+              <small>Última fecha: {{ fila.ultima_fecha|date:"d/m/Y" }}</small>
+              <div><a class="ui-btn ui-btn-outline" href="{% url 'simulacros' %}">Practicar ahora</a></div>
+            </article>
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
+  {% endif %}
+  <section class="ui-card">
+    <h2>Tu rendimiento observado es distinto de una predicción</h2>
+    <p>Las fortalezas y debilidades que ya aparecen en tus evaluaciones se calculan directamente desde respuestas calificadas, sin ningún algoritmo predictivo.</p>
+    <a class="ui-btn ui-btn-outline" href="{% url 'diagnostico_academico' %}">Ver diagnóstico observado</a>
+    <a class="ui-btn ui-btn-outline" href="{% url 'plan_semanal' %}">Organizar mi plan semanal</a>
+  </section>
+  <p class="portal-disclaimer">Los modelos pueden cometer errores; la plataforma no emite decisiones educativas automatizadas sobre estudiantes.</p>
+</div>
+{% endblock %}
