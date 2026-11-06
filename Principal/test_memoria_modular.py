@@ -69,6 +69,13 @@ class MemoriaModularTests(SimpleTestCase):
                 self.assertFalse(self.manager.save_chats_metadata([]))
         self.assertEqual(self.manager.get_chat_info("existente")["chat_id"], "existente")
 
+    def test_metadata_corrupta_no_se_sobrescribe_al_crear_chat(self):
+        path = Path(self.tmp.name) / "chats_meta.json"
+        path.write_text('{datos dañados', encoding="utf-8")
+        with self.assertLogs("Principal.IA.LangGraph.graph_chatbot.conversation_store", level="ERROR"):
+            self.assertFalse(self.manager.save_chats_metadata([]))
+        self.assertEqual(path.read_text(encoding="utf-8"), '{datos dañados')
+
     def test_perfiles_anteriores_siguen_en_formato_json_lista(self):
         self.assertTrue(self.manager.save_cognitive_profile({"area": "lectura"}))
         self.assertTrue(self.manager.save_cognitive_profile({"area": "matematicas"}))
