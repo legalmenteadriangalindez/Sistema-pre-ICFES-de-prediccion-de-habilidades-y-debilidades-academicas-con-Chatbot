@@ -2,6 +2,8 @@
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
+from django.db import transaction
+from .services.privacidad import eliminar_archivos_al_confirmar_cuenta
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
 
@@ -228,15 +230,26 @@ def gestion_users(request):
 @user_passes_test(es_gestor, login_url='/accounts/login/')
 @require_POST
 def eliminar_gestion_users(request,tipo,id):
-    if tipo =="usuarios":
-        cuenta = User.objects.filter(id=id).first()
-        # Nunca eliminar por este panel la misma cuenta administrativa en sesión.
-        if cuenta and cuenta.pk != request.user.pk:
+    """Borrado administrativo coherente: cuenta y datos dependientes.
+
+    Antes se podía borrar solo Persona y dejar una cuenta huérfana.
+    La limpieza de carpetas privadas ocurre al confirmarse el commit.
+    """
+    cuenta = None
+    if tipo == "usuarios":
+        cuenta = User.objects.filter(pk=id).first()
+    elif tipo == "personas":
+        persona = Persona.objects.filter(pk=id).select_related(
+            "perfil_user__user"
+        ).first()
+        cuenta = persona.perfil_user.user if persona else None
+
+    if cuenta and cuenta.pk != request.user.pk:
+        identificador = cuenta.pk
+        with transaction.atomic():
             cuenta.delete()
-    if tipo == "personas":
-        persona = Persona.objects.get(id=id)
-        persona.delete()
-    return redirect('admin_gestion_users')
+            eliminar_archivos_al_confirmar_cuenta(identificador)
+    return redirect("admin_gestion_users")
 
 @login_required # @user_passes_test(es_coordinador)
 def acudiente(request):
