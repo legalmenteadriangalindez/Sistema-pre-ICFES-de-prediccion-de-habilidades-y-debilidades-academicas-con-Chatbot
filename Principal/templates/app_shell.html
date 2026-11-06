@@ -18,7 +18,7 @@
  <a class="app-brand" href="{% url 'home' %}" aria-label="Inicio de Pre-ICFES"><i class="fas fa-graduation-cap"></i><span>Pre-ICFES</span><small aria-hidden="true"></small></a>
  <button class="menu-toggle" id="app-menu-toggle" aria-label="Abrir menú" aria-controls="app-sidebar" aria-expanded="false" type="button"><i class="fas fa-bars"></i></button>
  <nav class="top-links" aria-label="Navegación principal">{% block nav_top %}
-{% if menu_admin %}<a href="{% url 'admin_gestion_users' %}"><i class="fas fa-gauge-high"></i> Administración</a><a href="{% url 'gestion_docentes' %}"><i class="fas fa-chalkboard-user"></i> Docentes</a>
+{% if menu_admin %}<a href="{% url 'admin_gestion_users' %}"><i class="fas fa-gauge-high"></i> Administración</a><a href="{% url 'gestion_docentes' %}"><i class="fas fa-chalkboard-user"></i> Docentes</a><a href="{% url 'gestion_matriculas_familias' %}"><i class="fas fa-user-group"></i> Matrículas y familias</a>
 {% elif menu_docente %}<a href="{% url 'panel_docente' %}"><i class="fas fa-chalkboard-teacher"></i> Mi panel docente</a>
 {% elif menu_acudiente %}<a href="{% url 'panel_acudiente' %}"><i class="fas fa-users"></i> Seguimiento familiar</a>
 {% else %}
@@ -39,7 +39,7 @@
 <div class="app-layout">
 {% if user.is_authenticated %}
 <aside class="app-sidebar" id="app-sidebar"><nav aria-label="Menú lateral" class="side-nav">{% block nav_side %}
-{% if menu_admin %}<a href="{% url 'admin_gestion_users' %}"><i class="fas fa-gauge"></i> Usuarios</a><a href="{% url 'admin_gestion_academica' %}"><i class="fas fa-school"></i> Gestión académica</a><a href="{% url 'gestion_docentes' %}"><i class="fas fa-chalkboard-user"></i> Asignar docentes</a>
+{% if menu_admin %}<a href="{% url 'admin_gestion_users' %}"><i class="fas fa-gauge"></i> Usuarios</a><a href="{% url 'admin_gestion_academica' %}"><i class="fas fa-school"></i> Gestión académica</a><a href="{% url 'gestion_docentes' %}"><i class="fas fa-chalkboard-user"></i> Asignar docentes</a><a href="{% url 'gestion_matriculas_familias' %}"><i class="fas fa-people-roof"></i> Matrículas y acudientes</a>
 {% elif menu_docente %}<a href="{% url 'panel_docente' %}"><i class="fas fa-chalkboard"></i> Mis cursos y actividades</a>
 {% elif menu_acudiente %}<a href="{% url 'panel_acudiente' %}"><i class="fas fa-users"></i> Estudiantes vinculados</a>
 {% else %}

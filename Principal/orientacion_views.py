@@ -67,7 +67,9 @@ def orientacion_vocacional(request):
         resultados = {k: round(25 * (sum(v) / len(v) - 1), 1) for k, v in totales.items()}
         with transaction.atomic():
             for nombre, categoria, descripcion in CARRERAS_ORIENTATIVAS:
-                carrera, _ = Carrera.objects.get_or_create(nombre=nombre, defaults={'descripcion': descripcion})
+                carrera = Carrera.objects.filter(nombre=nombre).order_by('pk').first()
+                if carrera is None:
+                    carrera = Carrera.objects.create(nombre=nombre, descripcion=descripcion)
                 actualizaciones = {
                     'compatibilidad': Decimal(str(resultados[categoria])),
                     'conocimientos_necesarios': descripcion,

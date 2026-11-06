@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views # import de la vista
 from .simulacros_views import simulacros
-from . import portales, orientacion_views
+from . import portales, orientacion_views, vinculos_views
 from .historial_views import historial_academico 
 from django.urls import path, include  # librerias nesesarias para hacer la referencia desde url.py del proyecto 
 
@@ -9,6 +9,7 @@ urlpatterns = [
   path('panel-docente/', portales.panel_docente, name='panel_docente'),
   path('panel-acudiente/', portales.panel_acudiente, name='panel_acudiente'),
   path('gestion-docentes/', portales.gestion_docentes, name='gestion_docentes'),
+  path('gestion-matriculas-familias/', vinculos_views.gestion_matriculas_familias, name='gestion_matriculas_familias'),
   path('gestion/editar/<str:tipo>/<int:pk>/', portales.editar_catalogo, name='editar_catalogo'),
   path('orientacion-vocacional/', orientacion_views.orientacion_vocacional, name='orientacion_vocacional'),
   path('plan-semanal/', orientacion_views.plan_estudio, name='plan_estudio'),
