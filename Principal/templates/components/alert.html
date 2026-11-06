@@ -1,0 +1,2 @@
+{# Avisos breves. La clase y rol se deciden de forma controlada; el texto se escapa. #}
+<div class="ui-alert {% if tone == 'success' %}ui-alert-success{% else %}ui-alert-warning{% endif %}" role="{% if role == 'status' %}status{% else %}alert{% endif %}">{{ message }}</div>
