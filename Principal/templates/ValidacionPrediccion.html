@@ -33,6 +33,9 @@
         <article><strong>{{ evaluacion.metricas.auc_roc|floatformat:2 }}</strong><span>AUC ROC</span></article>
         <article><strong>{{ evaluacion.metricas.error_brier|floatformat:2 }}</strong><span>Error Brier</span></article>
       </div>
+      <h3>Materias respaldadas por la evaluación</h3>
+      <p>Solo se mostrarán alertas en estas materias, que también superaron criterios mínimos de cobertura y de desempeño en el conjunto de prueba.</p>
+      <div class="portal-list-row">{% for area in modelo.areas_validadas %}<span class="soft-chip">{{ area }}</span>{% empty %}<span>Sin áreas autorizadas</span>{% endfor %}</div>
       <h3>Referencia: predicción de clase mayoritaria</h3>
       <p>Exactitud balanceada de referencia: {{ evaluacion.referencia_mayoritaria.exactitud_balanceada|floatformat:2 }}.
          El modelo solo se publica si la supera por al menos 0,05 y consigue precisión y recuperación de alerta no inferiores a 0,55.</p>
