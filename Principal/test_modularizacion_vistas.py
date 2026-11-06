@@ -24,7 +24,6 @@ class ModularizacionVistasTests(TestCase):
             "home": views.home,
             "test": views.test,
             "registro": views.registro,
-            "verificar_correo": views.verificar_correo,
             "perfil": views.perfil,
             "configuraciones": views.configuraciones,
             "recomendaciones": views.recomendaciones,
