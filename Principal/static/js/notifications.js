@@ -6,7 +6,11 @@
 
   function dismiss(target) {
     const notice = target?.closest?.('[data-notice]');
-    if (notice) notice.remove();
+    if (notice) {
+      const host = notice.parentNode;
+      notice.remove();
+      if (host && !host.querySelector("[data-notice]")) host.hidden = true;
+    }
   }
 
   document.addEventListener('click', (event) => {
@@ -38,6 +42,7 @@
     close.textContent = '×';
 
     notice.append(text, close);
+    host.hidden = false;
     host.appendChild(notice);
     return notice;
   };
