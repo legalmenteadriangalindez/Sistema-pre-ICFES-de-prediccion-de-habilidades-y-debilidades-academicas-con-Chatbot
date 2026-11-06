@@ -74,6 +74,18 @@ En GitHub Actions la misma batería se ejecuta con Python 3.12 en solicitudes de
 
 **Cuentas demo:** solo disponibles en desarrollo local; crea o verifica con `python manage.py crear_usuarios_prueba`. Nunca subas `local.sqlite3`, `.env` ni contraseñas de producción.
 
+## Refactorización de memoria del chatbot — fase 5 (noviembre de 2026)
+
+`ModernMemoryManager` se conserva como fachada compatible y se separa en
+servicios de conversaciones JSON, ChromaDB, extracción de recuerdos, perfiles
+cognitivos y recursos auxiliares. Escritura JSON atómica y embeddings
+consistentes al leer/guardar. Sin conversaciones ni respuestas completas en
+`print()`; los logs contienen solo eventos técnicos. Se añaden pruebas
+de fallos simulados de Ollama, Chroma y disco sin conexión externa.
+
+No cambia la base SQLite, las URLs ni los datos existentes.
+Ver [arquitectura y pruebas de fase 5](docs/REFACTORIZACION_CHATBOT_FASE_5.md).
+
 ## Refactorización de vistas Django — fase 4 (noviembre de 2026)
 
 Se separaron autenticación, chatbot, cuestionarios, perfiles, estudiantes,
