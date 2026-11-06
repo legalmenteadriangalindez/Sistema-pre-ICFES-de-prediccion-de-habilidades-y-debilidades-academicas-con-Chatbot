@@ -298,8 +298,12 @@ def panel_acudiente(request):
             "curso__grado", "anio_lectivo"
         ).first()
         resultados = list(IntentoEvaluacion.objects.filter(estudiante=estudiante).order_by("-fecha", "-pk")[:5])
+        plan_de_la_semana = PlanEstudioSemanal.objects.filter(
+            estudiante=estudiante, semana_inicio=lunes_de(timezone.localdate())
+        ).first()
         hijos.append({"estudiante": estudiante, "matricula": matricula,
                      "relacion": vinculo.relacion, "resultados": resultados,
+                     "plan_semanal": resumen_plan(plan_de_la_semana) if plan_de_la_semana else None,
                      "actividades_pendientes": ActividadAsignada.objects.filter(
                          matricula=matricula, completada=False
                      ).count() if matricula else 0})
