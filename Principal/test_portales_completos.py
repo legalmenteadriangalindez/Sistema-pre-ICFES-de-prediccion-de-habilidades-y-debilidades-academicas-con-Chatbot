@@ -131,3 +131,29 @@ class PortalesCompletosTests(TestCase):
         self.curso.refresh_from_db()
         self.assertEqual(self.curso.nombre, '10C')
         self.assertTrue(Matricula.objects.filter(pk=self.matricula.pk).exists())
+
+    def test_admin_matricula_y_vincula_sin_duplicar(self):
+        self.client.force_login(self.admin)
+        url = reverse('gestion_matriculas_familias')
+        for _ in range(2):
+            response = self.client.post(url, {
+                'accion': 'matricular', 'estudiante_id': str(self.estudiante.estudiante.pk),
+                'curso_id': str(self.curso.pk), 'anio_id': str(self.anio.pk),
+            })
+            self.assertEqual(response.status_code, 302)
+        self.assertEqual(Matricula.objects.filter(estudiante=self.estudiante.estudiante, anio_lectivo=self.anio).count(), 1)
+        for _ in range(2):
+            self.client.post(url, {
+                'accion': 'vincular', 'estudiante_id': str(self.estudiante.estudiante.pk),
+                'acudiente_id': str(self.acudiente.acudiente.pk), 'relacion_id': str(self.relacion.pk),
+            })
+        self.assertEqual(EstudianteAcudiente.objects.filter(estudiante=self.estudiante.estudiante, acudiente=self.acudiente.acudiente).count(), 1)
+
+    def test_estudiante_no_modifica_matriculas_ni_vinculos(self):
+        self.client.force_login(self.estudiante)
+        response = self.client.post(reverse('gestion_matriculas_familias'), {
+            'accion': 'desactivar_matricula', 'matricula_id': str(self.matricula.pk),
+        })
+        self.assertNotEqual(response.status_code, 200)
+        self.matricula.refresh_from_db()
+        self.assertTrue(self.matricula.activa)
