@@ -52,7 +52,7 @@ class PlanSemanalPersistenteTests(TestCase):
     def _crear(self):
         r = self.client.post(self.url, {"accion": "crear"})
         self.assertRedirects(r, self.url)
-        return PlanEstudioSemanal.objects.get(estudiante=self.estudiante)
+        return PlanEstudioSemanal.objects.get(estudiante=self.estudiante, semana_inicio=LUNES)
 
     def test_get_ofrece_propuesta_sin_crear_registros(self, hoy_mock):
         respuesta = self.client.get(self.url)
