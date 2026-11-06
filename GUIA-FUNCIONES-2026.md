@@ -30,3 +30,12 @@ python manage.py runserver
 ```
 
 Si tu base SQLite ya aplicó `0012`, no la elimines ni vuelvas a generar migraciones. Primero respalda cualquier dato importante antes de actualizar código.
+
+## Predicción académica evaluada
+
+- `/prediccion-academica/`: orientación por área con riesgo exploratorio de rendir por debajo de 60 % en el siguiente intento. Nunca informa un resultado si no existe modelo validado o historial individual suficiente.
+- `/gestion/validacion-prediccion/`: auditoría de ejemplos y estudiantes, métricas de la evaluación fuera de muestra y materias autorizadas.
+- `python manage.py entrenar_prediccion`: solo audita. `--entrenar`: evalúa y publica un JSON local si supera los umbrales mínimos.
+- Se usa regresión logística, separación sin compartir estudiantes entre entrenamiento/prueba, referencia mayoritaria, F1/recuperación/precisión/BA/AUC/Brier y comparación por materia.
+- No existe modelo precargado con datos reales; no inventar resultados ni asegurar precisión antes de que la base autorizada alcance los requisitos y supere pruebas.
+- Más información: [Metodología de predicción](docs/PREDICCION_ACADEMICA.md).

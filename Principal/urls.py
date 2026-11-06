@@ -1,5 +1,5 @@
 from django.urls import path
-from . import portal_academico, privacy_views
+from . import portal_academico, privacy_views, prediction_views
 from . import views # import de la vista
 from .simulacros_views import simulacros
 from .historial_views import historial_academico 
@@ -11,6 +11,8 @@ urlpatterns = [
   path('orientacion-vocacional/', portal_academico.orientacion_vocacional, name='orientacion_vocacional'),
   path('plan-semanal/', portal_academico.plan_estudio, name='plan_semanal'),
   path('diagnostico-academico/', portal_academico.diagnostico_academico, name='diagnostico_academico'),
+  path('prediccion-academica/', prediction_views.prediccion_estudiante, name='prediccion_estudiante'),
+  path('gestion/validacion-prediccion/', prediction_views.validacion_prediccion, name='validacion_prediccion'),
   path('panel-docente/', portal_academico.panel_docente, name='panel_docente'),
   path('privacidad/', privacy_views.privacidad, name='privacidad'),
   path('privacidad/exportar/', privacy_views.exportar_mis_datos, name='exportar_mis_datos'),

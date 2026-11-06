@@ -74,6 +74,27 @@ En GitHub Actions la misma batería se ejecuta con Python 3.12 en solicitudes de
 
 **Cuentas demo:** solo disponibles en desarrollo local; crea o verifica con `python manage.py crear_usuarios_prueba`. Nunca subas `local.sqlite3`, `.env` ni contraseñas de producción.
 
+## Predicción académica evaluable (noviembre de 2026)
+
+Se incorporó un **pipeline reproducible de aprendizaje automático**, pero **no se publica ningún resultado predictivo sin datos reales suficientes y evaluación aprobada**. No se han subido datos de estudiantes ni modelos entrenados al repositorio.
+
+- Objetivo: clasificar si el **siguiente** intento de una materia obtendrá menos de **60 % de aciertos**, usando resultados anteriores, nunca respuestas futuras.
+- Datos: registros de `IntentoEvaluacion` y `RespuestaEvaluacion` con al menos cinco preguntas por materia; se excluyen las cinco cuentas demo. No se usan nombre, edad, documento, sexo, dirección ni correo como variables.
+- Mínimos para intentar entrenar: **40 estudiantes distintos, 150 ejemplos temporales, al menos 30 ejemplos de cada clase**. Se evalúa además la representación de las materias en el conjunto de prueba.
+- Modelo: estandarización + regresión logística; división por **estudiantes completos** (25 % de alumnos solo para prueba), comparación con clase mayoritaria, métricas F1, precisión, recuperación, exactitud balanceada, AUC, Brier y matriz de confusión.
+- Requisitos para publicar: mejora de al menos **0,05** de exactitud balanceada sobre la referencia y precisión y recuperación del riesgo de al menos **0,55**; únicamente aparecen áreas también validadas por separado.
+- **Sin modelo válido:** la aplicación muestra “predicción aún no validada”, sin porcentajes inventados. Las predicciones aprobadas se expresan como sugerencias de práctica, no notas ni puntajes ICFES.
+- El archivo JSON privado de coeficientes y métricas se conserva en `.local-data/prediccion/modelo.json`, ignorado por Git, y vence a los 180 días.
+
+Comandos del administrador del servidor:
+
+```powershell
+python manage.py entrenar_prediccion
+python manage.py entrenar_prediccion --entrenar
+```
+
+El primero audita sin entrenar; el segundo solo publica si pasa los controles. Páginas: `/prediccion-academica/` (estudiante) y `/gestion/validacion-prediccion/` (administrador). Consulta el diseño y las limitaciones en [Metodología predictiva](docs/PREDICCION_ACADEMICA.md).
+
 ## Seguimiento semanal persistente (noviembre de 2026)
 
 La ruta **`/plan-semanal/`** permite crear un plan por estudiante y por semana (lunes a domingo), registrar las siete sesiones propuestas y comparar avances de las últimas ocho semanas. Es independiente de las tareas que asignan los docentes.
