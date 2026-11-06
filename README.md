@@ -74,6 +74,20 @@ En GitHub Actions la misma batería se ejecuta con Python 3.12 en solicitudes de
 
 **Cuentas demo:** solo disponibles en desarrollo local; crea o verifica con `python manage.py crear_usuarios_prueba`. Nunca subas `local.sqlite3`, `.env` ni contraseñas de producción.
 
+## JavaScript consolidado y notificaciones reutilizables (noviembre de 2026)
+
+La auditoría confirmó que la fase 1 ya había retirado los cinco archivos JS
+heredados o vacíos; se mantiene `ui-polish.js` como controlador único de
+preferencias, `audio-recorder.js` como módulo del micrófono y
+`confirmations.js` para confirmaciones de formularios.
+
+Se añadieron `notifications.js`, `notifications.css` y un componente
+Django de mensajes seguros y accesibles, sin eventos inline. El panel de
+usuarios se reformateó para hacerlo mantenible conservando rutas y POST.
+Pruebas nuevas de JavaScript y Django protegen estas garantías.
+
+Ver [documentación de notificaciones y formato HTML](docs/JAVASCRIPT_NOTIFICACIONES_HTML_2026.md).
+
 ## Refactorización de memoria del chatbot — fase 5 (noviembre de 2026)
 
 `ModernMemoryManager` se conserva como fachada compatible y se separa en

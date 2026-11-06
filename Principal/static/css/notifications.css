@@ -1,0 +1,77 @@
+/* Avisos compartidos: no dependen de Bootstrap ni de la página actual. */
+.preicfes-ui .app-notifications {
+  display: grid;
+  gap: var(--ds-space-2, 8px);
+  max-width: 100%;
+  margin-bottom: var(--ds-space-3, 12px);
+}
+
+.preicfes-ui .app-notifications[hidden] {
+  display: none;
+}
+
+.preicfes-ui .app-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ds-space-3, 12px);
+  padding: var(--ds-space-3, 12px) var(--ds-space-4, 16px);
+  border: 1px solid var(--ds-border, #dbe6f5);
+  border-radius: var(--ds-button-radius, 13px);
+  background: var(--ds-surface, #fff);
+  color: var(--ds-ink, #243f64);
+  overflow-wrap: anywhere;
+}
+
+.preicfes-ui .app-notice--success {
+  border-color: #96dac0;
+  background: #effcf6;
+  color: #07573d;
+}
+
+.preicfes-ui .app-notice--warning {
+  border-color: #e9ca83;
+  background: #fffbeb;
+  color: #755009;
+}
+
+.preicfes-ui .app-notice--info {
+  border-color: #a8caef;
+  background: #f0f7ff;
+  color: #17447e;
+}
+
+.preicfes-ui .app-notice__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.preicfes-ui .app-notice__close {
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  min-width: 32px;
+  min-height: 32px;
+}
+
+.preicfes-ui .app-notice__close:hover,
+.preicfes-ui .app-notice__close:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.preicfes-ui.theme-dark .app-notice {
+  background: #183456;
+  border-color: #446486;
+  color: #f4f8ff;
+}
+
+.preicfes-ui.theme-dark .app-notice--success {
+  border-color: #419e7a;
+}
+
+.preicfes-ui.theme-dark .app-notice--warning {
+  border-color: #b69b55;
+}
