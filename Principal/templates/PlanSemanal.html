@@ -13,10 +13,6 @@
     </div>
   </section>
 
-  {% if messages %}{% for mensaje in messages %}
-    {% if mensaje.tags == "error" %}{% include "components/alert.html" with tone="warning" role="status" message=mensaje only %}{% else %}{% include "components/alert.html" with tone="success" role="status" message=mensaje only %}{% endif %}
-  {% endfor %}{% endif %}
-
   {% if plan_guardado %}
     <section class="weekly-summary" aria-label="Resumen de avance semanal">
       <article class="weekly-stat"><span class="weekly-stat-icon"><i class="fas fa-list-check"></i></span><span>Sesiones realizadas</span><strong>{{ progreso.completadas }} <small>de {{ progreso.total }}</small></strong></article>
