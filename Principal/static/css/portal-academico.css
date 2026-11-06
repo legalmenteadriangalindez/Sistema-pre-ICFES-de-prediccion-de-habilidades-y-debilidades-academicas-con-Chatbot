@@ -83,9 +83,9 @@
 }
 
 .interest-scale input:checked+span {
-  background:#0647b4;
+  background:var(--ds-portal-primary);
   color:var(--ds-white);
-  border-color:#0647b4;
+  border-color:var(--ds-portal-primary);
   transform:translateY(-2px)
 }
 
@@ -111,7 +111,7 @@
 .portal-metrics strong {
   display:block;
   font-size:1.6rem;
-  color:#0647b4
+  color:var(--ds-portal-primary)
 }
 
 .portal-metrics span {
@@ -213,7 +213,7 @@
 }
 
 .compare-selector input {
-  accent-color:#0647b4;
+  accent-color:var(--ds-portal-primary);
   width:18px;
   height:18px
 }
