@@ -233,6 +233,10 @@ class ModernChatbot:
                 "context_optimized": True
             }
         except Exception as e:
+            logging.getLogger(__name__).warning(
+                "chat_inference_failed",
+                extra={"component": "ollama", "error_type": type(e).__name__},
+            )
             return {
                 "success": False,
                 "response": None,
