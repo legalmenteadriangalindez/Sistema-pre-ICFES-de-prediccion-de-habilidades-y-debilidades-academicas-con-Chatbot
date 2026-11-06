@@ -7,7 +7,7 @@ from django.views.decorators.http import require_GET
 
 from .models import (
     ActividadAsignada, Estudiante, IntentoEvaluacion, Matricula, Persona,
-    PerfilUsuario, RecomendacionVocacional, RespuestaEvaluacion,
+    PerfilUsuario, PlanEstudioSemanal, RecomendacionVocacional, RespuestaEvaluacion,
 )
 
 
@@ -93,6 +93,24 @@ def exportar_mis_datos(request):
                 "puntaje": str(asignacion.puntaje) if asignacion.puntaje is not None else None,
                 "fecha_asignacion": asignacion.fecha_asignacion,
             } for asignacion in actividades],
+            "planes_semanales": [{
+                "semana_inicio": plan.semana_inicio,
+                "creado_en": plan.creado_en,
+                "con_datos_academicos": plan.con_datos_academicos,
+                "sesiones": [{
+                    "dia": sesion.dia_nombre,
+                    "fecha": sesion.fecha_programada,
+                    "area": sesion.area,
+                    "actividad": sesion.actividad,
+                    "completada": sesion.completada,
+                    "minutos_previstos": sesion.minutos_previstos,
+                    "minutos_realizados": sesion.minutos_realizados,
+                    "fecha_completada": sesion.fecha_completada,
+                    "notas": sesion.notas,
+                } for sesion in plan.sesiones.all().order_by("dia_indice")],
+            } for plan in PlanEstudioSemanal.objects.filter(
+                estudiante=estudiante
+            ).prefetch_related("sesiones").order_by("-semana_inicio")],
             "recomendaciones_vocacionales": [{
                 "carrera": recomendacion.carrera.nombre,
                 "afinidad_orientativa": str(recomendacion.compatibilidad),

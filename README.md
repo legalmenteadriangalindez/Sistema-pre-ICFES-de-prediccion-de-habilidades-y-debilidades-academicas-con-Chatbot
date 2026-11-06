@@ -74,6 +74,30 @@ En GitHub Actions la misma batería se ejecuta con Python 3.12 en solicitudes de
 
 **Cuentas demo:** solo disponibles en desarrollo local; crea o verifica con `python manage.py crear_usuarios_prueba`. Nunca subas `local.sqlite3`, `.env` ni contraseñas de producción.
 
+## Seguimiento semanal persistente (noviembre de 2026)
+
+La ruta **`/plan-semanal/`** permite crear un plan por estudiante y por semana (lunes a domingo), registrar las siete sesiones propuestas y comparar avances de las últimas ocho semanas. Es independiente de las tareas que asignan los docentes.
+
+- **Persistencia real:** migración `0014_plan_estudio_semanal_persistente` con `PlanEstudioSemanal` y `SesionPlanSemanal`. Cada estudiante solo puede crear un plan por semana. Guardar de nuevo no duplica registros ni borra sesiones.
+- **Seguimiento:** cada sesión permite registrar entre **1 y 480 minutos** y una nota opcional de hasta **500 caracteres**, editar el registro o volver a marcarlo como pendiente. Las semanas anteriores pueden consultarse pero no modificarse desde la interfaz.
+- **Indicadores:** sesiones realizadas/pendientes, porcentaje de cumplimiento, minutos registrados frente a los planificados, historial de semanas con sus porcentajes. Los indicadores reflejan **autoregistros**, no tiempo supervisado ni calificaciones.
+- **Personalización:** al crear la semana se usan las áreas y competencias medidas por las evaluaciones; sin respuestas se propone una rotación general. El plan se conserva como **instantánea**: los diagnósticos nuevos afectarán semanas futuras, no reescribirán sesiones históricas.
+- **Privacidad:** las operaciones por POST validan estudiante autenticado y semana actual. Los acudientes formalmente vinculados solo pueden ver el resumen de la semana actual. La exportación de datos personales incluye planes y sesiones propios.
+- **No depende de Ollama** y no cambia las tablas existentes de matrículas, evaluaciones o asignaciones del docente.
+
+Antes de ejecutar esta versión haz respaldo de `local.sqlite3` y aplica la migración `0014`:
+
+```powershell
+git pull origin main
+python manage.py migrate
+python manage.py check
+python manage.py makemigrations --check --dry-run
+python manage.py test Principal
+python manage.py runserver
+```
+
+Para probarlo entra como `estudiante_ana` (en un entorno local preparado con los usuarios demo), abre `/plan-semanal/`, crea el plan, registra una sesión, comprueba el porcentaje y revisa el historial. La cuenta `acudiente_demo` podrá consultar el resumen del estudiante vinculado. No debes volver a crear la base de datos ni modificar la migración 0012.
+
 ## Seguridad y privacidad (noviembre de 2026)
 
 **Cambios de esta versión (requiere migración `0013`):**
