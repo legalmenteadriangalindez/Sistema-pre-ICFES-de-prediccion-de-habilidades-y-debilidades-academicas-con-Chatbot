@@ -1,0 +1,387 @@
+/* Sección 3: módulos de páginas. Continuación de la cascada. */
+.preicfes-ui .btn-outline-primary {
+  border-radius:11px
+}
+
+.preicfes-ui .form-control,.preicfes-ui .form-select {
+  border-color:#cbddf3;
+  border-radius:12px;
+  padding:12px
+}
+
+.preicfes-ui .modal-content {
+  border-radius:20px
+}
+
+.preicfes-ui .page-intro {
+  padding:31px 34px;
+  border:1px solid #d4e7fa;
+  border-radius:22px;
+  background:linear-gradient(110deg,var(--ds-white),#e9f6ff);
+  margin-bottom:23px
+}
+
+.preicfes-ui .page-intro h1 {
+  font-size:30px;
+  margin:6px 0
+}
+
+.preicfes-ui .page-intro p {
+  font-size:13px;
+  color:#667d9a;
+  max-width:730px
+}
+
+.preicfes-ui .empty-card {
+  display:grid;
+  place-items:center;
+  text-align:center;
+  gap:12px;
+  padding:45px 22px;
+  min-height:260px;
+  background:var(--ds-white);
+  border:1px solid #e0eaf7;
+  border-radius:20px;
+  box-shadow:var(--pc-shadow)
+}
+
+.preicfes-ui .empty-card>i {
+  display:grid;
+  place-items:center;
+  width:66px;
+  height:66px;
+  border-radius:19px;
+  background:#e7f3ff;
+  color:#0757ca;
+  font-size:26px
+}
+
+.preicfes-ui .empty-card h2 {
+  font-size:20px
+}
+
+.preicfes-ui .empty-card p {
+  font-size:12px;
+  color:#7389a5;
+  max-width:500px
+}
+
+.preicfes-ui .subject-grid {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;
+  margin:22px 0
+}
+
+.preicfes-ui .subject-card {
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  text-align:left;
+  background:var(--ds-white);
+  border:1px solid #ddeafb;
+  border-radius:20px;
+  padding:21px;
+  min-height:180px;
+  box-shadow:var(--pc-shadow);
+  transition:transform .18s,box-shadow .18s
+}
+
+.preicfes-ui .subject-card:hover {
+  transform:translateY(-2px);
+  box-shadow:0 18px 31px #0a56af1c
+}
+
+.preicfes-ui .subject-card i {
+  display:grid;
+  place-items:center;
+  width:47px;
+  height:47px;
+  background:#e6f2ff;
+  border-radius:14px;
+  color:#0759cb;
+  font-size:20px;
+  margin-bottom:13px
+}
+
+.preicfes-ui .subject-card strong {
+  font-size:15px;
+  color:#0d2d64
+}
+
+.preicfes-ui .subject-card small {
+  font-size:11px;
+  color:#7587a1;
+  line-height:1.6;
+  margin:6px 0 16px
+}
+
+.preicfes-ui .subject-card span {
+  color:#0759c9;
+  font-size:11px;
+  font-weight:900;
+  margin-top:auto
+}
+
+.preicfes-ui .practice-results {
+  margin-top:24px
+}
+
+.preicfes-ui .practice-results > section,.preicfes-ui .practice-results > .container {
+  max-width:none!important;
+  width:100%!important;
+  background:var(--ds-white);
+  border:1px solid var(--ds-border);
+  border-radius:18px;
+  padding:24px;
+  margin:16px 0!important
+}
+
+.preicfes-ui .practice-results fieldset {
+  border-radius:13px!important
+}
+
+.preicfes-ui .history-series {
+  margin-top:18px
+}
+
+.preicfes-ui .history-series h2 {
+  font-size:20px;
+  margin-bottom:12px
+}
+
+.preicfes-ui .history-score {
+  display:inline-flex;
+  align-items:center;
+  background:#e5f3ff;
+  padding:7px 12px;
+  border-radius:11px;
+  color:#0753c1;
+  font-weight:900
+}
+
+@media(max-width:1280px) {
+  .preicfes-ui .top-links a {
+    font-size:11px!important;
+    padding:9px 8px
+  }
+
+  .preicfes-ui .app-sidebar {
+    width:207px;
+    flex-basis:207px
+  }
+
+  .preicfes-ui .app-main {
+    width:calc(100% - 207px)
+  }
+
+  .preicfes-ui .stats-grid {
+    grid-template-columns:repeat(2,minmax(0,1fr))
+  }
+
+  .preicfes-ui .dash-columns {
+    grid-template-columns:minmax(0,1.4fr) minmax(260px,.85fr)
+  }
+
+}
+
+@media(max-width:1000px) {
+  .preicfes-ui .top-links {
+    display:none!important
+  }
+
+  .preicfes-ui .menu-toggle {
+    display:block
+  }
+
+  .preicfes-ui .user-actions {
+    margin-left:auto
+  }
+
+  .preicfes-ui .app-sidebar {
+    display:none;
+    position:fixed;
+    z-index:89;
+    left:0;
+    top:78px;
+    width:270px;
+    height:calc(100vh - 78px);
+    box-shadow:18px 0 35px #0c306135
+  }
+
+  .preicfes-ui .app-sidebar.open {
+    display:block
+  }
+
+  .preicfes-ui .app-main {
+    width:100%
+  }
+
+  .preicfes-ui .dash-columns {
+    grid-template-columns:1fr
+  }
+
+  .preicfes-ui .dash-aside {
+    grid-template-columns:repeat(2,minmax(0,1fr))
+  }
+
+  .preicfes-ui .dash-aside .widget:last-child {
+    grid-column:1/-1
+  }
+
+}
+
+@media(max-width:700px) {
+  .preicfes-ui .app-topbar {
+    min-height:67px;
+    padding:10px 13px
+  }
+
+  .preicfes-ui .app-brand {
+    font-size:19px
+  }
+
+  .preicfes-ui .app-brand i {
+    font-size:21px
+  }
+
+  .preicfes-ui .user-link>span:last-child {
+    display:none
+  }
+
+  .preicfes-ui .app-sidebar {
+    top:67px;
+    height:calc(100vh - 67px)
+  }
+
+  .preicfes-ui .app-main {
+    padding:15px 12px 0!important
+  }
+
+  .preicfes-ui .dash-hero {
+    padding:22px;
+    min-height:190px;
+    gap:5px
+  }
+
+  .preicfes-ui .dash-hero h1 {
+    font-size:25px
+  }
+
+  .preicfes-ui .hero-art {
+    min-width:88px;
+    max-width:28%
+  }
+
+  .preicfes-ui .hero-art img {
+    max-height:135px
+  }
+
+  .preicfes-ui .dash-hero p {
+    font-size:12px
+  }
+
+  .preicfes-ui .stats-grid {
+    gap:9px
+  }
+
+  .preicfes-ui .stat-card {
+    padding:12px;
+    gap:9px;
+    min-height:100px
+  }
+
+  .preicfes-ui .stat-card strong {
+    font-size:22px
+  }
+
+  .preicfes-ui .stat-icon {
+    width:38px;
+    height:38px;
+    font-size:17px
+  }
+
+  .preicfes-ui .tools-grid,.preicfes-ui .dash-aside,.preicfes-ui .subject-grid {
+    grid-template-columns:1fr
+  }
+
+  .preicfes-ui .tutor-header {
+    padding:16px
+  }
+
+  .preicfes-ui .tutor-icon {
+    width:46px;
+    height:46px;
+    border-radius:13px
+  }
+
+  .preicfes-ui .tutor-icon img {
+    width:39px;
+    height:39px
+  }
+
+  .preicfes-ui .tutor-header h2 {
+    font-size:15px
+  }
+
+  .preicfes-ui .tutor-header p {
+    font-size:10px
+  }
+
+  .preicfes-ui .tutor-label {
+    font-size:0;
+    width:23px;
+    height:23px;
+    padding:8px
+  }
+
+  .preicfes-ui .tutor-card #respuesta.conversation-list {
+    min-height:230px!important;
+    padding:15px!important
+  }
+
+  .preicfes-ui .chat-suggestions {
+    padding:0 14px 14px
+  }
+
+  .preicfes-ui .chat-suggestions>span {
+    display:none
+  }
+
+  .preicfes-ui .tutor-form {
+    padding:13px
+  }
+
+  .preicfes-ui .bubble-avatar {
+    display:none
+  }
+
+  .preicfes-ui .chat-message-group {
+    max-width:90%
+  }
+
+  .preicfes-ui .app-footer {
+    font-size:10px
+  }
+
+  .preicfes-ui .page-intro {
+    padding:22px
+  }
+
+  .preicfes-ui .page-intro h1 {
+    font-size:25px
+  }
+
+}
+
+@media(prefers-reduced-motion:reduce) {
+  html {
+    scroll-behavior:auto
+  }
+
+  .preicfes-ui * {
+    animation:none!important;
+    transition:none!important
+  }
+
+}
