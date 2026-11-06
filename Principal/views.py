@@ -81,6 +81,11 @@ def home(request):
     # enviamos a los gestores a su panel antes de cargar el tutor estudiantil.
     if es_gestor(user):
         return redirect("admin_gestion_users")
+    # Enrutamiento por rol antes de inicializar el chatbot de estudiantes.
+    if PerfilUsuario.objects.filter(user=user, roles__nombre__iexact="DOCENTE").exists():
+        return redirect("panel_docente")
+    if PerfilUsuario.objects.filter(user=user, roles__nombre__iexact="ACUDIENTE").exists():
+        return redirect("acudiente")
     persona = getattr(user, "persona", None)
     estudiante = getattr(persona, "estudiante", None) if persona else None
     user_id = str(user.id)
