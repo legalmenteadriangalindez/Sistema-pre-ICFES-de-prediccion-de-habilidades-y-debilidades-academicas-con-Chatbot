@@ -13,6 +13,7 @@
 <a href="{% url 'admin_gestion_users' %}"><i class="fas fa-users"></i> Usuarios</a>
 <a href="{% url 'gestion_acudientes_estudiantes' %}" {% if request.resolver_match.url_name == 'gestion_acudientes_estudiantes' %}aria-current="page"{% endif %}><i class="fas fa-user-group"></i> Estudiantes y acudientes</a>
 <a href="{% url 'admin_gestion_db' %}" {% if request.resolver_match.url_name == 'admin_gestion_db' %}aria-current="page"{% endif %}><i class="fas fa-database"></i> Base de datos</a>
+<a href="{% url 'admin_asignaciones_docentes' %}" {% if request.resolver_match.url_name == 'admin_asignaciones_docentes' %}aria-current="page"{% endif %}><i class="fas fa-user-shield"></i> Permisos docentes</a>
 {% endblock %}
 {% block sidebar_quick %}
 <a class="quick-blue" href="{% url 'admin_gestion_users' %}"><i class="fas fa-user-plus"></i> Administrar usuarios</a>
