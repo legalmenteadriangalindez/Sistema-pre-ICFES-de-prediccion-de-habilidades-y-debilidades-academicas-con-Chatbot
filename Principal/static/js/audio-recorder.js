@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
           input.files = transfer.files;
           input.dispatchEvent(new Event('change', { bubbles: true }));
           announce('Grabación lista. Puedes enviarla al tutor.');
-        } catch (_) {
+        } catch {
           announce('No se pudo adjuntar la grabación. Intenta nuevamente.');
         } finally {
           release();
@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
       recorder.start();
       stop.disabled = false;
       announce('Grabando audio…');
-    } catch (_) {
+    } catch {
       announce('No se pudo acceder al micrófono. Revisa el permiso del navegador.');
       release();
     }
