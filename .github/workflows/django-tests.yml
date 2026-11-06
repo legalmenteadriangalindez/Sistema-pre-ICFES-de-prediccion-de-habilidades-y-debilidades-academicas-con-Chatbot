@@ -1,4 +1,4 @@
-name: Pruebas Pre-ICFES
+name: Pruebas y calidad Pre-ICFES
 
 on:
   pull_request:
@@ -6,40 +6,75 @@ on:
     branches: [main]
   workflow_dispatch:
 
-jobs:
-  frontend:
-    runs-on: ubuntu-latest
-    timeout-minutes: 8
-    steps:
-      - name: Descargar repositorio
-        uses: actions/checkout@v4
-      - name: Preparar Node.js 22
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-      - name: Validar sintaxis de JavaScript
-        run: |
-          find Principal/static/js -type f -name '*.js' -print0 | xargs -0 -n1 node --check
-          node --check tests/javascript/smoke.test.cjs
-      - name: Probar módulos y páginas sin controles
-        run: node --test tests/javascript/*.test.cjs
+permissions:
+  contents: read
 
-  styles:
+concurrency:
+  group: calidad-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python-quality:
+    name: Ruff y Black
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
-      - name: Descargar repositorio
-        uses: actions/checkout@v4
-      - name: Preparar Python 3.12
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Instalar parser CSS
-        run: python -m pip install 'tinycss2>=1.3,<2'
-      - name: Comprobar sintaxis y cascada de CSS
+      - name: Instalar herramientas
+        run: python -m pip install -r requirements-quality.txt
+      - name: Ruff, errores críticos en todo el proyecto
+        run: ruff check .
+      - name: Ruff, reglas estrictas en módulos adoptados
+        run: ruff check --select E,F,I tests/browser/seed_ci.py Principal/IA/LangGraph/graph_chatbot/json_storage.py
+      - name: Black, formato comprobado en módulos adoptados
+        run: black --check tests/browser/seed_ci.py Principal/IA/LangGraph/graph_chatbot/json_storage.py
+
+  frontend:
+    name: ESLint y pruebas JavaScript
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Instalar herramientas Node
+        run: npm install --no-audit --no-fund --package-lock=false
+      - name: ESLint (JavaScript de aplicación y Playwright)
+        run: npm run lint:js
+      - name: Sintaxis JavaScript
+        run: |
+          find Principal/static/js tests/browser -type f \( -name '*.js' -o -name '*.cjs' \) -print0 | xargs -0 -n1 node --check
+          node --check tests/javascript/smoke.test.cjs
+      - name: Pruebas de JavaScript sin navegador
+        run: npm run test:js
+
+  styles:
+    name: Stylelint y CSS
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Instalar linters
+        run: |
+          npm install --no-audit --no-fund --package-lock=false
+          python -m pip install 'tinycss2>=1.3,<2'
+      - name: Stylelint (CSS del proyecto)
+        run: npm run lint:css
+      - name: Sintaxis, tokens, cascada y responsive
         run: python -m unittest discover -s tests/styles -p 'test_*.py' -v
 
   django:
+    name: Django: pruebas y migraciones
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
@@ -49,33 +84,68 @@ jobs:
       OLLAMA_BASE_URL: http://127.0.0.1:11434
       OLLAMA_MODEL: llama3:8b
     steps:
-      - name: Descargar repositorio
-        uses: actions/checkout@v4
-
-      - name: Preparar Python 3.12
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: pip
-
-      - name: Instalar dependencias
+      - name: Instalar dependencias de Django
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
-
-      - name: Verificar configuración y migraciones
+      - name: Configuración y migraciones
         run: |
           python manage.py check
           python manage.py makemigrations --check --dry-run
-
-      - name: Ejecutar todas las pruebas Django (sin Ollama)
+      - name: Suite completa sin Ollama real
         run: python manage.py test Principal --verbosity 2
-
-      - name: Comprobar seguridad de configuración (informativo)
+      - name: Seguridad de configuración (informativo)
         continue-on-error: true
         env:
           DJANGO_ENV: production
           DJANGO_DEBUG: "false"
-          DJANGO_SECRET_KEY: "ci-clave-de-prueba-no-usar-en-produccion-clave-muy-larga"
-          DJANGO_ALLOWED_HOSTS: "ejemplo.test"
+          DJANGO_SECRET_KEY: ci-clave-de-prueba-no-usar-en-produccion-clave-muy-larga
+          DJANGO_ALLOWED_HOSTS: ejemplo.test
         run: python manage.py check --deploy
+
+  browser:
+    name: Playwright Chromium
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      DJANGO_ENV: development
+      DJANGO_DEBUG: "true"
+      DJANGO_DB_PATH: ci-browser.sqlite3
+      DJANGO_ALLOWED_HOSTS: 127.0.0.1,localhost
+      OLLAMA_BASE_URL: http://127.0.0.1:11434
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Instalar Django y herramientas de navegador
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+          npm install --no-audit --no-fund --package-lock=false
+          npx playwright install --with-deps chromium
+      - name: Crear base efímera y cuentas E2E
+        run: |
+          python manage.py migrate --noinput
+          python manage.py shell -c "exec(open('tests/browser/seed_ci.py', encoding='utf-8').read())"
+      - name: Flujos reales de Chrome sin Ollama
+        run: npm run test:browser
+      - name: Adjuntar capturas y trazas si falla
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-failures
+          path: |
+            test-results/
+            playwright-report/
+          if-no-files-found: ignore
+          retention-days: 7
