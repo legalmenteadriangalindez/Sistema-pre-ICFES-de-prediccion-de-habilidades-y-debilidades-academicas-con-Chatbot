@@ -12,6 +12,7 @@ urlpatterns = [
   path('plan-semanal/', portal_academico.plan_estudio, name='plan_semanal'),
   path('diagnostico-academico/', portal_academico.diagnostico_academico, name='diagnostico_academico'),
   path('panel-docente/', portal_academico.panel_docente, name='panel_docente'),
+  path('admin/asignaciones-docentes/', views.gestion_docentes, name='admin_asignaciones_docentes'),
     
   path('',views.home,name="home"), # url home 
   path('testDeVocacion/',views.test,name="test"), # url test
