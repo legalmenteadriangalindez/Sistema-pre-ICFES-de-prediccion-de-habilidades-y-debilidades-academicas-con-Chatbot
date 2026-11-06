@@ -31,25 +31,25 @@
 
         <h5 class="mt-3 ">Datos de acceso</h5>
         <div>
-             <div>Nombre de usuario: {{ user_form.username }}</div>
-             <div class="col-md-12"><label class="form-label">Correo electrónico</label>{{ user_form.email }}</div>
-             <div><label class="form-label">contraseña:</label>{{ user_form.password1 }}</div>
-             <div><label for="" class="form-label">Verifique su contraseña:</label>{{ user_form.password2 }}</div>
+             {% include "components/form_field.html" with field=user_form.username label_text="Nombre de usuario" wrapper_class="mb-3" only %}
+             {% include "components/form_field.html" with field=user_form.email label_text="Correo electrónico" wrapper_class="col-md-12" only %}
+             {% include "components/form_field.html" with field=user_form.password1 label_text="Contraseña" only %}
+             {% include "components/form_field.html" with field=user_form.password2 label_text="Verifique su contraseña" only %}
         </div>
         <hr>
 
         <h5 class="mt-3">Datos personales</h5>
         <div class="input-continer row g-3">
-             <div class="input col-md-6"><label for="" class="form-label">Nombre:</label> {{ persona_form.nombre }}</div>
-             <div class="input col-md-6"><label for="" class="form-label">Apellido:</label> {{ persona_form.apellido}}</div>
-             <div class="input col-md-6"><label for="" class="form-label">Documento:</label> {{ persona_form.documento}}</div>
-             <div class="input col-md-6"><label for="" class="form-label">Fecha de nacimiento: </label>{{ persona_form.fecha_nacimiento}}</div>
-             <div class="input col-md-6"><label for="" class="form-label">Sexo:</label> {{ persona_form.sexo}}</div>
-             <div class="input col-md-6"><label for="" class="form-label">Direccion:</label> {{ persona_form.direccion}}</div>
-             <div class="input col-md-6"><label for="" class="form-label">Telefono:</label> {{ persona_form.telefono}}</div>
+             {% include "components/form_field.html" with field=persona_form.nombre label_text="Nombre" wrapper_class="input col-md-6" only %}
+             {% include "components/form_field.html" with field=persona_form.apellido label_text="Apellido" wrapper_class="input col-md-6" only %}
+             {% include "components/form_field.html" with field=persona_form.documento label_text="Documento" wrapper_class="input col-md-6" only %}
+             {% include "components/form_field.html" with field=persona_form.fecha_nacimiento label_text="Fecha de nacimiento" wrapper_class="input col-md-6" only %}
+             {% include "components/form_field.html" with field=persona_form.sexo label_text="Sexo" wrapper_class="input col-md-6" only %}
+             {% include "components/form_field.html" with field=persona_form.direccion label_text="Dirección" wrapper_class="input col-md-6" only %}
+             {% include "components/form_field.html" with field=persona_form.telefono label_text="Teléfono" wrapper_class="input col-md-6" only %}
              
              <h5 class="mt-3">Datos académicos</h5>
-             <div class="input col-md-6"><label for="" class="form-label">Nesecidades especiales:</label> {{ estudiante_form.necesidades_especiales}}</div>
+             {% include "components/form_field.html" with field=estudiante_form.necesidades_especiales label_text="Necesidades especiales" wrapper_class="input col-md-6" only %}
              
              
         </div>
