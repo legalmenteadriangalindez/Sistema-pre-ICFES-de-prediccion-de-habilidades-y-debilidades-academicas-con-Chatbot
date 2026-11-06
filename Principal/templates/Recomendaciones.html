@@ -1,107 +1,12 @@
-{% extends "./home.html" %}
+{% extends 'app_shell.html' %}
 {% block title %}Recomendaciones{% endblock %}
-
-{% block content %}  
-<br>
-<br>
-<h1>Recomendaciones</h1> 
-
-<div class="container mt-5">
-    <h2>Analisis del perfil Academico </h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID del usuario</th>
-                <th>Nombre</th>
-                <th>Ritmo de aprendizaje</th>
-                <th>Estilo de aprendizaje</th>
-                <th>Nivel general del estudiante </th>
-
-                <th>Dudas frecuentes</th>
-                <th>Areas fuertes</th>
-                <th>Areas debiles</th>
-                <th>Ultima Actualizacion del analisis cognitivo </th>               
-            </tr>
-        </thead>
-        <tbody>
-            {% for p in perfil_pedagogico %}
-            <tr>
-                <td>{{p.id}}</td>
-                <td>{{p.estudiante.persona.nombre}}</td>
-                <td>{{p.ritmo}}</td>
-                <td>{{p.estilo}}</td>
-            {% endfor %}
-            {% for a in analisis_cognitivo %}
-                <td>{{a.nivel_general.nombre}}</td>
-                <td>{{a.dudas_frecuentes}}</td>
-                <td>{{a.areas_fuertes}}</td>
-                <td>{{a.areas_debiles}}</td>
-                <td>{{a.fecha}}</td>
-            </tr>
-            {%endfor%}
-        </tbody>
-    </table>
-</div>
-
-<div class="container mt-5">
-    <h2>Recomendaciones Vocacionales para el perfil cognitivo del usuario</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID del usuario</th>
-                <th>Carreras</th>
-                <th>Porcentaje de compatibilidad</th>
-                <th>Conocimientos nesesarios</th>
-                <th>Puntajes nesesarios</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for r in recomendacion_vocacional %}
-            <tr>
-                <td>{{r.id}}</td>
-                <td>{{r.carrera}}</td>
-                <td>{{r.compatibilidad}}</td>
-                <td>{{r.conocimientos_necesarios}}</td>
-                <td>{{r.puntaje_requerido}}</td>
-                <td>{{r.fecha}}</td>
-            </tr>
-            <tr>
-                <td>Progreso</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-
-<div class="container mt-5">
-    <h2>Materiales de estudio recomendados</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID del usuario</th>
-                <th>Materia</th>
-                <th>Tema</th>
-                <th>Enlace</th>
-                <th>Marcar como completado</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for m in material_estudio_recomendado %}
-            <tr>
-                <td>{{m.id}}</td>
-                <td>{{m.material}}</td>
-                <td>{{m.material.tema}}</td>
-                <td>{{m.material.url}}</td>
-                <td>{{m.activo}}</td>
-               
-            </tr>
-            <tr>
-                <td>Progreso</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-</div>
-
+{% block content %}
+<div class="dash recommendations-page"><section class="page-intro"><span class="eyebrow"><i class="fas fa-sparkles"></i> ORIENTACIÓN PERSONALIZADA</span><h1>Recomendaciones para {{ user.first_name|default:user.username|capfirst }}</h1><p>Descubre qué estudiar y cómo mejorar tu preparación con los registros de tu perfil académico.</p></section>
+{% if error %}<div class="alert alert-warning" role="alert">{{ error }}</div>{% endif %}
+<div class="recommendation-grid"><aside class="recommendation-side"><section class="ui-card"><div class="widget-title"><h2><i class="fas fa-user-graduate"></i> Tu perfil académico</h2></div>{% if analisis_cognitivo %}<div class="profile-tip mint"><strong><i class="fas fa-thumbs-up"></i> Fortalezas</strong><p>{{ analisis_cognitivo.areas_fuertes|default:"Por identificar" }}</p></div><div class="profile-tip blue"><strong><i class="far fa-lightbulb"></i> Áreas de mejora</strong><p>{{ analisis_cognitivo.areas_debiles|default:"Por identificar" }}</p></div><div class="profile-tip gold"><strong><i class="fas fa-chart-simple"></i> Nivel actual</strong><p>{{ analisis_cognitivo.nivel_general }}</p></div>{% else %}<p class="widget-empty">Tus fortalezas se mostrarán cuando se registren suficientes resultados.</p>{% endif %}{% if perfil_pedagogico %}<p class="widget-empty">Ritmo: {{ perfil_pedagogico.ritmo }} · Estilo: {{ perfil_pedagogico.estilo }}</p>{% endif %}</section>
+<section class="ui-card"><h2 class="section-small-title"><i class="fas fa-route"></i> Ruta de aprendizaje sugerida</h2><ol class="learning-steps"><li>Completa cuestionarios por materias.</li><li>Revisa tus fortalezas y áreas de mejora.</li><li>Explora carreras relacionadas con tus intereses.</li></ol><a class="pill-button solid" href="{% url 'test' %}">Continuar practicando</a></section></aside>
+<div class="recommendation-content"><section class="ui-card"><div class="widget-title"><h2><i class="fas fa-sparkles"></i> Carreras recomendadas</h2><a href="{% url 'comparadorDeCarreras' %}">Comparar carreras →</a></div><div class="career-grid">
+{% for r in recomendacion_vocacional %}<article class="career-tile"><span class="stat-icon blue"><i class="fas fa-graduation-cap"></i></span><h3>{{ r.carrera.nombre }}</h3><span class="career-affinity">Índice de afinidad: {{ r.compatibilidad }}</span><p>{{ r.carrera.descripcion|default:r.conocimientos_necesarios|truncatechars:180 }}</p><a class="pill-button outline" href="{% url 'comparadorDeCarreras' %}">Comparar</a></article>
+{% empty %}<div class="empty-card inline"><i class="fas fa-compass"></i><h2>Sin carreras calculadas todavía</h2><p>Explora las carreras registradas y realiza cuestionarios para ampliar tu perfil.</p><a class="pill-button outline" href="{% url 'comparadorDeCarreras' %}">Explorar carreras</a></div>{% endfor %}</div></section>
+<section class="ui-card"><div class="widget-title"><h2><i class="fas fa-book-open"></i> Materiales recomendados</h2><a href="{% url 'actividadesUsuario' %}">Mis actividades →</a></div>{% for m in material_estudio_recomendado %}<div class="material-row"><i class="fas fa-book"></i><div><strong>{{ m.material.titulo }}</strong><small>{{ m.material.tema.nombre }}</small></div>{% if m.material.url %}<a class="pill-button outline" target="_blank" rel="noopener noreferrer" href="{{ m.material.url }}">Abrir</a>{% endif %}</div>{% empty %}<p class="widget-empty">Todavía no tienes materiales asignados.</p>{% endfor %}</section></div></div></div>
 {% endblock %}

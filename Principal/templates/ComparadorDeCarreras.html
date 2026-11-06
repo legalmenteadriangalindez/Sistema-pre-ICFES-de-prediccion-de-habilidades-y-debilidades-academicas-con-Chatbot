@@ -1,9 +1,7 @@
-{% extends "./home.html" %}
-{% block title %} carreras {% endblock %}
-
-{% block contet %}  
-<br>
-<br>
-<h1>Comparar carreras</h1> 
-
+{% extends 'app_shell.html' %}
+{% block title %}Explorar carreras{% endblock %}
+{% block content %}
+<div class="dash career-page"><section class="page-intro"><span class="eyebrow"><i class="fas fa-scale-balanced"></i> TU FUTURO PROFESIONAL</span><h1>Explorar carreras</h1><p>Consulta las carreras registradas en la plataforma. Los detalles se muestran sin inventar salarios ni índices de afinidad.</p></section><div class="career-grid">
+{% for carrera in carreras %}<article class="ui-card career-tile"><span class="stat-icon blue"><i class="fas fa-graduation-cap"></i></span><h2>{{ carrera.nombre }}</h2><p>{{ carrera.descripcion|default:"Descripción aún no registrada." }}</p></article>{% empty %}<div class="empty-card"><i class="fas fa-compass"></i><h2>Todavía no hay carreras registradas</h2><p>Cuando el administrador añada carreras, aparecerán aquí.</p></div>{% endfor %}
+</div></div>
 {% endblock %}

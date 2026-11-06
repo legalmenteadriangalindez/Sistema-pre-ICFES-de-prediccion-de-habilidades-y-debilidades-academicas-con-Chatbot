@@ -1,160 +1,19 @@
-{% extends "./home.html" %}
-{% block title %} Test de práctica {% endblock %}
+{% extends 'app_shell.html' %}
 {% load static %}
-{% block extra_head %}
-    {{ block.super }}
-    <link rel="stylesheet" href="{% static 'css/test.css' %}">
-{% endblock %}
-
-{% block content %}  
-<br>
-<br>
-<!-- ==================================================CHAT================================================= -->
-<br>
-<div id="chatContainer" class="chat chat-container">
-<h1>Tu tutor académico con inteligencia artificial</h1>
-  <div class="chat-header">
-    <div>
-      <form action="{% url 'home' %}" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="chat_id" value="{{ chat_id }}">
-        <button type="submit" name="nuevo_chat" class="new-chat-btn">
-          <i class="fas fa-plus"></i> Nuevo Chat
-        </button>
-      </form>
-    </div>
-
-    <div class="chat-title">
-      Asistente de orientación académica
-    </div>
-  </div>
-
-  <form method="post" action="{% url 'home' %}" enctype="multipart/form-data">
-    {% csrf_token %}
-    <input type="hidden" name="chat_id" value="{{ chat_id }}">
-
-    <div class="chat-input-area">
-      <div id="areaDeTexto" class="chat-input-area">
-        <!-- <label class="chat-label">Preguntar a la IA :</label><br> -->
-
-              <!-- ==============================RESPUESTA===================================-->
-              <div id="respuesta" class="chat-history">
-              
-                  <div class="history-container">
-                      <div class="mensages ">
-                          {% for turn  in historial %}
-              
-                          {% if turn.usuario != "None" %}
-                
-                      <div class="message user">
-                          <div class="message-header">
-                              <div class="message-sender">
-                                  <strong>User:</strong>
-                              </div>
-                              <div class="message-time">Hace 5 min</div>
-                          </div>
-                          <div class="message-content">
-                              {{ turn.usuario }}
-                          </div>
-                      </div>
-                  {% endif %}
-              
-                  {% if turn.respuesta %}
-              
-                      <div class="message ai">
-                          <div class="message-header">
-                              <div class="message-sender">
-                                  <strong>IA:</strong>
-                              </div>
-                              <div class="message-time">Hace 5 min</div>
-                          </div>
-                          <div class="message-content">
-                              {{ turn.respuesta }}
-                          </div>
-                      </div>
-                  {% endif %}
-              
-                          {% empty %}
-                                 <p>Aún no hay conversaciones. Cuando inicies un chat, aparecerá aquí.</p>
-                          {% endfor %}
-                      </div>
-              
-                      <section class="response-section">
-                        <div class="response-container">
-                          <div class="response-header">
-                             <i class="fas fa-comment-dots"></i><h2>Respuesta generada por la IA:</h2>
-                          </div>
-                          <div class="response-content">
-                             {{ response }}
-                          </div>
-                        </div>   
-                      </section>
-              
-                  </div>
-              </div> 
-            <!-- **************************************CHAT***************************************************** -->
-        <textarea name="prompt" class="chat-textarea"
-          placeholder="Escribe tu pregunta aqui...">{{ audio_usuario }}</textarea>
-
-      </div>
-      
-    
-    </div>
-
-    <div class="chat-controls">
-      <div class="file-upload-btn">
-        <i class="fas fa-file-upload"></i>
-        Subir archivo
-        <input type="file"
-          accept="application/pdf,.doc,.docx,.xls,.xlsx,.txt"
-          name="archivo">
-      </div>
-
-      <div class="voice-controls">
-        <input type="file" name="audio" id="audioInput" hidden>
-        <button type="button" id="grabar" class=" voice-btn-record">🎙️Grabar</button>
-        <button type="button" id="detener" disabled class="voice-btn-stop">⏹️ Detener</button>
-      </div>
-          <button id="generar" type="submit" class="generate-btn">
-          <i class="fas fa-bolt"></i> Generar respuesta
-          </button>
-    </div>
-  </form>
-</div>
-<br>
-
-     <div class="history-chats-container">
-      <h1>Historial de conversaciones</h1>
-        <div class="history-header">
-          <div class="container-btn-clear"> 
-                <form action="{% url 'home' %}" method="post">
-                    {% csrf_token %}             
-                    <input type="hidden" name="chat_id" value="{{ chat_id }}">
-                    <button class="clear-history-btn" id="borrarHistorial" type="submit" name="borrarHistorial"><i class=" fas fa-trash-alt"></i> Borrar historial</button>
-                </form>
-          </div>
-        </div>
-      
-    </div>
-    <br><br><br>
-
-    <br>
-<!-- ********************************RESPUESTA*********************************** -->
-
-
-
-<br>
-<div class="materias">
-   <form action="{% url 'test' %}" method="POST">
-    {% csrf_token %}
-   <button type="submit" class="boton_Materias"  name="materia" value="Lectura Critica"><i class="fa fa-book-reader"></i> Lectura Critica</button>
-   <button type="submit" class="boton_Materias"  name="materia" value="Matematicas"><i class="fa fa-calculator"></i> Matematicas</button>
-   <button type="submit" class="boton_Materias"  name="materia" value="Sociales y ciudadanas"><i class="fa fa-globe-americas"></i> Sociales y ciudadanas</button>
-   <button type="submit" class="boton_Materias"  name="materia" value="Ciencias Naturales"><i class="fa fa-flask"></i> Ciencias Naturales</button>
-   <button type="submit" class="boton_Materias"  name="materia" value="Ingles"><i class="fa fa-language"></i> Ingles</button>
-   </form>
-</div>
-<!-- ========================================OPCIONES============================================ -->
+{% block title %}Cuestionarios de práctica{% endblock %}
+{% block content %}
+<div class="dash practice-page">
+<section class="page-intro"><span class="eyebrow"><i class="fas fa-clipboard-question"></i> ENTRENAMIENTO POR ÁREAS</span><h1>Cuestionarios de práctica</h1><p>Elige una materia, responde las preguntas y revisa tus resultados con explicaciones para seguir aprendiendo.</p></section>
+<div class="practice-header"><div><span class="eyebrow">ELIGE CÓMO PRACTICAR</span><h2>¿Qué quieres repasar hoy?</h2></div><a class="pill-button outline" href="{% url 'home' %}#chatContainer"><i class="fas fa-robot"></i> Tutor con IA</a></div>
+<form method="post" action="{% url 'test' %}" class="subject-grid" aria-label="Seleccionar materia">{% csrf_token %}
+<button type="submit" name="materia" value="Lectura Critica" class="subject-card"><i class="fas fa-book-open-reader"></i><strong>Lectura crítica</strong><small>Analiza textos y fortalece tu comprensión.</small><span>Comenzar <b>→</b></span></button>
+<button type="submit" name="materia" value="Matematicas" class="subject-card"><i class="fas fa-calculator"></i><strong>Matemáticas</strong><small>Resuelve problemas y practica razonamiento.</small><span>Comenzar <b>→</b></span></button>
+<button type="submit" name="materia" value="Sociales y ciudadanas" class="subject-card"><i class="fas fa-globe-americas"></i><strong>Sociales y ciudadanas</strong><small>Historia, contexto y pensamiento crítico.</small><span>Comenzar <b>→</b></span></button>
+<button type="submit" name="materia" value="Ciencias Naturales" class="subject-card"><i class="fas fa-flask"></i><strong>Ciencias naturales</strong><small>Biología, física y química.</small><span>Comenzar <b>→</b></span></button>
+<button type="submit" name="materia" value="Ingles" class="subject-card"><i class="fas fa-language"></i><strong>Inglés</strong><small>Vocabulario y lectura.</small><span>Comenzar <b>→</b></span></button>
+</form>
+<div class="practice-info"><i class="fas fa-circle-info"></i> Tu prueba se calificará en el servidor y se guardará en tu historial académico.</div>
+<div class="practice-results">
 {% if error_prueba %}<div class="alert alert-warning">{{ error_prueba }}</div>{% endif %}
 {% if resultado_evaluacion %}
 <div class="alert alert-info" role="status">
@@ -239,11 +98,6 @@
 {% endif %}
 </section>
 {% endif %}
-<!-- ============================================================================================= -->
-
+</div></div>
 {% endblock %}
-
-{% block extra_js %}
-{{ block.super }}
-<script src="{% static 'js/test.js' %}" defer></script>
-{% endblock %}
+{% block extra_js %}<script src="{% static 'js/test.js' %}" defer></script>{% endblock %}

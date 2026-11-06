@@ -1,54 +1,10 @@
-{% extends "./home.html" %}
-{% block title %} carreras {% endblock %}
-
-{% block content %}  
-
-<h1>Actividades de Usuario</h1> 
-
-<div class="container mt-5">
-    <h2>Actividades asignadas al usuario</h2>
-    <table class="table">
-        <thead>
-
-            <tr>
-                <th>ID del usuario</th>
-                <th>Materia</th>
-                <th>Tema</th>
-                <th>Titulo</th>
-                <th>Descripcion</th>
-                <th>Nivel</th>
-                <th>Puntaje</th>
-                <th>Progreso</th>
-                <th>Marcar como completada</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for u in usuarios %}
-            <tr>
-                <td>{{u.id}}</td>
-                <td>{{u.username}}</td>
-                <td>{{u.email}}</td>
-                <td>{{u.PerfilUsuario.Rol.nombre}}</td>
-                <td>{{u.date_joined}}</td>
-                <td>{{u.is_active}}</td>
-                <!-- <td>{{u.activo}}</td> -->
-                <td><button class="btn btn-sm btn-primary">Editar</button></td>
-                <td><a href="{% url 'eliminar_admin_gestion_users' 'usuarios' u.id %}"><button  class="btn btn-sm btn-danger">Eliminar</button></a></td>
-                <td>
-                  <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="user1" checked>
-                    <label class="form-check-label" for="user1"></label>
-                  </div>
-                </td>
-            </tr>
-            <tr>
-                <td>Progreso</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-
+{% extends 'app_shell.html' %}
+{% block title %}Mis actividades{% endblock %}
+{% block content %}
+<div class="dash activities-page"><section class="page-intro"><span class="eyebrow"><i class="far fa-calendar-check"></i> ORGANIZACIÓN DEL ESTUDIO</span><h1>Mis actividades</h1><p>Consulta las tareas asignadas a tu matrícula y registra las que has terminado.</p></section>
+{% if error %}<div class="alert alert-warning" role="alert">{{ error }}</div>{% endif %}
+<section class="stats-grid compact-stats"><article class="ui-card stat-card"><span class="stat-icon blue"><i class="fas fa-list-check"></i></span><div><p>Actividades asignadas</p><strong>{{ total_actividades|default:0 }}</strong></div></article><article class="ui-card stat-card"><span class="stat-icon mint"><i class="fas fa-check"></i></span><div><p>Completadas</p><strong>{{ total_completadas|default:0 }}</strong></div></article></section>
+<section class="ui-card activity-list-card"><div class="widget-title"><h2><i class="fas fa-book-open"></i> Lista de actividades</h2><a href="{% url 'simulacros' %}">Practicar en simulacros →</a></div>
+{% for a in actividades %}<article class="assigned-activity"><span class="stat-icon blue"><i class="fas fa-book"></i></span><div><h3>{{ a.actividad.titulo }}</h3><p>{{ a.actividad.descripcion }}</p><small>{{ a.actividad.tema.materia }} · {{ a.actividad.tema }} · {{ a.actividad.nivel }}</small></div><form method="post">{% csrf_token %}<input type="hidden" name="actividad_id" value="{{ a.id }}"><button class="pill-button {% if a.completada %}outline{% else %}solid{% endif %}" name="marcar_completada" value="1" type="submit" {% if a.completada %}disabled{% endif %}>{% if a.completada %}<i class="fas fa-check"></i> Completada{% else %}Marcar completada{% endif %}</button></form></article>
+{% empty %}<div class="empty-card inline"><i class="far fa-calendar"></i><h2>No hay actividades asignadas</h2><p>Cuando tu institución asigne actividades, aparecerán aquí. Mientras tanto puedes practicar.</p><a class="pill-button solid" href="{% url 'simulacros' %}">Iniciar simulacro</a></div>{% endfor %}</section></div>
 {% endblock %}
-    
-
