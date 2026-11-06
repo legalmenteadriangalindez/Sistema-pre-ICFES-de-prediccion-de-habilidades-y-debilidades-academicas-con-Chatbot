@@ -74,6 +74,17 @@ En GitHub Actions la misma batería se ejecuta con Python 3.12 en solicitudes de
 
 **Cuentas demo:** solo disponibles en desarrollo local; crea o verifica con `python manage.py crear_usuarios_prueba`. Nunca subas `local.sqlite3`, `.env` ni contraseñas de producción.
 
+## Refactorización de JavaScript — fase 1 (noviembre de 2026)
+
+Se separaron navegación, preferencias, confirmaciones, chat, micrófono y
+filtros administrativos en módulos seguros para páginas sin esos controles.
+Las preferencias existentes se conservan y los scripts específicos se cargan
+solo donde se necesitan. Se retiraron `script.js` y cuatro archivos JS
+vacíos, después de revisar referencias.
+
+GitHub Actions ejecuta pruebas de Django **y** pruebas JavaScript Node sin
+dependencias adicionales. Ver [documentación de la fase 1](docs/REFACTORIZACION_JS_FASE_1.md).
+
 ## Predicción académica evaluable (noviembre de 2026)
 
 Se incorporó un **pipeline reproducible de aprendizaje automático**, pero **no se publica ningún resultado predictivo sin datos reales suficientes y evaluación aprobada**. No se han subido datos de estudiantes ni modelos entrenados al repositorio.
