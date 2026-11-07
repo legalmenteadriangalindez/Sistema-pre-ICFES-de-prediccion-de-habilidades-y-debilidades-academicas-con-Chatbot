@@ -1,0 +1,18 @@
+{% extends 'app_shell.html' %}
+{% load static %}
+{% block title %}Versiones de pregunta{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/alta-prioridad.css' %}">{% endblock %}
+{% block content %}
+<div class="dash cierre-page"><section class="section-hero"><span class="eyebrow">HISTORIAL DE APROBACIONES</span><h1>Versiones de pregunta</h1>
+  <p>Las versiones anteriores permanecen inmutables y se conservan las respuestas históricas de estudiantes.</p>
+  <a class="ui-btn ui-btn-outline" href="{% url 'banco_preguntas' %}">Volver al banco</a>
+</section>
+{% for v in versiones %}
+<section class="ui-card"><h2>Versión {{ v.numero_version }} · {{ v.get_estado_display }} {% if v.activo %}(vigente){% else %}(archivada){% endif %}</h2>
+<p><strong>Autor:</strong> {{ v.creado_por.username|default:"Autor anterior" }} · <strong>Revisión:</strong> {{ v.revisado_por.username|default:"Pendiente" }} · {{ v.revisado_en|date:"d/m/Y H:i" }}</p>
+<p>{{ v.materia }} · {{ v.competencia }} · {{ v.evidencia }}</p><h3>{{ v.enunciado }}</h3>
+<ul>{% for letra, opcion in v.opciones.items %}<li>{{ letra }}. {{ opcion }}</li>{% endfor %}</ul>
+<p><strong>Clave:</strong> {{ v.respuesta_correcta }} · <strong>Explicación:</strong> {{ v.explicacion }}</p>
+{% if v.observaciones_revision %}<p><strong>Observaciones:</strong> {{ v.observaciones_revision }}</p>{% endif %}</section>
+{% endfor %}</div>
+{% endblock %}
