@@ -1,7 +1,8 @@
-"""Cierre de operaciones sensibles de la demostración gratuita.
+"""Permisos de la demo: misma navegación local, sin cambios de cuentas reales.
 
-Los usuarios y los datos del demo son sintéticos; no permitir altas reales,
-archivos, administración, correos ni cambios de identidad en instancia pública.
+Las cuatro vistas académicas principales siguen operativas con datos ficticios.
+Se permite inspeccionar administración sintética, pero no crear, editar ni borrar
+cuentas o catálogos desde un servidor público con contraseñas compartidas.
 """
 from django.conf import settings
 from django.http import HttpResponseForbidden, HttpResponseNotFound
@@ -18,17 +19,11 @@ class BloqueoDemoMiddleware:
         if not settings.DEMO_MODE:
             return None
 
-        if (
-            request.path.startswith("/admin/")
-            or request.path.startswith("/admin_gestion_")
-            or request.path.startswith("/gestion_acudientes_estudiantes/")
-        ):
-            return HttpResponseNotFound(
-                "La administración no está disponible en la demo."
-            )
-
+        # Django admin real no está expuesto. Solo paneles propios con roles.
         if request.path.startswith("/admin/"):
-            return HttpResponseNotFound("Administración no disponible en la demo.")
+            return HttpResponseNotFound(
+                "Administración Django no disponible en la demo."
+            )
 
         if request.FILES:
             return HttpResponseForbidden(
@@ -36,33 +31,48 @@ class BloqueoDemoMiddleware:
             )
 
         nombre = getattr(request.resolver_match, "url_name", "") or ""
-        cerradas = {
-            "registro", "verificar_correo", "admin_gestion_users",
-            "admin_gestion_db", "admin_gestion_academica",
-            "admin_matriculas_familias", "cargar_matriculas",
-            "admin_reportes_academicos", "exportar_reporte_matriculas",
-            "admin_asignaciones_docentes", "admin_editar_usuario",
-            "admin_editar_persona", "admin_editar_necesidades_estudiante",
-            "admin_editar_catalogo", "intervenciones_docente",
-            "editar_actividad_docente", "editar_matricula",
-            "exportar_mis_datos", "consentimiento_tutor",
-        }
-        if (
-            nombre in cerradas
-            or nombre.startswith("eliminar_")
-            or request.path.startswith("/gestion/")
-        ):
+        if nombre in {
+            "registro",
+            "verificar_correo",
+            "consentimiento_tutor",
+            "cargar_matriculas",
+            "exportar_reporte_matriculas",
+            "exportar_mis_datos",
+        }:
             return HttpResponseForbidden(
-                "La administración y el registro no están disponibles "
-                "en la demostración pública."
+                "Esta operación no está disponible en la demo pública."
             )
 
-        if request.method not in {"GET", "HEAD", "OPTIONS"} and (
-            nombre.startswith("eliminar_")
-            or request.path.startswith("/perfil/")
-            or request.path.startswith("/configuraciones/")
-        ):
+        # Desactivar recuperación/cambio de claves de las cuentas compartidas,
+        # pero conservar login/logout para explorar los cuatro roles.
+        if request.path.startswith("/accounts/") and nombre not in {
+            "login", "logout"
+        }:
             return HttpResponseForbidden(
-                "Los cambios de identidad no se permiten en la demo."
+                "No se pueden modificar credenciales en la demo pública."
             )
+
+        if nombre.startswith("eliminar_"):
+            return HttpResponseForbidden(
+                "Las eliminaciones no están disponibles en la demo pública."
+            )
+
+        if request.method not in {"GET", "HEAD", "OPTIONS"}:
+            # Paneles administrativos y docentes navegables en modo lectura.
+            rutas_lectura = (
+                "/gestion/",
+                "/admin_gestion_",
+                "/gestion_acudientes_estudiantes/",
+                "/panel-docente/",
+                "/banco-preguntas/",
+                "/perfil/",
+                "/configuraciones/",
+            )
+            if request.path.startswith(rutas_lectura) or nombre.startswith(
+                ("admin_", "editar_")
+            ):
+                return HttpResponseForbidden(
+                    "Puedes consultar los paneles, pero no modificarlos "
+                    "en esta demostración pública."
+                )
         return None
