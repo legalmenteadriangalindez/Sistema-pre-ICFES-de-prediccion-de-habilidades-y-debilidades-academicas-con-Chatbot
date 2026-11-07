@@ -1,0 +1,17 @@
+{% extends 'app_shell.html' %}
+{% block title %}Agenda de repetición espaciada{% endblock %}
+{% block content %}
+<div class="dash portal-page">
+<section class="section-hero"><span class="eyebrow">APRENDER A LARGO PLAZO</span><h1>Mis repasos programados</h1>
+<p>Después de cada práctica con preguntas aprobadas, el sistema programa repasos con intervalos crecientes cuando mejoras.</p>
+<a href="{% url 'practica_adaptativa' %}" class="ui-btn ui-btn-primary">Practicar los repasos pendientes</a></section>
+<section class="ui-card"><h2>Pendientes hoy: {{ pendientes|length }}</h2>
+{% for repaso in pendientes %}<article class="portal-list-row"><span><strong>{{ repaso.pregunta.materia }} · {{ repaso.pregunta.competencia }}</strong>
+<small>Programado para {{ repaso.proximo_repaso|date:'d/m/Y' }} · siguiente intervalo de {{ repaso.intervalo_dias }} días</small></span><span class="soft-chip">Por repasar</span></article>
+{% empty %}<p>No tienes repasos vencidos. Puedes seguir practicando nuevas preguntas.</p>{% endfor %}
+</section>
+<section class="ui-card"><h2>Próximas revisiones</h2>
+{% for repaso in proximos %}<p>{{ repaso.pregunta.materia }} · {{ repaso.pregunta.competencia }} — {{ repaso.proximo_repaso|date:'d/m/Y' }}</p>
+{% empty %}<p>La agenda se construirá después de resolver preguntas del banco aprobado.</p>{% endfor %}
+</section></div>
+{% endblock %}
