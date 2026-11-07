@@ -74,6 +74,17 @@ En GitHub Actions la misma batería se ejecuta con Python 3.12 en solicitudes de
 
 **Cuentas demo:** solo disponibles en desarrollo local; crea o verifica con `python manage.py crear_usuarios_prueba`. Nunca subas `local.sqlite3`, `.env` ni contraseñas de producción.
 
+## Chatbot con responsabilidades separadas — fase 8 (noviembre de 2026)
+
+La portada del tutor separa preparación GET, acciones POST y sincronización
+de perfiles académicos. Abrir la página ya no actualiza el perfil pedagógico;
+solo una respuesta satisfactoria puede iniciar esa sincronización.
+El grafo LangGraph respeta el retorno booleano del extractor y evita
+almacenar el mismo recuerdo dos veces. No se modificaron rutas,
+migraciones ni esquemas de las memorias.
+
+[Detalles, compatibilidad y pruebas de la fase 8](docs/FASE_8_CHATBOT_RESPONSABILIDADES.md).
+
 ## Calidad automática y pruebas de navegador — fase 7 (noviembre de 2026)
 
 El repositorio cuenta con Ruff y Black para Python, ESLint 10 para
