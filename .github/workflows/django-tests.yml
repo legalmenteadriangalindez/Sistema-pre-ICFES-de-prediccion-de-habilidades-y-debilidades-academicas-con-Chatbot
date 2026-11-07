@@ -152,7 +152,7 @@ jobs:
           retention-days: 7
 
   render-free:
-    name: Render Free: instalación mínima
+    name: "Render Free: instalación mínima"
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
