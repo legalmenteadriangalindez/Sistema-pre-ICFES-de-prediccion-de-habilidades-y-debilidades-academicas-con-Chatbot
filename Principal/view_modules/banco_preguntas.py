@@ -208,13 +208,23 @@ def revisar_pregunta_banco(request, pregunta_id):
                 raise PermissionDenied("La pregunta cambió de estado o no tienes permiso.")
             if accion == "aprobar":
                 actual.full_clean()
+            # Cuando una revisión queda aprobada, solo la última versión
+            # puede aparecer en nuevas prácticas. El historial no se toca.
+            if accion == "aprobar" and actual.revision_de_id:
+                PreguntaBanco.objects.filter(pk=actual.revision_de_id).update(
+                    activo=False
+                )
+                PreguntaBanco.objects.filter(
+                    revision_de_id=actual.revision_de_id
+                ).exclude(pk=actual.pk).update(activo=False)
+                actual.activo = True
             actual.estado = "APROBADA" if accion == "aprobar" else "RECHAZADA"
             actual.observaciones_revision = observacion
             actual.revisado_por = request.user
             actual.revisado_en = timezone.now()
             actual.save(update_fields=(
                 "estado", "observaciones_revision", "revisado_por",
-                "revisado_en", "actualizado_en",
+                "revisado_en", "actualizado_en", "activo",
             ))
         messages.success(request, "Revisión guardada. Solo las aprobadas se publican.")
         return redirect("banco_preguntas")

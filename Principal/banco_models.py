@@ -33,6 +33,12 @@ class PreguntaBanco(models.Model):
     opciones = models.JSONField()
     respuesta_correcta = models.CharField(max_length=1)
     explicacion = models.TextField(max_length=2000)
+    # Historial inmutable: cada nueva revisión es otra fila con identidad propia.
+    revision_de = models.ForeignKey(
+        "self", null=True, blank=True, on_delete=models.PROTECT,
+        related_name="revisiones",
+    )
+    numero_version = models.PositiveIntegerField(default=1)
     huella = models.CharField(max_length=64, unique=True, editable=False)
     estado = models.CharField(max_length=12, choices=ESTADOS, default="BORRADOR")
     origen = models.CharField(max_length=8, choices=ORIGENES, default="DOCENTE")
@@ -52,6 +58,12 @@ class PreguntaBanco(models.Model):
 
     class Meta:
         ordering = ("-creado_en", "-pk")
+        constraints = [
+            models.UniqueConstraint(
+                fields=["revision_de", "numero_version"],
+                name="unique_version_por_pregunta_raiz",
+            ),
+        ]
 
     @staticmethod
     def generar_huella(materia, enunciado):
@@ -77,12 +89,25 @@ class PreguntaBanco(models.Model):
             raise ValidationError({"respuesta_correcta": "La respuesta debe ser A, B, C o D."})
         if not self.competencia.strip() or not self.enunciado.strip() or not self.explicacion.strip():
             raise ValidationError("Competencia, pregunta y explicación son obligatorias.")
-        huella = self.generar_huella(self.materia, self.enunciado)
+        huella = self.huella_para_version()
+        if self.revision_de_id and (
+            self.numero_version < 2
+            or (self.revision_de and self.revision_de.revision_de_id is not None)
+        ):
+            raise ValidationError("La revisión debe apuntar a la primera versión.")
         if PreguntaBanco.objects.filter(huella=huella).exclude(pk=self.pk).exists():
             raise ValidationError({"enunciado": "Ya existe esta pregunta para la misma materia."})
 
+    def huella_para_version(self):
+        base = self.generar_huella(self.materia, self.enunciado)
+        if self.revision_de_id:
+            return hashlib.sha256(
+                f"{base}|raiz={self.revision_de_id}|v={self.numero_version}".encode("utf-8")
+            ).hexdigest()
+        return base
+
     def save(self, *args, **kwargs):
-        self.huella = self.generar_huella(self.materia, self.enunciado)
+        self.huella = self.huella_para_version()
         if kwargs.get("update_fields") is not None:
             kwargs["update_fields"] = set(kwargs["update_fields"]) | {"huella"}
         super().save(*args, **kwargs)

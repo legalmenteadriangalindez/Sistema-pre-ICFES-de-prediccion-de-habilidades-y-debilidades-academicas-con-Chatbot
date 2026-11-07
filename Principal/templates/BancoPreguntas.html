@@ -7,6 +7,7 @@
   <section class="section-hero">
     <span class="eyebrow"><i class="fas fa-book-open"></i> CALIDAD DE CONTENIDOS</span>
     <h1>Banco de preguntas y revisión docente</h1>
+    <a class="ui-btn ui-btn-outline" href="{% url 'calidad_banco' %}">Ver análisis estadístico de calidad</a>
     <p>Crea preguntas originales o guarda borradores sugeridos por IA. Solo se publican después de la aprobación de otro revisor autorizado.</p>
     <div class="hero-actions">
       <a class="ui-btn ui-btn-outline" href="{% url 'panel_docente' %}">Panel docente</a>
@@ -92,6 +93,12 @@
           {% if pregunta.observaciones_revision %}<p><strong>Observación del revisor:</strong> {{ pregunta.observaciones_revision }}</p>{% endif %}
         </div>
         <div class="bank-actions">
+          <a class="ui-btn ui-btn-outline" href="{% url 'historial_versiones_banco' pregunta.pk %}">Versiones</a>
+          {% if pregunta.estado == 'APROBADA' and pregunta.activo %}
+          <form method="post" action="{% url 'crear_revision_banco' pregunta.pk %}">{% csrf_token %}
+            <button type="submit" class="ui-btn ui-btn-outline">Proponer corrección v{{ pregunta.numero_version }}</button>
+          </form>
+          {% endif %}
           {% if pregunta.estado == 'BORRADOR' or pregunta.estado == 'RECHAZADA' %}
           <a class="ui-btn ui-btn-outline" href="{% url 'editar_pregunta_banco' pregunta.pk %}">Editar</a>
           <form method="post" action="{% url 'enviar_pregunta_revision' pregunta.pk %}">{% csrf_token %}
@@ -129,7 +136,8 @@
           <strong>{{ pregunta.enunciado|truncatechars:100 }}</strong>
           <p>{{ pregunta.materia }} · {{ pregunta.competencia }}{% if pregunta.evidencia %} · {{ pregunta.evidencia }}{% endif %} · {{ pregunta.get_dificultad_display }}</p>
         </div>
-        <span class="soft-chip">Aprobada</span>
+        <a href="{% url 'historial_versiones_banco' pregunta.pk %}" class="ui-btn ui-btn-outline">Versiones</a>
+        <span class="soft-chip">Aprobada v{{ pregunta.numero_version }}</span>
       </article>
       {% empty %}<p class="widget-empty">No hay preguntas aprobadas con estos filtros.</p>{% endfor %}
     </div>

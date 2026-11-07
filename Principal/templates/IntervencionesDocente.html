@@ -1,0 +1,34 @@
+{% extends 'app_shell.html' %}
+{% load static %}
+{% block title %}Planes de intervención docente{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/alta-prioridad.css' %}">{% endblock %}
+{% block content %}
+<div class="dash cierre-page"><section class="section-hero"><span class="eyebrow">ACOMPAÑAMIENTO DOCENTE</span><h1>Planes de intervención académica</h1>
+  <p>Diseña estrategias de recuperación por estudiante y competencia. Compara resultados antes y después sin afirmar causalidad.</p>
+  <a class="ui-btn ui-btn-outline" href="{% url 'panel_docente' %}">Regresar al panel</a>
+</section>
+<section class="ui-card"><h2>Asignar plan de recuperación</h2>
+<form method="post" class="cierre-form">{% csrf_token %}{{ formulario.as_p }}
+<button class="ui-btn ui-btn-primary" type="submit">Crear plan</button></form></section>
+<section class="ui-card"><h2>Mis intervenciones (últimas 100)</h2>
+{% for plan in intervenciones %}
+<article class="cierre-resultado">
+  <h3>{{ plan.matricula.estudiante.persona.nombre }} {{ plan.matricula.estudiante.persona.apellido }} · {{ plan.materia }} · {{ plan.competencia }}</h3>
+  <p>Objetivo: {{ plan.objetivo }} · Revisar antes de: {{ plan.fecha_revision|date:"d/m/Y" }} · {{ plan.get_estado_display }}</p>
+  <p>Actividades: {{ plan.actividades }}</p>
+  <p>Referencia inicial: {% if plan.porcentaje_inicial is not None %}{{ plan.porcentaje_inicial }} % ({{ plan.total_inicial }} respuestas){% else %}Sin evidencias suficientes{% endif %}</p>
+  {% if plan.estado == 'CERRADA' %}
+  <p>Resultado posterior: {% if plan.porcentaje_final is not None %}{{ plan.porcentaje_final }} % ({{ plan.total_final }} respuestas){% else %}Sin evidencias suficientes{% endif %}</p>
+  <p>Variación: {% if plan.variacion_pp is not None %}{{ plan.variacion_pp }} puntos porcentuales{% else %}No calculable{% endif %}</p>
+  <p>Observación final: {{ plan.observacion_cierre }}</p>
+  {% else %}
+  <form method="post" action="{% url 'cerrar_intervencion_docente' plan.pk %}" class="cierre-form">{% csrf_token %}
+    <label for="cierre-{{ plan.pk }}">Conclusión formativa de la intervención</label>
+    <textarea id="cierre-{{ plan.pk }}" name="observacion" minlength="10" maxlength="2000" required class="form-control" rows="2"></textarea>
+    <button type="submit" class="ui-btn ui-btn-outline">Cerrar y medir avance</button>
+  </form>
+  {% endif %}
+</article>
+{% empty %}<p>Aún no has creado planes de intervención.</p>{% endfor %}
+</section></div>
+{% endblock %}

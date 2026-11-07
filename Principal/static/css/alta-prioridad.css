@@ -1,0 +1,107 @@
+/* Nuevos módulos aislados: no se alteran los estilos antiguos. */
+.cierre-page {
+  width: 100%;
+}
+
+.cierre-page .ui-card {
+  margin-block: 1rem;
+}
+
+.cierre-examen {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(190px, 240px);
+  gap: 1rem;
+}
+
+.cierre-pregunta {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.cierre-pregunta legend {
+  float: none;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.cierre-enunciado {
+  white-space: pre-wrap;
+  font-weight: 600;
+  margin-top: 1rem;
+}
+
+.cierre-contexto {
+  white-space: pre-wrap;
+}
+
+.cierre-opcion {
+  display: block;
+  padding: 0.65rem;
+  margin-top: 0.5rem;
+  border: 1px solid var(--ui-border, #cbd5e1);
+  border-radius: 0.7rem;
+  cursor: pointer;
+}
+
+.cierre-opcion input {
+  margin-right: 0.5rem;
+}
+
+.cierre-navegador,
+.cierre-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.cierre-numero {
+  border: 1px solid var(--ui-border, #64748b);
+  background: transparent;
+  color: inherit;
+  border-radius: 0.5rem;
+  padding: 0.4rem;
+  min-width: 2.4rem;
+  cursor: pointer;
+}
+
+.cierre-numero.is-current {
+  outline: 2px solid currentcolor;
+}
+
+.cierre-numero.is-answered {
+  background: #d3f3e3;
+  color: #124c2e;
+}
+
+.cierre-actions form {
+  margin: 0;
+}
+
+.cierre-form p {
+  display: grid;
+  gap: 0.3rem;
+  margin-block: 0.65rem;
+}
+
+.cierre-form input,
+.cierre-form select,
+.cierre-form textarea {
+  width: 100%;
+  max-width: 100%;
+}
+
+.cierre-resultado {
+  border-bottom: 1px solid var(--ui-border, #cbd5e1);
+  padding: 1rem 0;
+}
+
+.cierre-resultado:last-child {
+  border-bottom: 0;
+}
+
+@media (max-width: 760px) {
+  .cierre-examen {
+    grid-template-columns: 1fr;
+  }
+}

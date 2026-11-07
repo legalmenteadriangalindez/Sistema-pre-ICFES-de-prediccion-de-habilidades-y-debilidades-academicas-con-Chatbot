@@ -1,0 +1,33 @@
+{% extends 'app_shell.html' %}
+{% load static %}
+{% block title %}Análisis de calidad de preguntas{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/alta-prioridad.css' %}">{% endblock %}
+{% block content %}
+<div class="dash cierre-page"><section class="section-hero"><span class="eyebrow">ESTADÍSTICA EDUCATIVA</span><h1>Calidad de preguntas</h1>
+  <p>Indicadores exploratorios de preguntas aprobadas del banco. No se muestran nombres ni respuestas individuales.</p>
+  <a class="ui-btn ui-btn-outline" href="{% url 'banco_preguntas' %}">Volver al banco</a>
+</section>
+<section class="ui-card">
+  <form method="get" class="cierre-actions"><label for="materia-calidad">Filtrar materia</label>
+    <select class="form-select" id="materia-calidad" name="materia"><option value="">Todas</option>{% for valor, nombre in materias %}<option value="{{ valor }}" {% if valor == materia %}selected{% endif %}>{{ nombre }}</option>{% endfor %}</select>
+    <button type="submit" class="ui-btn ui-btn-primary">Aplicar</button>
+  </form>
+  <h2>Indicadores por ítem (hasta 100 preguntas)</h2>
+  <p>La proporción de aciertos usa la última respuesta de cada estudiante. La discriminación compara los grupos de mayor y menor desempeño, excluyendo la propia pregunta del puntaje de referencia. Los avisos solo se activan con al menos 20 estudiantes.</p>
+  <div class="table-responsive"><table class="table">
+    <thead><tr><th>Pregunta</th><th>Versión</th><th>Estudiantes</th><th>Proporción de aciertos</th><th>Discriminación</th><th>Evaluación preliminar</th></tr></thead>
+    <tbody>{% for fila in filas %}
+      <tr><td>{{ fila.pregunta.materia }} · {{ fila.pregunta.enunciado|truncatechars:75 }}</td>
+      <td>v{{ fila.pregunta.numero_version }}</td><td>{{ fila.n }}</td>
+      <td>{% if fila.dificultad is not None %}{{ fila.dificultad }}{% else %}Sin datos{% endif %}</td>
+      <td>{% if fila.discriminacion is not None %}{{ fila.discriminacion }}{% else %}Insuficiente{% endif %}</td><td>{{ fila.alerta }}</td></tr>
+    {% empty %}<tr><td colspan="6">Aún no hay preguntas aprobadas en este filtro.</td></tr>{% endfor %}</tbody>
+  </table></div>
+</section>
+<section class="ui-card"><h2>Consistencia interna por formulario comparable</h2>
+<p>Alfa de Cronbach se calcula únicamente con al menos 30 estudiantes que respondieron exactamente las mismas tres o más preguntas del banco. No compara formularios distintos ni sustituye la revisión pedagógica.</p>
+<div class="table-responsive"><table class="table"><thead><tr><th>Ítems comparables</th><th>Estudiantes</th><th>Alfa</th></tr></thead><tbody>
+{% for f in consistencia %}<tr><td>{{ f.items }}</td><td>{{ f.estudiantes }}</td><td>{% if f.alfa is not None %}{{ f.alfa }}{% else %}Indeterminado{% endif %}</td></tr>
+{% empty %}<tr><td colspan="3">No hay suficientes formularios comparables para estimar alfa de Cronbach.</td></tr>{% endfor %}
+</tbody></table></div></section></div>
+{% endblock %}

@@ -5,9 +5,18 @@ from .simulacros_views import simulacros
 from .historial_views import historial_academico 
 from django.urls import path, include  # librerias nesesarias para hacer la referencia desde url.py del proyecto
 from .view_modules import docentes as docente_ops, admin_operaciones, admin_escolar
-from .view_modules import banco_preguntas as banco_ops, practica_adaptativa as adaptativo_ops 
+from .view_modules import banco_preguntas as banco_ops, practica_adaptativa as adaptativo_ops
+from .view_modules import (calidad_banco, intervenciones, simulacro_avanzado, versiones_banco) 
 
 urlpatterns = [
+  path("simulacros/avanzado/", simulacro_avanzado.simulacro_avanzado, name="simulacro_avanzado"),
+  path("simulacros/avanzado/resultado/<int:examen_id>/", simulacro_avanzado.resultado_simulacro_avanzado, name="resultado_simulacro_avanzado"),
+  path("banco-preguntas/calidad/", calidad_banco.calidad_banco, name="calidad_banco"),
+  path("banco-preguntas/<int:pregunta_id>/nueva-version/", versiones_banco.crear_revision_banco, name="crear_revision_banco"),
+  path("banco-preguntas/<int:pregunta_id>/historial/", versiones_banco.historial_versiones_banco, name="historial_versiones_banco"),
+  path("panel-docente/intervenciones/", intervenciones.intervenciones_docente, name="intervenciones_docente"),
+  path("panel-docente/intervenciones/<int:intervencion_id>/cerrar/", intervenciones.cerrar_intervencion_docente, name="cerrar_intervencion_docente"),
+  path("intervenciones/mias/", intervenciones.mis_intervenciones, name="mis_intervenciones"),
   path("banco-preguntas/", banco_ops.banco_preguntas, name="banco_preguntas"),
   path("banco-preguntas/<int:pregunta_id>/editar/", banco_ops.editar_pregunta_banco, name="editar_pregunta_banco"),
   path("banco-preguntas/<int:pregunta_id>/enviar/", banco_ops.enviar_pregunta_revision, name="enviar_pregunta_revision"),

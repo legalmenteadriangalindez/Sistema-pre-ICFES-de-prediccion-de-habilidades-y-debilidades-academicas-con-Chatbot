@@ -9,7 +9,7 @@ AREAS_BASE = ("Matemáticas", "Lectura Crítica", "Sociales y Ciudadanas", "Cien
 def _materia(respuesta):
     """Recupera el área del simulacro integral sin atribuirlo a una sexta materia."""
     intento = respuesta.intento
-    if intento.materia in ("Simulacro: Integral", "Simulacro: Integral ampliado", "Práctica adaptativa"):
+    if intento.materia in ("Simulacro: Integral", "Simulacro: Integral ampliado", "Simulacro: Avanzado práctica", "Práctica adaptativa"):
         prefijo = respuesta.competencia.split(" · ", 1)[0]
         return prefijo if prefijo in AREAS_BASE else None
     if intento.materia.startswith("Simulacro: "):

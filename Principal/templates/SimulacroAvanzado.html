@@ -1,0 +1,71 @@
+{% extends 'app_shell.html' %}
+{% load static %}
+{% block title %}Simulacro recuperable{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/alta-prioridad.css' %}">{% endblock %}
+{% block content %}
+<div class="dash cierre-page">
+  <section class="section-hero"><span class="eyebrow">PRÁCTICA DE DOS BLOQUES</span>
+    <h1>Simulacro recuperable</h1>
+    <p>50 preguntas originales, dos bloques de 25 y 75 minutos de práctica por bloque. No reproduce los tiempos, la cantidad de preguntas ni la calificación oficial del ICFES.</p>
+    <a class="ui-btn ui-btn-outline" href="{% url 'simulacros' %}">Volver a simulacros habituales</a>
+  </section>
+  {% if error %}<p class="alert alert-warning" role="alert">{{ error }}</p>{% endif %}
+  {% if not examen %}
+  <section class="ui-card"><h2>Iniciar una práctica nueva</h2>
+    <p>El progreso se guarda en la base de datos. Puedes cerrar sesión, recargar o cambiar de dispositivo y continuar. Al pausar se congela el tiempo restante.</p>
+    <form method="post">{% csrf_token %}<input type="hidden" name="accion" value="iniciar"><button type="submit" class="ui-btn ui-btn-primary">Iniciar 50 preguntas</button></form>
+  </section>
+  {% else %}
+  <section class="ui-card" id="estado-simulacro">
+    <h2>Bloque {{ examen.bloque }} de {{ total_bloques }} · {{ examen.get_estado_display }}</h2>
+    <p><strong id="tiempo-restante" data-vence="{{ examen.vence_en|date:'U' }}" data-activo="{% if examen.estado == 'EN_CURSO' %}1{% else %}0{% endif %}" data-restante="{{ restantes }}">{{ restantes }} segundos restantes</strong></p>
+    <p>Respuestas guardadas: <strong id="conteo-guardadas">{{ examen.respuestas|length }}</strong> (ambos bloques). La corrección se realiza solo al finalizar el bloque dos.</p>
+    {% if examen.estado == 'PAUSADO' %}
+    <div class="cierre-actions">
+      {% if restantes > 0 %}
+      <form method="post">{% csrf_token %}<input type="hidden" name="accion" value="reanudar"><button type="submit" class="ui-btn ui-btn-primary">Reanudar bloque {{ examen.bloque }}</button></form>
+      {% else %}
+      <p>Se agotó el tiempo de este bloque. No puedes modificar sus respuestas.</p>
+      {% endif %}
+      {% if examen.bloque == 1 %}
+      <form method="post">{% csrf_token %}<input type="hidden" name="accion" value="siguiente_bloque"><button type="submit" class="ui-btn ui-btn-outline">Cerrar bloque 1 y preparar bloque 2</button></form>
+      {% else %}
+      <form method="post">{% csrf_token %}<input type="hidden" name="accion" value="finalizar"><button type="submit" class="ui-btn ui-btn-primary">Finalizar y calificar</button></form>
+      {% endif %}
+    </div>
+    {% else %}
+    <p id="estado-guardado" aria-live="polite">Las respuestas se guardan automáticamente al elegir una alternativa.</p>
+    <div class="cierre-examen" id="examen-persistente" data-guardar-url="{% url 'simulacro_avanzado' %}">
+      <div class="ui-card">
+        {% for p in preguntas %}
+        <fieldset class="cierre-pregunta" data-idx="{{ p.id }}" {% if not forloop.first %}hidden{% endif %}>
+          <legend>Pregunta {{ forloop.counter }} de 25 · {{ p.materia }}</legend>
+          <small>{{ p.competencia }}</small>
+          {% if p.contexto %}<p class="cierre-contexto">{{ p.contexto }}</p>{% endif %}
+          <p class="cierre-enunciado">{{ p.pregunta }}</p>
+          {% for letra, opcion in p.opciones.items %}
+          <label class="cierre-opcion"><input type="radio" name="respuesta_{{ p.id }}" value="{{ letra }}" {% if p.respuesta == letra %}checked{% endif %}> <strong>{{ letra }}.</strong> {{ opcion }}</label>
+          {% endfor %}
+        </fieldset>
+        {% endfor %}
+        <div class="cierre-actions"><button type="button" id="pregunta-anterior" class="ui-btn ui-btn-outline">Anterior</button><button type="button" id="pregunta-siguiente" class="ui-btn ui-btn-outline">Siguiente</button></div>
+      </div>
+      <aside class="ui-card"><h3>Navegar por el bloque</h3>
+        <div id="navegador-preguntas" class="cierre-navegador" aria-label="Navegador de preguntas"></div>
+        <small>El botón de una pregunta aparecerá marcado después de guardar la respuesta.</small>
+      </aside>
+    </div>
+    <div class="cierre-actions">
+      <form method="post">{% csrf_token %}<input type="hidden" name="accion" value="pausar"><button type="submit" class="ui-btn ui-btn-outline">Pausar y guardar</button></form>
+      {% if examen.bloque == 1 %}
+      <form method="post" data-confirm="¿Terminar el bloque 1? No podrás volver a modificarlo.">{% csrf_token %}<input type="hidden" name="accion" value="siguiente_bloque"><button type="submit" class="ui-btn ui-btn-primary">Cerrar bloque 1 y continuar</button></form>
+      {% else %}
+      <form method="post" data-confirm="¿Finalizar el simulacro y obtener tu resultado?">{% csrf_token %}<input type="hidden" name="accion" value="finalizar"><button type="submit" class="ui-btn ui-btn-primary">Finalizar y calificar</button></form>
+      {% endif %}
+    </div>
+    {% endif %}
+  </section>
+  {% endif %}
+</div>
+{% endblock %}
+{% block extra_js %}<script src="{% static 'js/simulacro-persistente.js' %}" defer></script>{% endblock %}

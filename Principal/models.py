@@ -761,3 +761,4 @@ class SesionPlanSemanal(models.Model):
 
 # Registro de modelos de banco curado; Django conserva app_label Principal.
 from .banco_models import PreguntaBanco  # noqa: E402,F401
+from .alta_prioridad_models import IntervencionAcademica, SimulacroAvanzado  # noqa: E402,F401

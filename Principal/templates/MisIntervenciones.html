@@ -1,0 +1,18 @@
+{% extends 'app_shell.html' %}
+{% load static %}
+{% block title %}Mis planes de refuerzo{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/alta-prioridad.css' %}">{% endblock %}
+{% block content %}
+<div class="dash cierre-page"><section class="section-hero"><span class="eyebrow">REFUERZO PERSONALIZADO</span><h1>Mis planes de intervención</h1>
+<p>El docente registra objetivos, actividades sugeridas y revisión posterior de tus competencias.</p>
+<a class="ui-btn ui-btn-primary" href="{% url 'practica_adaptativa' %}">Practicar competencias</a></section>
+{% for plan in planes %}
+<section class="ui-card"><h2>{{ plan.materia }} · {{ plan.competencia }}</h2>
+<p><strong>Objetivo:</strong> {{ plan.objetivo }}</p><p><strong>Actividades:</strong> {{ plan.actividades|linebreaksbr }}</p>
+<p>Revisión prevista: {{ plan.fecha_revision|date:"d/m/Y" }} · Estado: {{ plan.get_estado_display }}</p>
+{% if plan.estado == 'CERRADA' %}<p>Observación del docente: {{ plan.observacion_cierre }}</p>
+<p>Avance descriptivo: {% if plan.variacion_pp is not None %}{{ plan.variacion_pp }} puntos porcentuales{% else %}No hay suficientes respuestas comparables para calcularlo{% endif %}</p>{% endif %}
+</section>
+{% empty %}<section class="ui-card"><p>Todavía no tienes planes de intervención registrados.</p></section>{% endfor %}
+</div>
+{% endblock %}
