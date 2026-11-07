@@ -20,12 +20,14 @@ def gestion_acudientes_estudiantes(request):
             form_estudiantes = EstudianteForm(request.POST)
             if form_estudiantes.is_valid():
                 form_estudiantes.save()
+                return redirect('gestion_acudientes_estudiantes')
         else:
             form_estudiantes = EstudianteForm(request.POST)
         if tipo_form == "acudientes":
             form_acudientes = AcudienteForm(request.POST)
             if form_acudientes.is_valid():
                form_acudientes.save()
+               return redirect('gestion_acudientes_estudiantes')
         else:
            form_acudientes = AcudienteForm()
     else :
