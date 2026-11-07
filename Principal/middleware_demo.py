@@ -18,6 +18,15 @@ class BloqueoDemoMiddleware:
         if not settings.DEMO_MODE:
             return None
 
+        if (
+            request.path.startswith("/admin/")
+            or request.path.startswith("/admin_gestion_")
+            or request.path.startswith("/gestion_acudientes_estudiantes/")
+        ):
+            return HttpResponseNotFound(
+                "La administración no está disponible en la demo."
+            )
+
         if request.path.startswith("/admin/"):
             return HttpResponseNotFound("Administración no disponible en la demo.")
 
@@ -38,7 +47,11 @@ class BloqueoDemoMiddleware:
             "editar_actividad_docente", "editar_matricula",
             "exportar_mis_datos", "consentimiento_tutor",
         }
-        if nombre in cerradas or request.path.startswith("/gestion/"):
+        if (
+            nombre in cerradas
+            or nombre.startswith("eliminar_")
+            or request.path.startswith("/gestion/")
+        ):
             return HttpResponseForbidden(
                 "La administración y el registro no están disponibles "
                 "en la demostración pública."
