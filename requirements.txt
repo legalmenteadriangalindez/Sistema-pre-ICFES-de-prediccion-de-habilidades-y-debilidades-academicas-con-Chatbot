@@ -23,3 +23,6 @@ scikit-learn>=1.5,<2.0
 
 # Importación XLSX de matrículas, sin macros ni fórmulas ejecutables
 openpyxl>=3.1,<4.0
+
+# Texto de PDF (sin OCR y con límites de páginas y caracteres)
+pypdf>=5.0,<7.0
