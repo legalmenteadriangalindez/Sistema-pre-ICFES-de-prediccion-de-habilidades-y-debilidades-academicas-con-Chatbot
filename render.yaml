@@ -1,11 +1,19 @@
 # Infraestructura propuesta, NO aplicada automáticamente.
-# Requiere PostgreSQL persistente y aprobación de costos del web service
-# y disco antes de crear una instancia pública con datos reales.
+# El plan requiere servicios pagos (CPU, PostgreSQL y disco).
+# NO aplicarlo sin revisar costos, permisos y política de protección de menores.
+databases:
+  - name: preicfes-piloto-db
+    plan: 0.1c-256mb
+    region: virginia
+    postgresMajorVersion: "17"
+    diskSizeGB: 5
+    databaseName: preicfes
+
 services:
   - type: web
     name: preicfes-piloto
     runtime: python
-    plan: starter
+    plan: 1c-2g
     region: virginia
     branch: main
     autoDeployTrigger: checksPass
@@ -15,7 +23,7 @@ services:
     disk:
       name: preicfes-datos-privados
       mountPath: /var/data/preicfes
-      sizeGB: 2
+      sizeGB: 5
     envVars:
       - key: DJANGO_ENV
         value: production
@@ -28,7 +36,9 @@ services:
       - key: DJANGO_SECRET_KEY
         generateValue: true
       - key: DATABASE_URL
-        sync: false
+        fromDatabase:
+          name: preicfes-piloto-db
+          property: connectionString
       - key: DJANGO_ALLOWED_HOSTS
         sync: false
       - key: DJANGO_CSRF_TRUSTED_ORIGINS
