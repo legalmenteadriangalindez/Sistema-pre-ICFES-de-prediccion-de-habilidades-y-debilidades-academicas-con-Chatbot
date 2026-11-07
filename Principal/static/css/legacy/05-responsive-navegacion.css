@@ -1,0 +1,36 @@
+/* =================NAV RESPONSIVE ANDROID================== */
+@media(max-width: 600px){
+
+    nav{
+        display: block;
+        text-align: center;
+        min-height: auto;
+
+    }
+
+    nav a{
+        display: block;
+    }
+
+    #iniciarSesion{
+        display: block;
+        margin: auto;
+    }
+    
+    #registrarse{
+        display: block;       
+        margin: auto;
+       
+    }
+
+    #modoOscuroContainer{
+     position: absolute;
+     z-index: 9999;
+     margin-top:60%;
+    }   
+   
+}
+/* ================================================ */
+
+
+
