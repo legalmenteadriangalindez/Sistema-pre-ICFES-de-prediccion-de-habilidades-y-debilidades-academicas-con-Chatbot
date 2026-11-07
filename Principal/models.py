@@ -687,6 +687,10 @@ class IntentoEvaluacion(models.Model):
 
 
 class RespuestaEvaluacion(models.Model):
+    pregunta_banco = models.ForeignKey(
+        "PreguntaBanco", on_delete=models.SET_NULL, blank=True, null=True,
+        related_name="respuestas_evaluacion",
+    )
     intento = models.ForeignKey(IntentoEvaluacion, on_delete=models.CASCADE, related_name="respuestas")
     numero = models.PositiveIntegerField()
     competencia = models.CharField(max_length=100)
@@ -753,3 +757,7 @@ class SesionPlanSemanal(models.Model):
 
     def __str__(self):
         return f"{self.plan} | {self.dia_nombre}"
+
+
+# Registro de modelos de banco curado; Django conserva app_label Principal.
+from .banco_models import PreguntaBanco  # noqa: E402,F401
