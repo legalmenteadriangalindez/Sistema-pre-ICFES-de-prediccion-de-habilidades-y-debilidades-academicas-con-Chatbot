@@ -31,6 +31,24 @@
   width: 100%;
 }
 
+.bank-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  align-items: end;
+  gap: 0.8rem;
+}
+
+.bank-filters label {
+  display: grid;
+  gap: 0.35rem;
+  font-weight: 600;
+}
+
+.bank-filters button,
+.bank-filters a {
+  width: 100%;
+}
+
 .bank-help {
   margin-top: 1.5rem;
 }
