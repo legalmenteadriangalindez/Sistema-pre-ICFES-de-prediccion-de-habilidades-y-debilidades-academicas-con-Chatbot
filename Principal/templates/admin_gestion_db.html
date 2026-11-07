@@ -33,13 +33,10 @@
                 <td>{{r.nombre}}</td>
                 <td>{{r.descripcion}}</td>
                 <td>Estado</td>
-                <td><button class="btn btn-sm btn-primary">Editar</button></td>
+                <td><a class="btn btn-sm btn-primary" href="{% url 'admin_editar_catalogo' 'roles' r.pk %}">Editar</a></td>
                 <td><form method="post" action="{% url 'eliminar_admin_gestion_db' 'rol' r.id %}" class="d-inline">{% csrf_token %}<button type="submit"  class="btn btn-sm btn-danger">Eliminar</button></form></td>
                 <td>
-                  <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="user1" checked>
-                    <label class="form-check-label" for="user1"></label>
-                  </div>
+                  <small>Modificar desde Editar</small>
                 </td>
             </tr>
             {% endfor %}
@@ -64,8 +61,6 @@
       </div>
       <div class="modal-body">
         <form action="" method="post">
-        <input type="hidden" name="form" value="relaciones">
-        <input type="hidden" name="form" value="sexos">
         <input type="hidden" name="form" value="roles">
         {% csrf_token %}
         {{form_roles }}
@@ -101,13 +96,10 @@
                 <td>{{s.id}}</td>
                 <td>{{s.descripcion}}</td>
                 <td>{{s.activo}}</td>
-                <td><button class="btn btn-sm btn-primary">Editar</button></td>
+                <td><a class="btn btn-sm btn-primary" href="{% url 'admin_editar_catalogo' 'sexos' s.pk %}">Editar</a></td>
                 <td><form method="post" action="{% url 'eliminar_admin_gestion_db' 'sexo' s.id %}" class="d-inline">{% csrf_token %}<button type="submit"  class="btn btn-sm btn-danger">Eliminar</button></form></td>
                 <td>
-                  <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="user1" checked>
-                    <label class="form-check-label" for="user1"></label>
-                  </div>
+                  <small>Modificar desde Editar</small>
                 </td>
             </tr>
             {% endfor %}
@@ -132,7 +124,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="" method="post">
+        <form action="" method="post"><input type="hidden" name="form" value="sexos">
         {% csrf_token %}
         {{form_sexos }}
         
@@ -167,13 +159,10 @@
                 <td>{{rel.id}}</td>
                 <td>{{rel.descripcion}}</td>
                 <td>{{rel.activo}}</td>
-                <td><button class="btn btn-sm btn-primary">Editar</button></td>
+                <td><a class="btn btn-sm btn-primary" href="{% url 'admin_editar_catalogo' 'relaciones' rel.pk %}">Editar</a></td>
                 <td><form method="post" action="{% url 'eliminar_admin_gestion_db' 'relaciones' rel.id %}" class="d-inline">{% csrf_token %}<button type="submit"  class="btn btn-sm btn-danger">Eliminar</button></form></td>
                 <td>
-                  <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="user1" checked>
-                    <label class="form-check-label" for="user1"></label>
-                  </div>
+                  <small>Modificar desde Editar</small>
                 </td>
             </tr>
             {% endfor %}
@@ -198,7 +187,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="" method="post">
+        <form action="" method="post"><input type="hidden" name="form" value="relaciones">
         {% csrf_token %}
         {{form_relaciones}}
       </div>
