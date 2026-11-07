@@ -1,6 +1,7 @@
 """CRUD administrativo de catálogos generales y académicos."""
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
 from Principal.forms import (
@@ -11,6 +12,7 @@ from Principal.models import (
     AnioLectivo, Curso, Grado, Materia, RelacionAcudiente, Rol, Sexo,
 )
 from .selectores import es_gestor
+from .admin_operaciones import CATALOGOS, eliminar_si_no_referenciado
 
 @login_required
 @user_passes_test(es_gestor, login_url='/accounts/login/')
@@ -50,17 +52,19 @@ def gestion_db(request):
 @login_required
 @user_passes_test(es_gestor, login_url='/accounts/login/')
 @require_POST
-def eliminar_admin_gestion_db(request,tipo,id):
-    if tipo == "rol":
-      rol = Rol.objects.get(id=id)
-      rol.delete()
-    if tipo == "sexo":
-        sexo = Sexo.objects.get(id=id)
-        sexo.delete()
-    if tipo == "relaciones":
-        relacion = RelacionAcudiente.objects.get(id=id)
-        relacion.delete()
-    return redirect('admin_gestion_db')
+def eliminar_admin_gestion_db(request, tipo, id):
+    tipos = {"rol": "roles", "sexo": "sexos", "relaciones": "relaciones"}
+    clave = tipos.get(tipo)
+    if clave is None:
+        from django.http import Http404
+        raise Http404("Catálogo desconocido.")
+    modelo = CATALOGOS[clave][0]
+    objeto = get_object_or_404(modelo, pk=id)
+    if eliminar_si_no_referenciado(objeto):
+        messages.success(request, "Registro eliminado.")
+    else:
+        messages.error(request, "No puede eliminarse: existen registros relacionados.")
+    return redirect("admin_gestion_db")
 
 
 @login_required # @user_passes_test(es_coordinador)
@@ -123,18 +127,14 @@ def gestion_academica(request):
 @login_required
 @user_passes_test(es_gestor, login_url='/accounts/login/')
 @require_POST
-def eliminar_gestion_academica(request,tipo,id):
-    if tipo == "grados":
-        grado = Grado.objects.get(id=id)
-        grado.delete()
-    if tipo == "cursos":
-        curso = Curso.objects.get(id=id)
-        curso.delete()
-    if tipo == "anios":
-        anio_lectivo = AnioLectivo.objects.get(id=id)
-        anio_lectivo.delete()
-    if tipo == "materias":
-        materia = Materia.objects.get(id=id)
-        materia.delete()
-    return redirect('admin_gestion_academica')
-
+def eliminar_gestion_academica(request, tipo, id):
+    if tipo not in ("grados", "cursos", "anios", "materias"):
+        from django.http import Http404
+        raise Http404("Catálogo desconocido.")
+    modelo = CATALOGOS[tipo][0]
+    objeto = get_object_or_404(modelo, pk=id)
+    if eliminar_si_no_referenciado(objeto):
+        messages.success(request, "Registro eliminado.")
+    else:
+        messages.error(request, "No puede eliminarse: tiene matrículas, contenidos o permisos asociados.")
+    return redirect("admin_gestion_academica")
