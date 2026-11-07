@@ -1,22 +1,19 @@
 """Recomendaciones descriptivas y actividades propias del estudiante."""
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
+from django.core.exceptions import PermissionDenied
 
 from Principal.models import (
     ActividadAsignada, AnalisisCognitivo, Estudiante, MaterialAsignado,
     Matricula, PerfilPedagogico, PerfilUsuario, Persona, RecomendacionVocacional,
 )
+from .selectores import _estudiante
 
 @login_required
 def recomendaciones(request):
-    user = request.user
-
-    perfil = PerfilUsuario.objects.filter(user= user).first()
-    persona = Persona.objects.filter(perfil_user=perfil).first()
-    estudiante = Estudiante.objects.filter(persona= persona).first()
-
+    estudiante = _estudiante(request.user)
     if not estudiante:
-        return render(request,"Recomendaciones.html",{"error": "este perfil no tiene estudiante asociado"})
+        raise PermissionDenied("Esta recomendación requiere un perfil estudiantil.")
     
     matricula = Matricula.objects.filter(estudiante=estudiante,activa=True).first()
     perfil_pedagogico = None
@@ -48,9 +45,7 @@ def recomendaciones(request):
 
 @login_required
 def actividadesUsuario(request):
-    perfil = PerfilUsuario.objects.filter(user=request.user).first()
-    persona = Persona.objects.filter(perfil_user=perfil).first() if perfil else None
-    estudiante = Estudiante.objects.filter(persona=persona).first() if persona else None
+    estudiante = _estudiante(request.user)
     matricula = Matricula.objects.filter(estudiante=estudiante, activa=True).first() if estudiante else None
     if not matricula:
         return render(request, "actividadesUsuario.html", {
