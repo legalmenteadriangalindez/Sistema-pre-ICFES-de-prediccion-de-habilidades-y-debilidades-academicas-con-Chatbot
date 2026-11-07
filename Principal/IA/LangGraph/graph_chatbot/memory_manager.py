@@ -16,7 +16,7 @@ from .cognitive_profiles import CognitiveProfileMixin
 from .external_resources import ExternalResourcesMixin
 
 logger = logging.getLogger(__name__)
-USER_DIR = settings.BASE_DIR / "ProyectoDeGrado" / "DATABASES" / "USERS"
+USER_DIR = settings.USER_DATA_ROOT
 
 
 class ModernMemoryManager(
