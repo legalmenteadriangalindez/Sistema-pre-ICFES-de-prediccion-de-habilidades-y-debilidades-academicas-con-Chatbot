@@ -218,6 +218,8 @@ USER_DATA_ROOT = (
     if DATA_ROOT
     else BASE_DIR / "ProyectoDeGrado" / "DATABASES" / "USERS"
 )
+if DATA_ROOT:
+    MEDIA_ROOT = DATA_ROOT / "media"
 
 STATICFILES_DIRS = [
     BASE_DIR / "Principal" / "static",
