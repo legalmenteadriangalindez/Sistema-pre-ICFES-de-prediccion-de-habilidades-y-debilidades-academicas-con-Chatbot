@@ -13,7 +13,7 @@ from Principal.forms import (
     RelacionAcudienteForm, RolForm, SexoForm,
 )
 from Principal.models import (
-    AnioLectivo, Curso, Grado, Materia, PerfilUsuario, Persona,
+    AnioLectivo, Curso, Estudiante, Grado, Materia, PerfilUsuario, Persona,
     RelacionAcudiente, Rol, Sexo,
 )
 from .selectores import es_gestor
@@ -39,6 +39,17 @@ class CrearPersonaAdminForm(PersonaForm):
         self.fields["perfil_user"].queryset = PerfilUsuario.objects.filter(
             persona__isnull=True,
         ).select_related("user").order_by("user__username")
+
+
+class EditarNecesidadesEstudianteForm(forms.ModelForm):
+    class Meta:
+        model = Estudiante
+        fields = ("necesidades_especiales",)
+        widgets = {
+            "necesidades_especiales": forms.Textarea(attrs={
+                "class": "form-control", "rows": 4,
+            }),
+        }
 
 
 class EditarUsuarioAdminForm(forms.ModelForm):
@@ -90,6 +101,24 @@ def editar_usuario(request, usuario_id):
     return render(request, "AdminEditarRegistro.html", {
         "titulo": "Editar usuario", "formulario": formulario,
         "volver": "admin_gestion_users",
+    })
+
+
+@login_required
+@user_passes_test(es_gestor, login_url="/accounts/login/")
+@require_http_methods(["GET", "POST"])
+def editar_necesidades_estudiante(request, estudiante_id):
+    estudiante = get_object_or_404(Estudiante, pk=estudiante_id)
+    formulario = EditarNecesidadesEstudianteForm(
+        request.POST if request.method == "POST" else None, instance=estudiante,
+    )
+    if request.method == "POST" and formulario.is_valid():
+        formulario.save()
+        messages.success(request, "Información del estudiante actualizada.")
+        return redirect("gestion_acudientes_estudiantes")
+    return render(request, "AdminEditarRegistro.html", {
+        "titulo": "Editar necesidades educativas",
+        "formulario": formulario, "volver": "gestion_acudientes_estudiantes",
     })
 
 
