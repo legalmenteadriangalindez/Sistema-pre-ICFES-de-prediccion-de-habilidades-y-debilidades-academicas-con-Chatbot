@@ -1,0 +1,17 @@
+{% extends 'app_shell.html' %}
+{% block title %}Avisos académicos{% endblock %}
+{% block content %}
+<div class="dash portal-page"><section class="section-hero"><span class="eyebrow">CENTRO DE AVISOS</span><h1>Mis notificaciones</h1>
+<p>Solo se muestran avisos asociados a tu cuenta. Se generan por actividades reales; no enviamos correos, SMS ni información a terceros desde este módulo.</p></section>
+<section class="ui-card"><h2>Preferencias</h2><form method="post">{% csrf_token %}<input type="hidden" name="accion" value="preferencias">
+<label><input type="checkbox" name="recibir_avisos" {% if preferencias.recibir_avisos %}checked{% endif %}> Recibir avisos académicos internos</label>
+<label><input type="checkbox" name="avisos_familiares" {% if preferencias.avisos_familiares %}checked{% endif %}> Permitir avisos familiares internos</label>
+<button type="submit" class="ui-btn ui-btn-primary">Guardar preferencias</button></form></section>
+<section class="ui-card"><h2>Últimos avisos</h2>
+{% for aviso in avisos %}<article class="portal-list-row"><span><strong>{{ aviso.titulo }}</strong> · {{ aviso.fecha|date:'d/m/Y H:i' }}
+<p>{{ aviso.mensaje }}</p></span>
+{% if aviso.leida_en %}<span class="soft-chip">Leído</span>{% else %}
+<form method="post" action="{% url 'marcar_aviso_leido' aviso.pk %}">{% csrf_token %}<button class="ui-btn ui-btn-outline" type="submit">Marcar leído</button></form>{% endif %}
+</article>{% empty %}<p>No tienes avisos pendientes.</p>{% endfor %}
+</section></div>
+{% endblock %}
