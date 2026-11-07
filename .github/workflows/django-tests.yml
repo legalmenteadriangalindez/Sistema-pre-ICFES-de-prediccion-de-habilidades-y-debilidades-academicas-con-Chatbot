@@ -99,8 +99,7 @@ jobs:
           python manage.py makemigrations --check --dry-run
       - name: Suite completa sin Ollama real
         run: python manage.py test Principal --verbosity 2
-      - name: Seguridad de configuración (informativo)
-        continue-on-error: true
+      - name: Seguridad de configuración (obligatorio)
         env:
           DJANGO_ENV: production
           DJANGO_DEBUG: "false"
