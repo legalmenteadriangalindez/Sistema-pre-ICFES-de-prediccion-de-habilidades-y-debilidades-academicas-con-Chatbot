@@ -1,0 +1,20 @@
+{% extends 'home_admin_academico.html' %}
+{% block title %}Reportes académicos{% endblock %}
+{% block content %}
+<div class="dash portal-page">
+<section class="section-hero"><span class="eyebrow">INDICADORES DESCRIPTIVOS</span><h1>Reporte académico administrativo</h1>
+<p>Resultados históricos acumulados de estudiantes actualmente matriculados. No son notas oficiales, predicciones ni métricas aisladas del año lectivo.</p></section>
+<section class="stats-grid">
+<article class="ui-card"><h2>Matrículas activas</h2><strong>{{ total_matriculas_activas }}</strong></article>
+<article class="ui-card"><h2>Intentos de evaluación</h2><strong>{{ total_evaluaciones }}</strong></article>
+<article class="ui-card"><h2>Actividades asignadas</h2><strong>{{ total_asignaciones }}</strong></article>
+<article class="ui-card"><h2>Actividades completadas</h2><strong>{{ total_completadas }}</strong></article>
+<article class="ui-card"><h2>Observaciones docentes</h2><strong>{{ total_retroalimentaciones }}</strong></article>
+</section>
+<section class="ui-card"><h2>Resumen de cursos</h2><div class="table-responsive"><table class="table">
+<thead><tr><th>Grado</th><th>Curso</th><th>Año de matrícula</th><th>Alumnos</th><th>Intentos históricos</th><th>Porcentaje histórico</th></tr></thead><tbody>
+{% for fila in filas %}<tr><td>{{ fila.curso__grado__nombre }}</td><td>{{ fila.curso__nombre }}</td><td>{{ fila.anio_lectivo__anio }}</td><td>{{ fila.alumnos }}</td><td>{{ fila.intentos }}</td><td>{% if fila.porcentaje is not None %}{{ fila.porcentaje }} %{% else %}Sin datos{% endif %}</td></tr>
+{% empty %}<tr><td colspan="6">No hay matrículas activas.</td></tr>{% endfor %}
+</tbody></table></div></section>
+</div>
+{% endblock %}
