@@ -221,7 +221,12 @@ if PUBLIC_ENVIRONMENT:
             "BACKEND": "django.core.files.storage.FileSystemStorage"
         },
         "staticfiles": {
+            # El CSS heredado tiene referencias url() en comentarios; el
+            # almacenamiento de demo no reescribe esas referencias ni
+            # rompe la compatibilidad visual de los estilos originales.
             "BACKEND": (
+                "whitenoise.storage.CompressedStaticFilesStorage"
+                if DEMO_MODE else
                 "whitenoise.storage.CompressedManifestStaticFilesStorage"
             )
         },
