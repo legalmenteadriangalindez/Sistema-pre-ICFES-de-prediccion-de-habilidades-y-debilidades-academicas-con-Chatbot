@@ -14,7 +14,9 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
 from django.contrib import admin
+from Principal.demo_views import demo_publica
 from django.urls import include, path
 from django.contrib.auth import views as auth_views
 from Principal.health_views import healthz, readyz
@@ -29,3 +31,7 @@ urlpatterns = [
 
 # Los adjuntos de alumnos nunca se sirven mediante una ruta pública de media.
 # Los archivos estáticos CSS/JS los gestiona Django durante el desarrollo.
+
+# La portada pública del demo no toca perfiles ni datos académicos.
+if settings.DEMO_MODE:
+    urlpatterns.insert(2, path("", demo_publica, name="demo_publica"))
