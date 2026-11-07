@@ -1,7 +1,6 @@
 """Panel del banco: creación, moderación humana y borradores de IA."""
 import logging
 
-from django import forms
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
@@ -13,7 +12,8 @@ from django.utils import timezone
 from django.views.decorators.http import require_http_methods, require_POST
 
 from Principal.models import PreguntaBanco
-from Principal.services.evaluaciones import normalizar_preguntas
+from Principal.forms_banco import PreguntaBancoForm
+from Principal.services.banco_generacion import generar_borrador_ia
 from .docentes import matriculas_permitidas_docente
 from .selectores import _tiene_rol, es_gestor
 
@@ -25,82 +25,6 @@ def puede_curaduría(user):
     return es_gestor(user) or (
         _tiene_rol(user, "DOCENTE") and matriculas_permitidas_docente(user).exists()
     )
-
-
-class PreguntaBancoForm(forms.ModelForm):
-    opcion_a = forms.CharField(max_length=500, label="Opción A")
-    opcion_b = forms.CharField(max_length=500, label="Opción B")
-    opcion_c = forms.CharField(max_length=500, label="Opción C")
-    opcion_d = forms.CharField(max_length=500, label="Opción D")
-    # El contenido enviado en este campo es ignorado: las opciones se
-    # reconstruyen exclusivamente con los cuatro campos editables.
-    opciones = forms.JSONField(required=False, widget=forms.HiddenInput)
-
-    class Meta:
-        model = PreguntaBanco
-        fields = (
-            "materia", "competencia", "evidencia", "dificultad", "contexto", "enunciado",
-            "opcion_a", "opcion_b", "opcion_c", "opcion_d", "opciones",
-            "respuesta_correcta", "explicacion",
-        )
-        widgets = {
-            "materia": forms.Select(attrs={"class": "form-select"}),
-            "competencia": forms.TextInput(attrs={"class": "form-control"}),
-            "evidencia": forms.TextInput(attrs={"class": "form-control", "placeholder": "Evidencia de aprendizaje asociada"}),
-            "dificultad": forms.Select(attrs={"class": "form-select"}),
-            "contexto": forms.Textarea(attrs={"class": "form-control", "rows": 3}),
-            "enunciado": forms.Textarea(attrs={"class": "form-control", "rows": 3}),
-            "respuesta_correcta": forms.Select(
-                choices=[(letra, letra) for letra in ("A", "B", "C", "D")],
-                attrs={"class": "form-select"},
-            ),
-            "explicacion": forms.Textarea(attrs={"class": "form-control", "rows": 3}),
-        }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for letra in ("A", "B", "C", "D"):
-            self.fields["opcion_" + letra.lower()].widget.attrs["class"] = "form-control"
-            if self.instance.pk:
-                self.fields["opcion_" + letra.lower()].initial = (
-                    self.instance.opciones or {}
-                ).get(letra, "")
-
-    def clean(self):
-        datos = super().clean()
-        if all(datos.get("opcion_" + letra.lower()) for letra in "ABCD"):
-            datos["opciones"] = {
-                letra: datos["opcion_" + letra.lower()].strip() for letra in "ABCD"
-            }
-        return datos
-
-
-def generar_borrador_ia(materia, usuario):
-    """La IA solo propone un borrador, nunca lo publica sin revisión humana."""
-    from Principal.services.gestion_view_test import generar_quizes
-
-    entradas = generar_quizes(materia, 1)
-    normalizadas = normalizar_preguntas(entradas, materia)
-    pregunta = normalizadas[0]
-    opciones = pregunta["opciones"]
-    if set(opciones) != {"A", "B", "C", "D"}:
-        raise ValueError("La IA no devolvió cuatro alternativas completas.")
-
-    objeto = PreguntaBanco(
-        materia=materia, competencia=pregunta["competencia"][:100],
-        evidencia="",  # El revisor humano puede completar la evidencia.
-        dificultad="MEDIA", contexto=pregunta["contexto"][:5000],
-        enunciado=pregunta["pregunta"][:2000],
-        opciones=opciones,
-        respuesta_correcta=pregunta["respuesta_correcta"],
-        explicacion=pregunta["explicacion"][:2000],
-        origen="IA", creado_por=usuario, estado="BORRADOR",
-    )
-    objeto.huella = objeto.generar_huella(objeto.materia, objeto.enunciado)
-    objeto.full_clean()
-    with transaction.atomic():
-        objeto.save()
-    return objeto
 
 
 @login_required
