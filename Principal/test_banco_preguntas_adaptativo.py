@@ -63,6 +63,7 @@ class BancoDocenteAdaptativoTests(TestCase):
             "accion": "crear",
             "materia": "Matemáticas",
             "competencia": competencia,
+            "evidencia": "Resuelve operaciones con números enteros.",
             "dificultad": "BASICA",
             "contexto": "Suma de números enteros.",
             "enunciado": enunciado,
