@@ -59,9 +59,15 @@ def procesar_post_chat(request, chatbot, contexto, estudiante, chat_id, render_f
             contexto["response"] = resultado["response"]
             # Después del grafo: el perfil puede haberse generado en este turno.
             # Nunca sincronizar la base académica durante una petición GET.
-            perfiles = chatbot.memory_manager.get_cognitive_profile()
-            contexto["profile"] = perfiles
-            sincronizar_perfil_academico(estudiante, perfiles, str(request.user.id))
+            try:
+                perfiles = chatbot.memory_manager.get_cognitive_profile()
+                contexto["profile"] = perfiles
+                sincronizar_perfil_academico(estudiante, perfiles, str(request.user.id))
+            except Exception as exc:
+                logger.warning(
+                    "tutor_profile_unavailable",
+                    extra={"component": "academic_profile", "error_type": type(exc).__name__},
+                )
         else:
             contexto["chat_error"] = (
                 f"No pudimos generar una respuesta: {resultado['error']}"
