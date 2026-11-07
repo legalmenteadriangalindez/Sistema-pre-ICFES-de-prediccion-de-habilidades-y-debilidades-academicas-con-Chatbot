@@ -33,3 +33,11 @@ def emitir_aviso_familiar(estudiante, categoria, mensaje, clave):
             usuario, categoria, "Aviso de acompañamiento familiar",
             mensaje, f"familia-{clave}",
         )
+
+
+def avisar_retro_familiar(estudiante, comentario_id):
+    emitir_aviso_familiar(
+        estudiante, "RETRO_FAMILIAR",
+        "Un estudiante vinculado recibió retroalimentación docente.",
+        f"retro-{comentario_id}",
+    )
