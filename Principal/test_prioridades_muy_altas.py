@@ -105,7 +105,7 @@ class PrioridadesAltasTests(TestCase):
         self.assertContains(recargada, "Reanudar bloque 1")
         self.assertEqual(self.client.post(url, {"accion": "reanudar"}).status_code, 302)
         recargada = self.client.get(url)
-        self.assertContains(recargada, "Respuesta guardada")
+        self.assertContains(recargada, "Las respuestas se guardan automáticamente")
         self.assertNotContains(recargada, examen.preguntas[0]["explicacion"])
         examen.refresh_from_db()
         self.assertIn("0", examen.respuestas)
