@@ -1,0 +1,35 @@
+{% extends 'app_shell.html' %}
+{% load static %}
+{% block title %}Revisión pedagógica de pregunta{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/banco-preguntas.css' %}">{% endblock %}
+{% block content %}
+<div class="dash portal-page bank-page">
+  <section class="section-hero"><span class="eyebrow">REVISIÓN HUMANA OBLIGATORIA</span>
+    <h1>Revisar pregunta</h1>
+    <p>Comprueba la exactitud conceptual, que solo haya una clave correcta, los distractores y la explicación. No apruebes contenido que no hayas verificado.</p>
+  </section>
+  <section class="ui-card">
+    {% if error %}<div class="alert alert-warning" role="alert">{{ error }}</div>{% endif %}
+    <p><strong>Materia:</strong> {{ pregunta.materia }} · {{ pregunta.competencia }} · {{ pregunta.get_dificultad_display }}</p>
+    <p><strong>Origen:</strong> {{ pregunta.get_origen_display }}</p>
+    {% if pregunta.evidencia %}<p><strong>Evidencia de aprendizaje:</strong> {{ pregunta.evidencia }}</p>{% endif %}
+    {% if pregunta.contexto %}<blockquote>{{ pregunta.contexto }}</blockquote>{% endif %}
+    <h2>{{ pregunta.enunciado }}</h2>
+    <ol class="bank-options" type="A">
+      {% for letra, opcion in pregunta.opciones.items %}
+      <li><strong>{{ letra }}.</strong> {{ opcion }} {% if letra == pregunta.respuesta_correcta %}<span class="bank-answer">Clave</span>{% endif %}</li>
+      {% endfor %}
+    </ol>
+    <p><strong>Explicación propuesta:</strong> {{ pregunta.explicacion }}</p>
+    <form method="post" class="portal-form">{% csrf_token %}
+      <label for="id_observacion">Observaciones pedagógicas (obligatorias al rechazar)</label>
+      <textarea id="id_observacion" name="observacion" maxlength="1000" rows="3" class="form-control"></textarea>
+      <div class="hero-actions">
+        <button class="ui-btn ui-btn-primary" type="submit" name="accion" value="aprobar">Aprobar publicación</button>
+        <button class="ui-btn ui-btn-outline" type="submit" name="accion" value="rechazar">Rechazar y devolver</button>
+        <a href="{% url 'banco_preguntas' %}" class="ui-btn ui-btn-outline">Cancelar</a>
+      </div>
+    </form>
+  </section>
+</div>
+{% endblock %}

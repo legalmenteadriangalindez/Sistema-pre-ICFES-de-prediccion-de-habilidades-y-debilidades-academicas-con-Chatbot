@@ -1,0 +1,138 @@
+{% extends 'app_shell.html' %}
+{% load static %}
+{% block title %}Banco de preguntas{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/banco-preguntas.css' %}">{% endblock %}
+{% block content %}
+<div class="dash portal-page bank-page">
+  <section class="section-hero">
+    <span class="eyebrow"><i class="fas fa-book-open"></i> CALIDAD DE CONTENIDOS</span>
+    <h1>Banco de preguntas y revisión docente</h1>
+    <p>Crea preguntas originales o guarda borradores sugeridos por IA. Solo se publican después de la aprobación de otro revisor autorizado.</p>
+    <div class="hero-actions">
+      <a class="ui-btn ui-btn-outline" href="{% url 'panel_docente' %}">Panel docente</a>
+      <a class="ui-btn ui-btn-outline" href="{% url 'practica_adaptativa' %}">Ver práctica adaptativa</a>
+    </div>
+  </section>
+  <section class="ui-card" aria-label="Estado del banco">
+    <h2>Preguntas aprobadas y disponibles para practicar: {{ aprobadas }}</h2>
+    <p>Las claves de respuesta y las explicaciones solo aparecen al revisar o al terminar una práctica.</p>
+  </section>
+  <div class="bank-layout">
+    <section class="ui-card">
+      <h2>Crear pregunta manualmente</h2>
+      <form method="post" class="portal-form bank-form">{% csrf_token %}
+        <input type="hidden" name="accion" value="crear">
+        {{ formulario.as_p }}
+        <button type="submit" class="ui-btn ui-btn-primary">Guardar borrador</button>
+      </form>
+    </section>
+    <section class="ui-card">
+      <h2>Sugerir borrador con IA</h2>
+      <p>El generador requiere Ollama local. Ninguna pregunta de IA se publica automáticamente.</p>
+      <form method="post" class="portal-form">{% csrf_token %}
+        <input type="hidden" name="accion" value="generar_ia">
+        <label for="ia-materia">Materia</label>
+        <select name="materia" id="ia-materia" class="form-select" required>
+          {% for valor, etiqueta in materias %}<option value="{{ valor }}">{{ etiqueta }}</option>{% endfor %}
+        </select>
+        <button type="submit" class="ui-btn ui-btn-outline">Generar y guardar borrador</button>
+      </form>
+      <div class="bank-help">
+        <h3>Proceso de publicación</h3>
+        <p><strong>1.</strong> Crea o genera un borrador.</p>
+        <p><strong>2.</strong> Comprueba opciones y explicaciones.</p>
+        <p><strong>3.</strong> Envíalo a revisión.</p>
+        <p><strong>4.</strong> Otro docente autorizado o administrador lo aprueba o rechaza.</p>
+      </div>
+    </section>
+  </div>
+  <section class="ui-card">
+    <h2>Buscar y organizar preguntas</h2>
+    <form method="get" class="bank-filters" aria-label="Filtros del banco de preguntas">
+      <label for="buscar-banco">Texto, competencia o evidencia
+        <input id="buscar-banco" name="q" class="form-control" type="search" maxlength="80" value="{{ busqueda }}" placeholder="Ej. proporcionalidad">
+      </label>
+      <label for="filtrar-materia">Materia
+        <select id="filtrar-materia" name="materia" class="form-select">
+          <option value="">Todas</option>
+          {% for valor, etiqueta in materias %}
+          <option value="{{ valor }}" {% if filtro_materia == valor %}selected{% endif %}>{{ etiqueta }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label for="filtrar-estado">Estado de mis preguntas
+        <select id="filtrar-estado" name="estado" class="form-select">
+          <option value="">Todos</option>
+          {% for valor, etiqueta in estados %}
+          <option value="{{ valor }}" {% if filtro_estado == valor %}selected{% endif %}>{{ etiqueta }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label for="filtrar-dificultad">Dificultad
+        <select id="filtrar-dificultad" name="dificultad" class="form-select">
+          <option value="">Todas</option>
+          {% for valor, etiqueta in dificultades %}
+          <option value="{{ valor }}" {% if filtro_dificultad == valor %}selected{% endif %}>{{ etiqueta }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <button class="ui-btn ui-btn-primary" type="submit">Aplicar filtros</button>
+      <a class="ui-btn ui-btn-outline" href="{% url 'banco_preguntas' %}">Limpiar</a>
+    </form>
+  </section>
+  <section class="ui-card">
+    <h2>Mis preguntas (últimas 100)</h2>
+    <div class="bank-list">
+      {% for pregunta in mias %}
+      <article class="bank-row">
+        <div class="bank-row-main">
+          <strong>{{ pregunta.enunciado|truncatechars:110 }}</strong>
+          <p>{{ pregunta.materia }} · {{ pregunta.competencia }} · {{ pregunta.get_dificultad_display }}{% if pregunta.evidencia %} · Evidencia: {{ pregunta.evidencia }}{% endif %}</p>
+          <small>{{ pregunta.get_estado_display }} · {{ pregunta.get_origen_display }}</small>
+          {% if pregunta.observaciones_revision %}<p><strong>Observación del revisor:</strong> {{ pregunta.observaciones_revision }}</p>{% endif %}
+        </div>
+        <div class="bank-actions">
+          {% if pregunta.estado == 'BORRADOR' or pregunta.estado == 'RECHAZADA' %}
+          <a class="ui-btn ui-btn-outline" href="{% url 'editar_pregunta_banco' pregunta.pk %}">Editar</a>
+          <form method="post" action="{% url 'enviar_pregunta_revision' pregunta.pk %}">{% csrf_token %}
+            <button type="submit" class="ui-btn ui-btn-primary">Enviar a revisión</button>
+          </form>
+          {% else %}<span class="soft-chip">{{ pregunta.get_estado_display }}</span>{% endif %}
+        </div>
+      </article>
+      {% empty %}<p class="widget-empty">Todavía no has creado preguntas.</p>{% endfor %}
+    </div>
+  </section>
+  <section class="ui-card">
+    <h2>Pendientes por revisar (máximo 100)</h2>
+    <p>No puedes aprobar tus propias preguntas.</p>
+    <div class="bank-list">
+      {% for pregunta in pendientes %}
+      <article class="bank-row">
+        <div class="bank-row-main">
+          <strong>{{ pregunta.enunciado|truncatechars:110 }}</strong>
+          <p>{{ pregunta.materia }} · {{ pregunta.competencia }} · {{ pregunta.get_origen_display }}</p>
+          <small>Creada por {{ pregunta.creado_por.username|default:"Autor anterior" }}</small>
+        </div>
+        <a href="{% url 'revisar_pregunta_banco' pregunta.pk %}" class="ui-btn ui-btn-primary">Revisar contenido</a>
+      </article>
+      {% empty %}<p class="widget-empty">No hay preguntas de otros autores pendientes.</p>{% endfor %}
+    </div>
+  </section>
+  <section class="ui-card">
+    <h2>Publicadas recientemente (máximo 50)</h2>
+    <p>Listado de referencia de contenido aprobado; las claves de respuesta no se muestran en este catálogo.</p>
+    <div class="bank-list">
+      {% for pregunta in publicadas %}
+      <article class="bank-row">
+        <div class="bank-row-main">
+          <strong>{{ pregunta.enunciado|truncatechars:100 }}</strong>
+          <p>{{ pregunta.materia }} · {{ pregunta.competencia }}{% if pregunta.evidencia %} · {{ pregunta.evidencia }}{% endif %} · {{ pregunta.get_dificultad_display }}</p>
+        </div>
+        <span class="soft-chip">Aprobada</span>
+      </article>
+      {% empty %}<p class="widget-empty">No hay preguntas aprobadas con estos filtros.</p>{% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

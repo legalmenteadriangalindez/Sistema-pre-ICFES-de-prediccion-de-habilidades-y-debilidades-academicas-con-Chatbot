@@ -1,0 +1,22 @@
+{% extends 'app_shell.html' %}
+{% load static %}
+{% block title %}Editar borrador de pregunta{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/banco-preguntas.css' %}">{% endblock %}
+{% block content %}
+<div class="dash portal-page bank-page">
+  <section class="section-hero"><span class="eyebrow">BORRADOR EDITABLE</span>
+    <h1>Editar pregunta</h1>
+    <p>Revisa las alternativas, la clave y la explicación antes de enviarla a un segundo revisor.</p>
+  </section>
+  <section class="ui-card">
+    {% if pregunta.observaciones_revision %}<p><strong>Observación previa:</strong> {{ pregunta.observaciones_revision }}</p>{% endif %}
+    <form method="post" class="portal-form bank-form">{% csrf_token %}
+      {{ formulario.as_p }}
+      <div class="hero-actions">
+        <button type="submit" class="ui-btn ui-btn-primary">Guardar cambios</button>
+        <a href="{% url 'banco_preguntas' %}" class="ui-btn ui-btn-outline">Volver al banco</a>
+      </div>
+    </form>
+  </section>
+</div>
+{% endblock %}

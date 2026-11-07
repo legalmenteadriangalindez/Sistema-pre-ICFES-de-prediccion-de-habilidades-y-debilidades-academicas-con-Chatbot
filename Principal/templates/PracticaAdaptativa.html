@@ -1,0 +1,66 @@
+{% extends 'app_shell.html' %}
+{% load static %}
+{% block title %}Práctica adaptativa{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/banco-preguntas.css' %}">{% endblock %}
+{% block content %}
+<div class="dash portal-page adaptive-page">
+  <section class="section-hero">
+    <span class="eyebrow"><i class="fas fa-brain"></i> REFUERZO PERSONALIZADO</span>
+    <h1>Práctica adaptativa</h1>
+    <p>Seleccionamos hasta cinco preguntas aprobadas según tu historial de errores y las materias que necesitas reforzar. Es una recomendación descriptiva, no una predicción ni un puntaje oficial ICFES.</p>
+    <div class="hero-actions"><a class="ui-btn ui-btn-outline" href="{% url 'diagnostico_academico' %}">Mi diagnóstico</a>
+      <a class="ui-btn ui-btn-outline" href="{% url 'plan_semanal' %}">Mi plan semanal</a>
+      <a class="ui-btn ui-btn-outline" href="{% url 'historial_academico' %}">Historial</a>
+    </div>
+  </section>
+  {% if error %}<div class="alert alert-warning" role="alert">{{ error }}</div>{% endif %}
+  {% if resultado %}
+  <section class="ui-card" aria-live="polite">
+    <h2>Resultado del refuerzo</h2>
+    <p><strong>{{ resultado.aciertos }} de {{ resultado.total }}</strong> respuestas correctas · <strong>{{ resultado.porcentaje }} %</strong>.</p>
+    <p>El resultado ya está guardado en tu historial académico y alimenta las recomendaciones futuras.</p>
+    {% for p in detalles %}
+    <article class="bank-result-row">
+      <h3>Pregunta {{ forloop.counter }} · {% if p.es_correcta %}Correcta{% else %}Por reforzar{% endif %}</h3>
+      <p><strong>{{ p.competencia }}</strong> · {{ p.pregunta }}</p>
+      <p>Tu respuesta: {{ p.respuesta_estudiante|default:"Sin responder" }}</p>
+      <p>Clave: {{ p.respuesta_correcta }} — {% for letra, opcion in p.opciones.items %}{% if letra == p.respuesta_correcta %}{{ opcion }}{% endif %}{% endfor %}</p>
+      <p><strong>Explicación:</strong> {{ p.explicacion }}</p>
+    </article>{% endfor %}
+  </section>
+  {% endif %}
+  {% if preguntas %}
+  <section class="ui-card">
+    <h2>Tu práctica activa (30 minutos)</h2>
+    {% if focos %}
+    <p><strong>Competencias por reforzar:</strong>
+      {% for foco in focos %}{{ foco.materia }} · {{ foco.competencia }}{% if not forloop.last %}; {% endif %}{% endfor %}
+    </p>
+    {% else %}<p>Todavía no hay suficientes errores por competencia. Esta sesión explora contenidos variados.</p>{% endif %}
+    <form method="post" class="portal-form">{% csrf_token %}
+      <input type="hidden" name="accion" value="calificar">
+      {% for p in preguntas %}
+      <fieldset class="bank-question">
+        <legend>Pregunta {{ forloop.counter }} · {{ p.competencia }}</legend>
+        {% if p.contexto %}<p class="bank-context">{{ p.contexto }}</p>{% endif %}
+        <p>{{ p.pregunta }}</p>
+        {% for letra, opcion in p.opciones.items %}
+        <label class="bank-choice"><input type="radio" name="respuesta_{{ p.id }}" value="{{ letra }}"> <strong>{{ letra }}.</strong> {{ opcion }}</label>
+        {% endfor %}
+      </fieldset>
+      {% endfor %}
+      <button type="submit" class="ui-btn ui-btn-primary">Calificar y guardar respuestas</button>
+    </form>
+  </section>
+  {% else %}
+  <section class="ui-card">
+    <h2>Iniciar una práctica de refuerzo</h2>
+    <p>Solo verás preguntas que hayan sido revisadas. Si todavía no existe un banco aprobado, puedes seguir usando los simulacros habituales.</p>
+    <form method="post">{% csrf_token %}<input type="hidden" name="accion" value="iniciar">
+      <button type="submit" class="ui-btn ui-btn-primary">Preparar mis preguntas</button>
+      <a href="{% url 'test' %}" class="ui-btn ui-btn-outline">Cuestionarios tradicionales</a>
+    </form>
+  </section>
+  {% endif %}
+</div>
+{% endblock %}
