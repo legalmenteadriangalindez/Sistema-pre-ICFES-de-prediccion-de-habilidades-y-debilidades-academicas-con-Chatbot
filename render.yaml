@@ -1,0 +1,39 @@
+# Infraestructura propuesta, NO aplicada automáticamente.
+# Requiere PostgreSQL persistente y aprobación de costos del web service
+# y disco antes de crear una instancia pública con datos reales.
+services:
+  - type: web
+    name: preicfes-piloto
+    runtime: python
+    plan: starter
+    region: virginia
+    branch: main
+    autoDeployTrigger: checksPass
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
+    startCommand: python manage.py migrate --noinput && gunicorn ProyectoDeGrado.wsgi:application --bind 0.0.0.0:$PORT --workers 1 --threads 2 --timeout 120
+    healthCheckPath: /readyz/
+    disk:
+      name: preicfes-datos-privados
+      mountPath: /var/data/preicfes
+      sizeGB: 2
+    envVars:
+      - key: DJANGO_ENV
+        value: production
+      - key: DJANGO_DEBUG
+        value: "false"
+      - key: DJANGO_TRUST_PROXY_SSL_HEADER
+        value: "true"
+      - key: DJANGO_DATA_ROOT
+        value: /var/data/preicfes
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false
+      - key: DJANGO_ALLOWED_HOSTS
+        sync: false
+      - key: DJANGO_CSRF_TRUSTED_ORIGINS
+        sync: false
+      - key: OLLAMA_BASE_URL
+        sync: false
+      - key: OLLAMA_MODEL
+        value: llama3:8b
