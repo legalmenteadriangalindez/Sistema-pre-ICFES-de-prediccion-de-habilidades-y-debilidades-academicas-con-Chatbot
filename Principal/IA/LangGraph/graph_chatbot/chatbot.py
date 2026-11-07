@@ -22,6 +22,34 @@ import os
 # ****************************************************IMPORTS***************************************************************************
 
 
+def extraer_y_guardar_recuerdo(state, memory_manager):
+    """El extractor realiza la persistencia y devuelve bool, nunca una lista.
+
+    El grafo solo marca qué mensaje intentó procesarse. No realiza una
+    segunda escritura en ChromaDB, y permite reintentar errores inesperados.
+    """
+    mensajes = state.get("messages") or []
+    mensaje = next(
+        (item for item in reversed(mensajes) if isinstance(item, HumanMessage)),
+        None,
+    )
+    if mensaje is None or not isinstance(mensaje.content, str):
+        return {}
+    if not mensaje.content.strip():
+        return {}
+    if state.get("last_memory_extraction") == mensaje.content:
+        return {}
+    try:
+        memory_manager.extract_and_store_memories(mensaje.content)
+    except Exception as exc:
+        logging.getLogger(__name__).warning(
+            "chat_memory_extraction_failed",
+            extra={"component": "memory", "error_type": type(exc).__name__},
+        )
+        return {}
+    return {"last_memory_extraction": mensaje.content}
+
+
 class ModernChatbot:
     
     def __init__(self, user_id: str):
@@ -145,35 +173,8 @@ class ModernChatbot:
 
         # nodo que extrae y almacena nuevas memorias vectoriales
         def memory_extraction_node(state):
-            messages = state['messages']
-    
-            last_extraction = state.get('last_memory_extraction')
-    
-            # obtener el ultimo mensage del usuario
-            last_user_message = None
-            for msg in reversed(messages):
-                if isinstance(msg, HumanMessage):
-                    last_user_message = msg
-                    break
-            
-            if not last_user_message:
-                return {}
-            # procesar solo si no hemos extraido memoria recientemente de este mensage
-            if last_extraction != last_user_message.content:
-                extracted_memories =self.memory_manager.extract_and_store_memories(last_user_message.content)
-                if not extracted_memories or not isinstance(extracted_memories, list):
-                    extracted_memories = []
-                valid_memories = [
-                mem for mem in extracted_memories
-                if getattr(mem, "content", "").strip() and getattr(mem, "importance", 0) >= 2
-                ]
-                # Guardar solo las memorias válidas
-                for mem in valid_memories:
-                    self.memory_manager.save_memory_vectorial(mem)
+            return extraer_y_guardar_recuerdo(state, self.memory_manager)
 
-                return {"last_memory_extraction": last_user_message.content}
-            return {}
-        
         # configuarar el grafo con flujo secuencial de nodos
         workflow.add_node("memory_retrieval", memory_retrieval_node)
         workflow.add_node("context_optimization", context_optimization_node)
