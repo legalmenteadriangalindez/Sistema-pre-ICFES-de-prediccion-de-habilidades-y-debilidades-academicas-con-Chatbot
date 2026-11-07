@@ -26,6 +26,7 @@ class PreguntaBanco(models.Model):
 
     materia = models.CharField(max_length=32, choices=MATERIAS)
     competencia = models.CharField(max_length=100)
+    evidencia = models.CharField(max_length=200, blank=True)
     dificultad = models.CharField(max_length=8, choices=DIFICULTADES, default="MEDIA")
     contexto = models.TextField(blank=True)
     enunciado = models.TextField(max_length=2000)
