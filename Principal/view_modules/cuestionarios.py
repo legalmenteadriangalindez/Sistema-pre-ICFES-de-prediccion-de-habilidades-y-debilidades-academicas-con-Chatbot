@@ -5,7 +5,7 @@ import unicodedata
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
-from Principal.models import Estudiante, PerfilUsuario, Persona
+from .selectores import _estudiante
 from Principal.services.evaluaciones import (
     calificar_y_guardar_evaluacion, normalizar_preguntas,
     preguntas_para_estudiante,
@@ -25,9 +25,7 @@ def test(request, *, generar_quizes_func=generar_quizes, generar_material_func=g
         if not pendientes:
             contexto["error_prueba"] = "La evaluación expiró o ya fue calificada. Genera una nueva prueba."
         else:
-            perfil = PerfilUsuario.objects.filter(user=request.user).first()
-            persona = Persona.objects.filter(perfil_user=perfil).first()
-            estudiante = Estudiante.objects.filter(persona=persona).first()
+            estudiante = _estudiante(request.user)
             if not estudiante:
                 contexto["error_prueba"] = "Debes completar tu registro como estudiante para guardar resultados."
             else:
