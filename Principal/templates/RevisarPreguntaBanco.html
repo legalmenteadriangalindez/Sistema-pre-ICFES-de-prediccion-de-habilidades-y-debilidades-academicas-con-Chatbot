@@ -12,6 +12,7 @@
     {% if error %}<div class="alert alert-warning" role="alert">{{ error }}</div>{% endif %}
     <p><strong>Materia:</strong> {{ pregunta.materia }} · {{ pregunta.competencia }} · {{ pregunta.get_dificultad_display }}</p>
     <p><strong>Origen:</strong> {{ pregunta.get_origen_display }}</p>
+    {% if pregunta.evidencia %}<p><strong>Evidencia de aprendizaje:</strong> {{ pregunta.evidencia }}</p>{% endif %}
     {% if pregunta.contexto %}<blockquote>{{ pregunta.contexto }}</blockquote>{% endif %}
     <h2>{{ pregunta.enunciado }}</h2>
     <ol class="bank-options" type="A">
