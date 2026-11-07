@@ -18,7 +18,6 @@ def recomendaciones(request):
     if not estudiante:
         return render(request,"Recomendaciones.html",{"error": "este perfil no tiene estudiante asociado"})
     
-    print(estudiante)
     matricula = Matricula.objects.filter(estudiante=estudiante,activa=True).first()
     perfil_pedagogico = None
     analisis_cognitivo = None
