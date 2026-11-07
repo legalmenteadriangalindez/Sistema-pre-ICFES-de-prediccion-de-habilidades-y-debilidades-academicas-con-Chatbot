@@ -210,7 +210,8 @@ class BancoDocenteAdaptativoTests(TestCase):
             "accion": "calificar", "respuesta_0": "B",
             "id_banco": "99999", "respuesta_correcta": "A",
         })
-        self.assertContains(resultado, "100.0 %")
+        self.assertEqual(resultado.context["resultado"]["porcentaje"], 100)
+        self.assertContains(resultado, "1 de 1")
         intento = IntentoEvaluacion.objects.get(estudiante=self.estudiantes[0])
         self.assertEqual(intento.materia, "Práctica adaptativa")
         respuesta = RespuestaEvaluacion.objects.get(intento=intento)
