@@ -386,3 +386,16 @@ Los usuarios están **activos** y pueden iniciar sesión sin verificación de co
 4. **No borres ni regeneres las migraciones** para este procedimiento. La restauración de la base de datos anterior es posible si conservas `local.sqlite3.respaldo`.
 
 Las pruebas automatizadas están en `Principal/test_usuarios_prueba.py` y `Principal/test_redireccion_roles.py`; ejecútalas con `python manage.py test Principal.test_usuarios_prueba Principal.test_redireccion_roles` desde el entorno con las dependencias instaladas.
+
+## Preparación técnica de producción: adjuntos, PostgreSQL y persistencia
+
+El tutor puede pasar texto extraído de un PDF legible a Ollama y enviar las
+transcripciones de audio como preguntas del chat. Para verificar el motor real
+se requiere Ollama/Whisper instalados y documentos sintéticos de prueba.
+
+En producción se exige PostgreSQL (`DATABASE_URL`) y un volumen persistente
+(`DJANGO_DATA_ROOT`); la plantilla `render.yaml` describe la infraestructura,
+**pero no aprovisiona recursos por sí sola** ni habilita varios colegios.
+
+Consulta [la guía de operación y despliegue seguro](docs/CIERRE_OPERATIVO_PRODUCCION_2026.md)
+antes de activar una instancia pública con estudiantes.

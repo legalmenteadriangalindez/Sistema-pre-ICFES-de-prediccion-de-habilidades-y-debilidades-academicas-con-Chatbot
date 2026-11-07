@@ -23,3 +23,12 @@ scikit-learn>=1.5,<2.0
 
 # Importación XLSX de matrículas, sin macros ni fórmulas ejecutables
 openpyxl>=3.1,<4.0
+
+# Texto de PDF (sin OCR y con límites de páginas y caracteres)
+pypdf>=5.0,<7.0
+
+# Producción: PostgreSQL, proceso WSGI y estáticos
+psycopg[binary]>=3.2,<4.0
+dj-database-url>=2.3,<4.0
+gunicorn>=22.0,<26.0
+whitenoise>=6.8,<7.0

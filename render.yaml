@@ -1,0 +1,49 @@
+# Infraestructura propuesta, NO aplicada automáticamente.
+# El plan requiere servicios pagos (CPU, PostgreSQL y disco).
+# NO aplicarlo sin revisar costos, permisos y política de protección de menores.
+databases:
+  - name: preicfes-piloto-db
+    plan: 0.1c-256mb
+    region: virginia
+    postgresMajorVersion: "17"
+    diskSizeGB: 5
+    databaseName: preicfes
+
+services:
+  - type: web
+    name: preicfes-piloto
+    runtime: python
+    plan: 1c-2g
+    region: virginia
+    branch: main
+    autoDeployTrigger: checksPass
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
+    startCommand: python manage.py migrate --noinput && gunicorn ProyectoDeGrado.wsgi:application --bind 0.0.0.0:$PORT --workers 1 --threads 2 --timeout 120
+    healthCheckPath: /readyz/
+    disk:
+      name: preicfes-datos-privados
+      mountPath: /var/data/preicfes
+      sizeGB: 5
+    envVars:
+      - key: DJANGO_ENV
+        value: production
+      - key: DJANGO_DEBUG
+        value: "false"
+      - key: DJANGO_TRUST_PROXY_SSL_HEADER
+        value: "true"
+      - key: DJANGO_DATA_ROOT
+        value: /var/data/preicfes
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: preicfes-piloto-db
+          property: connectionString
+      - key: DJANGO_ALLOWED_HOSTS
+        sync: false
+      - key: DJANGO_CSRF_TRUSTED_ORIGINS
+        sync: false
+      - key: OLLAMA_BASE_URL
+        sync: false
+      - key: OLLAMA_MODEL
+        value: llama3:8b
