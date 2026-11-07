@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.db import IntegrityError, transaction
+from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -144,16 +145,53 @@ def banco_preguntas(request):
         else:
             raise Http404("Acción no disponible.")
 
-    mias = PreguntaBanco.objects.filter(creado_por=request.user)[:100]
+    materia = request.GET.get("materia", "")
+    estado = request.GET.get("estado", "")
+    dificultad = request.GET.get("dificultad", "")
+    busqueda = request.GET.get("q", "").strip()[:80]
+    if materia not in dict(PreguntaBanco.MATERIAS):
+        materia = ""
+    if estado not in dict(PreguntaBanco.ESTADOS):
+        estado = ""
+    if dificultad not in dict(PreguntaBanco.DIFICULTADES):
+        dificultad = ""
+    mias = PreguntaBanco.objects.filter(creado_por=request.user)
     pendientes = PreguntaBanco.objects.filter(estado="EN_REVISION").exclude(
         creado_por=request.user
-    ).select_related("creado_por")[:100]
+    ).select_related("creado_por")
+    publicadas = PreguntaBanco.objects.filter(
+        estado="APROBADA", activo=True,
+    )
+    if materia:
+        mias = mias.filter(materia=materia)
+        pendientes = pendientes.filter(materia=materia)
+        publicadas = publicadas.filter(materia=materia)
+    if estado:
+        mias = mias.filter(estado=estado)
+    if dificultad:
+        mias = mias.filter(dificultad=dificultad)
+        pendientes = pendientes.filter(dificultad=dificultad)
+        publicadas = publicadas.filter(dificultad=dificultad)
+    if busqueda:
+        filtro = (
+            Q(enunciado__icontains=busqueda)
+            | Q(competencia__icontains=busqueda)
+            | Q(evidencia__icontains=busqueda)
+        )
+        mias = mias.filter(filtro)
+        pendientes = pendientes.filter(filtro)
+        publicadas = publicadas.filter(filtro)
     return render(request, "BancoPreguntas.html", {
-        "formulario": formulario, "mias": mias, "pendientes": pendientes,
+        "formulario": formulario, "mias": mias[:100], "pendientes": pendientes[:100],
+        "publicadas": publicadas[:50],
         "aprobadas": PreguntaBanco.objects.filter(
             estado="APROBADA", activo=True
         ).count(),
         "materias": PreguntaBanco.MATERIAS,
+        "estados": PreguntaBanco.ESTADOS,
+        "dificultades": PreguntaBanco.DIFICULTADES,
+        "filtro_materia": materia, "filtro_estado": estado,
+        "filtro_dificultad": dificultad, "busqueda": busqueda,
     })
 
 
