@@ -1,0 +1,25 @@
+{
+  "name": "pre-icfes-quality",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Calidad frontend y pruebas de navegador de Pre-ICFES",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "lint:js": "eslint Principal/static/js tests/browser",
+    "lint:css": "stylelint 'Principal/static/css/**/*.css'",
+    "test:js": "node --test tests/javascript/*.test.cjs",
+    "test:browser": "playwright test",
+    "test:browser:headed": "playwright test --headed"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "1.65.0",
+    "eslint": "10.14.0",
+    "globals": "17.13.0",
+    "stylelint": "17.16.0",
+    "stylelint-config-recommended": "18.0.0"
+  }
+}

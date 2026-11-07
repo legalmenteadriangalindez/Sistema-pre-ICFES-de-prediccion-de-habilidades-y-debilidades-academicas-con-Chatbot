@@ -74,6 +74,17 @@ En GitHub Actions la misma batería se ejecuta con Python 3.12 en solicitudes de
 
 **Cuentas demo:** solo disponibles en desarrollo local; crea o verifica con `python manage.py crear_usuarios_prueba`. Nunca subas `local.sqlite3`, `.env` ni contraseñas de producción.
 
+## Calidad automática y pruebas de navegador — fase 7 (noviembre de 2026)
+
+El repositorio cuenta con Ruff y Black para Python, ESLint 10 para
+JavaScript, Stylelint para CSS, pruebas completas de Django y Playwright
+Chromium con una base SQLite temporal y usuarios sintéticos. Cinco trabajos
+de GitHub Actions comprueban automáticamente los Pull Requests y los
+commits a `main`. Se empieza por una línea base crítica para el código
+histórico y reglas estrictas en los módulos nuevos o ya adoptados.
+
+[Guía de controles, ejecución local y protección de `main`](docs/FASE_7_CALIDAD_AUTOMATICA.md).
+
 ## JavaScript consolidado y notificaciones reutilizables (noviembre de 2026)
 
 La auditoría confirmó que la fase 1 ya había retirado los cinco archivos JS

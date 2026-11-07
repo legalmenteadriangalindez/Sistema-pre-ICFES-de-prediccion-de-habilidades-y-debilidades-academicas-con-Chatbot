@@ -1,4 +1,5 @@
 """Lectura y escritura atómica de JSON privado (sin cambiar el esquema)."""
+
 import json
 import os
 import tempfile

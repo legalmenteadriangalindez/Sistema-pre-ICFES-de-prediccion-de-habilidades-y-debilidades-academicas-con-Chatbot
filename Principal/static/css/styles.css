@@ -39,7 +39,8 @@ nav{
     display: flex;
     gap: 2%;
     min-height: 100px;
-    box-shadow: 5% 5% 5% grey;
+
+
 }
 
 /* margen del nav */
@@ -224,7 +225,8 @@ input:checked + .slider:before{
     padding: 8px 20px;
     border-radius: 8px;
     font-weight: 500;
-    transition: all 0.3 ease ;
+
+
     display: flex;
     align-items: center;
     gap: 8px;
@@ -307,7 +309,8 @@ input:checked + .slider:before{
    border: none;
    border-radius: 8px;
    font-weight: 500;
-   transform:all 0.3 ease;
+
+
    display: flex;
    align-items: center;
    justify-content: center;
@@ -354,7 +357,8 @@ input:checked + .slider:before{
     border-radius: 8px;
     font-weight: 600;
     font-size: 1.1rem;
-    transition: all 0.3 ease;
+
+
     display: flex;
     align-items: center;
     justify-content: center;
@@ -618,7 +622,8 @@ textarea {
  /* pie de pagina  */
 footer{
      background-color: #A68B6A;
-     padding: 20 0;
+
+
      margin-top: auto;
       text-align: center;
      /* min-height: 150px;

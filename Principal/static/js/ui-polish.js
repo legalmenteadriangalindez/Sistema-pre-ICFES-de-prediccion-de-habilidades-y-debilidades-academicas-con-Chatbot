@@ -18,7 +18,7 @@
       const oldDark = localStorage.getItem('modoOscuro');
       if (oldDark === 'true') options.dark = true;
     }
-  } catch (_) {
+  } catch {
     // La interfaz sigue funcionando sin persistencia local.
   }
 
@@ -37,7 +37,7 @@
     apply();
     try {
       localStorage.setItem(KEY, JSON.stringify(options));
-    } catch (_) {
+    } catch {
       // Sin almacenamiento, las preferencias continúan activas durante la sesión.
     }
   };
