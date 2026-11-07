@@ -1,6 +1,5 @@
 """Indicadores descriptivos de ítems con umbrales explícitos de suficiencia."""
 from collections import defaultdict
-from math import ceil
 
 from Principal.models import PreguntaBanco, RespuestaEvaluacion
 
