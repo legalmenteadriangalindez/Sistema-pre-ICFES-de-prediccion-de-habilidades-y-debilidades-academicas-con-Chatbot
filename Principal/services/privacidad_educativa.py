@@ -1,9 +1,10 @@
 """Privacidad: consentimiento vinculado, auditoría mínima y retención."""
-from django.db import transaction
+from datetime import timedelta
+
 from django.utils import timezone
 
 from Principal.models import (
-    ConsentimientoTutorIA, Persona, RegistroAuditoria,
+    ConsentimientoTutorIA, RegistroAuditoria,
 )
 
 
@@ -38,5 +39,5 @@ def registrar_auditoria(actor, accion, recurso, recurso_id=None):
 
 def expirar_auditoria(dias=365):
     """Operación explícita de mantenimiento; no se ejecuta al importar módulos."""
-    limite = timezone.now() - timezone.timedelta(days=dias)
+    limite = timezone.now() - timedelta(days=dias)
     return RegistroAuditoria.objects.filter(fecha__lt=limite).delete()[0]
