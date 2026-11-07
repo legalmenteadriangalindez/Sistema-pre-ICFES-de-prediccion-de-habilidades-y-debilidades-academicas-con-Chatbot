@@ -4,6 +4,7 @@ La fachada Principal.views.home sigue utilizando render_func para que los
 mocks y las URLs históricas continúen funcionando.
 """
 
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
@@ -21,6 +22,8 @@ from .selectores import es_gestor
 
 @login_required
 def home(request, *, render_func=render):
+    if settings.DEMO_MODE:
+        return render_func(request, "TutorDemoLimitado.html")
     usuario = request.user
     if es_gestor(usuario):
         return redirect("admin_gestion_users")
