@@ -260,6 +260,26 @@ class BancoDocenteAdaptativoTests(TestCase):
         preguntas, _ = seleccionar_adaptativas(alumno, cantidad=1)
         self.assertNotEqual(preguntas[0].pk, aritmetica.pk)
 
+    def test_busqueda_filtra_por_materia_dificultad_y_evidencia(self):
+        propia = self.nueva_pregunta(
+            enunciado="¿Qué operación permite encontrar el total?",
+            estado="APROBADA", materia="Matemáticas",
+        )
+        propia.evidencia = "Interpreta relaciones aritméticas"
+        propia.save(update_fields=["evidencia"])
+        otra = self.nueva_pregunta(
+            enunciado="¿Cuál es la idea principal del texto?",
+            estado="APROBADA", materia="Lectura Crítica",
+        )
+        self.client.force_login(self.docente)
+        vista = self.client.get(reverse("banco_preguntas"), {
+            "materia": "Matemáticas", "dificultad": "BASICA",
+            "q": "relaciones aritméticas",
+        })
+        self.assertContains(vista, propia.enunciado)
+        self.assertNotContains(vista, otra.enunciado)
+        self.assertEqual(len(vista.context["publicadas"]), 1)
+
     def test_no_hay_banco_aprobado_muestra_alternativa(self):
         self.nueva_pregunta(estado="EN_REVISION")
         self.client.force_login(self.alumnos[0])
