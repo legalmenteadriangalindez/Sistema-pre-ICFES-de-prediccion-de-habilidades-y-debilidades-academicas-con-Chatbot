@@ -115,9 +115,10 @@ class DemoGratuitaTests(TestCase):
             "materia": "Matematicas",
         })
         self.assertEqual(respuesta.status_code, 200)
-        self.assertContains(respuesta, "Ecuaciones lineales")
+        self.assertContains(respuesta, "Si 3x + 5 = 20")
         preguntas = self.client.session.get("prueba_materia_preguntas")
         self.assertEqual(len(preguntas), 2)
+        self.assertEqual(preguntas[0]["competencia"], "Ecuaciones lineales")
         self.assertEqual(preguntas[0]["respuesta_correcta"], "B")
 
         resultado = self.client.post("/testDeVocacion/", {
