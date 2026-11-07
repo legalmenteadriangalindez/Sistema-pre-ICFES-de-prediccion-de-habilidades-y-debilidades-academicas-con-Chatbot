@@ -6,9 +6,19 @@ from .historial_views import historial_academico
 from django.urls import path, include  # librerias nesesarias para hacer la referencia desde url.py del proyecto
 from .view_modules import docentes as docente_ops, admin_operaciones, admin_escolar
 from .view_modules import banco_preguntas as banco_ops, practica_adaptativa as adaptativo_ops
-from .view_modules import (calidad_banco, intervenciones, simulacro_avanzado, versiones_banco) 
+from .view_modules import (calidad_banco, intervenciones, simulacro_avanzado, versiones_banco)
+from .view_modules import (repasos, progreso_competencias, material_validado, consentimientos, avisos, import_export) 
 
 urlpatterns = [
+  path("repasos/", repasos.agenda_repasos, name="agenda_repasos"),
+  path("progreso-competencias/", progreso_competencias.progreso_competencias, name="progreso_competencias"),
+  path("material-validado/<int:pregunta_id>/", material_validado.material_validado, name="material_validado"),
+  path("privacidad/consentimiento-ia/", consentimientos.consentimiento_tutor, name="consentimiento_tutor"),
+  path("avisos/", avisos.mis_avisos, name="mis_avisos"),
+  path("avisos/<int:aviso_id>/leido/", avisos.marcar_aviso_leido, name="marcar_aviso_leido"),
+  path("gestion/matriculas/importar/", import_export.cargar_matriculas, name="cargar_matriculas"),
+  path("gestion/matriculas/plantilla/", import_export.descargar_plantilla_matriculas, name="descargar_plantilla_matriculas"),
+  path("gestion/reportes/exportar/", import_export.exportar_reporte_matriculas, name="exportar_reporte_matriculas"),
   path("simulacros/avanzado/", simulacro_avanzado.simulacro_avanzado, name="simulacro_avanzado"),
   path("simulacros/avanzado/resultado/<int:examen_id>/", simulacro_avanzado.resultado_simulacro_avanzado, name="resultado_simulacro_avanzado"),
   path("banco-preguntas/calidad/", calidad_banco.calidad_banco, name="calidad_banco"),
