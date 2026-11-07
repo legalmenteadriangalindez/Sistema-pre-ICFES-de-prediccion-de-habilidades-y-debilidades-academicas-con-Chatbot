@@ -4,7 +4,7 @@
 
 1. Un docente con matrícula autorizada o un administrador accede a
    **Banco de preguntas** desde su panel.
-2. Crea una pregunta con materia, competencia, dificultad, contexto opcional,
+2. Crea una pregunta con materia, competencia, evidencia pedagógica opcional, dificultad, contexto opcional,
    cuatro alternativas A–D, una clave y explicación; o solicita al generador
    local Ollama un **borrador de IA**.
 3. Puede corregir un borrador propio y enviarlo a revisión. No puede
