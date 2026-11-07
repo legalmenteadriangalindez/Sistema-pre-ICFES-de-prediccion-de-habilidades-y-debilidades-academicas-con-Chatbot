@@ -48,6 +48,24 @@ SESSION_ENGINE = "django.contrib.sessions.backends.db"
 CSRF_COOKIE_SAMESITE = "Lax"
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
+
+# HTTPS obligatorio solo en producción. En local se conserva HTTP.
+SECURE_SSL_REDIRECT = ENVIRONMENT == "production"
+SECURE_HSTS_SECONDS = 31536000 if ENVIRONMENT == "production" else 0
+SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+SECURE_HSTS_PRELOAD = False
+# Habilitar solo cuando el proxy de confianza sanea X-Forwarded-Proto.
+SECURE_PROXY_SSL_HEADER = (
+    ("HTTP_X_FORWARDED_PROTO", "https")
+    if ENVIRONMENT == "production"
+    and os.environ.get("DJANGO_TRUST_PROXY_SSL_HEADER", "").lower() in {"1", "true", "yes"}
+    else None
+)
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")
+    if origin.strip()
+]
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_REFERRER_POLICY = "same-origin"
 
