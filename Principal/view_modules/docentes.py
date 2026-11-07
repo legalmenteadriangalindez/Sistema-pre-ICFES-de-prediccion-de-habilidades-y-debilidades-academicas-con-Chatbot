@@ -11,7 +11,7 @@ from Principal.models import (
     Matricula, NivelAprendizaje, RetroalimentacionDocente, Tema,
 )
 from .selectores import _tiene_rol
-from Principal.services.avisos_academicos import emitir_aviso, emitir_aviso_familiar
+from Principal.services.avisos_academicos import avisar_retro_familiar, emitir_aviso
 
 
 def matriculas_permitidas_docente(user):
@@ -140,7 +140,7 @@ def panel_docente(request):
                     "Tienes una nueva observación docente sobre tus actividades.",
                     f"retroalimentacion-{comentario.pk}",
                 )
-                emitir_aviso_familiar(matricula.estudiante, "RETRO_FAMILIAR", "Un estudiante vinculado recibió retroalimentación docente.", f"retro-{comentario.pk}")
+                avisar_retro_familiar(matricula.estudiante, comentario.pk)
                 exito = "Retroalimentación guardada y disponible para el estudiante."
         else:
             error = "La acción solicitada no está permitida."
