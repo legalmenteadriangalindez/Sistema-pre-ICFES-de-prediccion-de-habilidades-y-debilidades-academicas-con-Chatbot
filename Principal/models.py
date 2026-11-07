@@ -529,6 +529,10 @@ class ProgresoTema(models.Model):
 
 #==========TABLA ACTIVIDADES========
 class Actividad(models.Model):
+    creado_por = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name="actividades_creadas",
+    )
     tema = models.ForeignKey(Tema, on_delete=models.PROTECT) # muchas actividades pueden tener un tema asignado 
     titulo = models.CharField(max_length=100)
     descripcion = models.TextField()
@@ -543,6 +547,10 @@ class Actividad(models.Model):
 
 #==========TABLA ACTIVIDADES ASIGNADAS========
 class ActividadAsignada(models.Model):
+    asignada_por = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name="actividades_asignadas",
+    )
     matricula = models.ForeignKey(Matricula, on_delete=models.CASCADE) 
     actividad = models.ForeignKey(Actividad, on_delete=models.PROTECT) # muchas actividades pueden ser asignadas a una matricula  
     fecha_asignacion = models.DateTimeField(auto_now_add=True)
@@ -559,6 +567,21 @@ class ActividadAsignada(models.Model):
         if self.matricula and self.actividad:
             return f"{self.matricula.estudiante} - {self.actividad.titulo}"
         return "Actividad asignada sin matrícula"
+
+class RetroalimentacionDocente(models.Model):
+    """Observación formativa del docente, aislada por matrícula autorizada."""
+    matricula = models.ForeignKey(
+        Matricula, on_delete=models.CASCADE, related_name="retroalimentaciones_docentes"
+    )
+    docente = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name="retroalimentaciones_emitidas"
+    )
+    texto = models.TextField(max_length=1000)
+    creado_en = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-creado_en", "-pk"]
 
 #**********TABLA ACTIVIDADES ASIGNADAS********
 
