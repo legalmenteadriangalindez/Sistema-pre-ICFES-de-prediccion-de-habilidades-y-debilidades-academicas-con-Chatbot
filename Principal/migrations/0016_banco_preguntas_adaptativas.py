@@ -23,6 +23,7 @@ class Migration(migrations.Migration):
                     ("Inglés", "Inglés"),
                 ], max_length=32)),
                 ("competencia", models.CharField(max_length=100)),
+                ("evidencia", models.CharField(blank=True, max_length=200)),
                 ("dificultad", models.CharField(choices=[
                     ("BASICA", "Básica"), ("MEDIA", "Media"), ("ALTA", "Alta"),
                 ], default="MEDIA", max_length=8)),
