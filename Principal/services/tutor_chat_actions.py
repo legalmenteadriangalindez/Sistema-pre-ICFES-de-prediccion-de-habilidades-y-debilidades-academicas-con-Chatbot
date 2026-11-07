@@ -10,6 +10,8 @@ from Principal.services.files import guardar_PDFs, validar_audio, validar_pdf
 from Principal.services.gestion_view_test import agrupar_historial_por_turnos
 from Principal.services.tutor_academico import construir_contexto_academico
 from Principal.services.tutor_profile_sync import sincronizar_perfil_academico
+from Principal.services.fuentes_validadas import contexto_con_fuentes
+from Principal.services.privacidad_educativa import tutor_autorizado
 
 logger = logging.getLogger(__name__)
 
@@ -50,7 +52,17 @@ def procesar_post_chat(request, chatbot, contexto, estudiante, chat_id, render_f
         contexto["historial"] = []
 
     if prompt:
+        if not tutor_autorizado(estudiante):
+            contexto["chat_error"] = (
+                "Para utilizar IA con menores, un acudiente vinculado debe "
+                "autorizarla desde su panel familiar."
+            )
+            return render_func(request, "home.html", contexto)
         resumen = construir_contexto_academico(estudiante)
+        fuentes_texto, fuentes = contexto_con_fuentes(estudiante, prompt)
+        if fuentes_texto:
+            resumen += "\\n\\n" + fuentes_texto
+        contexto["fuentes_validadas"] = fuentes
         resultado = chatbot.chat(prompt, chat_id=chat_id, academic_context=resumen)
         chat_id = resultado.get("chat_id") or chat_id
         contexto["chat_id"] = chat_id
