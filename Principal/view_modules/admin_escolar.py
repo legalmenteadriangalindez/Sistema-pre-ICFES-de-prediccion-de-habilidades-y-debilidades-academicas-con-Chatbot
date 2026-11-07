@@ -8,9 +8,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_http_methods, require_POST
 
 from Principal.models import (
-    Acudiente, ActividadAsignada, AnioLectivo, Curso, Estudiante,
-    EstudianteAcudiente, IntentoEvaluacion, Matricula,
-    RelacionAcudiente, RetroalimentacionDocente,
+    ActividadAsignada, Boletin, Curso, EstudianteAcudiente,
+    IntentoEvaluacion, Matricula, Nota, Observacion, RetroalimentacionDocente,
 )
 from .selectores import es_gestor
 
@@ -25,6 +24,14 @@ class MatriculaAdminForm(forms.ModelForm):
             "anio_lectivo": forms.Select(attrs={"class": "form-select"}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk:
+            # La identidad y el año son inmutables: evitan trasladar notas
+            # y asignaciones de un estudiante a otro mediante un POST.
+            self.fields["estudiante"].disabled = True
+            self.fields["anio_lectivo"].disabled = True
+
     def clean(self):
         datos = super().clean()
         alumno = datos.get("estudiante")
@@ -35,6 +42,17 @@ class MatriculaAdminForm(forms.ModelForm):
             estudiante=alumno, anio_lectivo=anio,
         ).exclude(pk=self.instance.pk).exists():
             self.add_error("estudiante", "Ya existe una matrícula de este estudiante en ese año. Edítala.")
+        if curso and self.instance.pk and curso.pk != self.instance.curso_id:
+            relacionadas = (
+                ActividadAsignada.objects.filter(matricula=self.instance).exists()
+                or Nota.objects.filter(matricula=self.instance).exists()
+                or Boletin.objects.filter(matricula=self.instance).exists()
+                or Observacion.objects.filter(matricula=self.instance).exists()
+            )
+            if relacionadas:
+                self.add_error(
+                    "curso", "No puedes trasladar una matrícula con trabajos o registros históricos."
+                )
         if curso and activa:
             if not curso.activo:
                 self.add_error("curso", "El curso debe estar activo.")
