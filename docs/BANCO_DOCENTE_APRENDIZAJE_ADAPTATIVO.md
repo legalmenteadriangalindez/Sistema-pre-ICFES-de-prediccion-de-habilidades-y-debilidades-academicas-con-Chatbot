@@ -9,13 +9,13 @@
    local Ollama un **borrador de IA**.
 3. Puede corregir un borrador propio y enviarlo a revisión. No puede
    aprobarlo ni editarlo mientras esté en revisión o aprobado.
-4. **Otra persona autorizada**, docente o administrador, revisa y aprueba
+4. El panel permite buscar por materia, texto, competencia, evidencia,\n   dificultad y estado, además de consultar las preguntas publicadas.\n5. **Otra persona autorizada**, docente o administrador, revisa y aprueba
    o rechaza con observaciones. El rechazo requiere al menos 10 caracteres
    y devuelve la pregunta a su autor para corrección.
-5. Solamente `APROBADA` y `activo=True` entra en la práctica adaptativa.
+6. Solamente `APROBADA` y `activo=True` entra en la práctica adaptativa.
    Los formularios muestran la clave exclusivamente a los revisores
    autorizados. No se publica automáticamente contenido sugerido por IA.
-6. El estudiante entra en **Práctica adaptativa**, recibe hasta 5 preguntas,
+7. El estudiante entra en **Práctica adaptativa**, recibe hasta 5 preguntas,
    responde en un máximo de 30 minutos y obtiene calificación y explicación
    al finalizar. El resultado queda registrado en su historial mediante
    `IntentoEvaluacion` y `RespuestaEvaluacion`.
