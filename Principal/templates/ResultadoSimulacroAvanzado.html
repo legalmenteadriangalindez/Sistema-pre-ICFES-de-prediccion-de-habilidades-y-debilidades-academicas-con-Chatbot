@@ -1,0 +1,21 @@
+{% extends 'app_shell.html' %}
+{% load static %}
+{% block title %}Resultado de práctica recuperable{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/alta-prioridad.css' %}">{% endblock %}
+{% block content %}
+<div class="dash cierre-page"><section class="section-hero"><span class="eyebrow">RESULTADO PRIVADO</span>
+  <h1>Tu simulacro de práctica</h1><p>Resultado descriptivo, no oficial del ICFES.</p>
+  <h2>{{ examen.intento.aciertos }} / {{ examen.intento.total_preguntas }} preguntas correctas · {{ examen.intento.porcentaje }} %</h2>
+  <a class="ui-btn ui-btn-outline" href="{% url 'historial_academico' %}">Historial de evaluaciones</a>
+  <a class="ui-btn ui-btn-primary" href="{% url 'simulacro_avanzado' %}">Otra práctica</a>
+</section>
+<section class="ui-card"><h2>Resultados por materia y competencia</h2>
+<p>Las preguntas originales de esta modalidad no poseen evidencias oficiales clasificadas; el reporte presenta su competencia de práctica.</p>
+<div class="table-responsive"><table class="table"><thead><tr><th>Materia</th><th>Competencia</th><th>Aciertos</th><th>Porcentaje</th></tr></thead>
+<tbody>{% for f in filas %}<tr><td>{{ f.materia }}</td><td>{{ f.competencia }}</td><td>{{ f.aciertos }} / {{ f.total }}</td><td>{{ f.porcentaje }} %</td></tr>{% endfor %}</tbody></table></div></section>
+<section class="ui-card"><h2>Correcciones y explicaciones</h2>
+{% for d in detalles %}<article class="cierre-resultado"><h3>{{ forloop.counter }}. {{ d.materia }} · {{ d.competencia }}</h3>
+<p>{{ d.pregunta }}</p><p>Tu respuesta: {{ d.respuesta|default:"Sin responder" }}. Correcta: {{ d.correcta }}.
+{% if d.acierto %}Acierto{% else %}Por reforzar{% endif %}</p><p>Explicación: {{ d.explicacion }}</p></article>{% endfor %}
+</section></div>
+{% endblock %}
