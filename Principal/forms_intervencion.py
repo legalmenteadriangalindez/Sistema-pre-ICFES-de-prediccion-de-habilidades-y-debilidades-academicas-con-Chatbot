@@ -2,7 +2,7 @@
 from django import forms
 from django.utils import timezone
 
-from Principal.models import IntervencionAcademica
+from Principal.models import IntervencionAcademica, Matricula
 
 
 class IntervencionForm(forms.ModelForm):
@@ -27,7 +27,7 @@ class IntervencionForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields["matricula"].queryset = (
             permitidas if permitidas is not None
-            else IntervencionAcademica.objects.none()
+            else Matricula.objects.none()
         )
 
     def clean_fecha_revision(self):
