@@ -34,4 +34,4 @@ urlpatterns = [
 
 # La portada pública del demo no toca perfiles ni datos académicos.
 if settings.DEMO_MODE:
-    urlpatterns.insert(2, path("", demo_publica, name="demo_publica"))
+    urlpatterns.insert(2, path("demo/", demo_publica, name="demo_publica"))
