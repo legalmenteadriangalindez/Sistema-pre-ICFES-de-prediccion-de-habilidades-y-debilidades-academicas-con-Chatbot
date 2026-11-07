@@ -11,6 +11,7 @@ urlpatterns = [
   path("panel-docente/estudiante/<int:matricula_id>/", docente_ops.detalle_estudiante_docente, name="detalle_estudiante_docente"),
   path("gestion/usuarios/<int:usuario_id>/editar/", admin_operaciones.editar_usuario, name="admin_editar_usuario"),
   path("gestion/personas/<int:persona_id>/editar/", admin_operaciones.editar_persona, name="admin_editar_persona"),
+  path("gestion/estudiantes/<int:estudiante_id>/editar/", admin_operaciones.editar_necesidades_estudiante, name="admin_editar_necesidades_estudiante"),
   path("gestion/catalogos/<str:tipo>/<int:registro_id>/editar/", admin_operaciones.editar_catalogo, name="admin_editar_catalogo"),
   path("gestion/matriculas/", admin_escolar.gestion_matriculas_familias, name="admin_matriculas_familias"),
   path("gestion/matriculas/<int:matricula_id>/editar/", admin_escolar.editar_matricula, name="admin_editar_matricula"),
