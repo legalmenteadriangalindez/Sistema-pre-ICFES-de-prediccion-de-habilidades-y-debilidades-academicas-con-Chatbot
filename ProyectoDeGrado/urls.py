@@ -17,8 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from django.contrib.auth import views as auth_views
+from Principal.health_views import healthz, readyz
 
 urlpatterns = [
+    path("healthz/", healthz, name="healthz"),
+    path("readyz/", readyz, name="readyz"),
     path('admin/', admin.site.urls),
     path("",include("Principal.urls")), # referencia a las urls de la app Principal 
     path('accounts/', include('django.contrib.auth.urls')),
