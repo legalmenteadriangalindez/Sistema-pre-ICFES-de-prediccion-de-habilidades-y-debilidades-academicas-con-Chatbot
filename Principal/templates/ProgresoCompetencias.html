@@ -1,0 +1,17 @@
+{% extends 'app_shell.html' %}
+{% block title %}Evolución por competencias{% endblock %}
+{% block content %}
+<div class="dash portal-page"><section class="section-hero"><span class="eyebrow">RESULTADOS EN EL TIEMPO</span><h1>Progreso por competencia</h1>
+<p>{% if es_docente %}Estudiante: {{ estudiante.persona.nombre }} {{ estudiante.persona.apellido }}.{% else %}Tus resultados personales.{% endif %}
+Se comparan las tres primeras y las tres últimas respuestas de cada competencia cuando hay al menos seis registros. No es una prueba de causalidad.</p>
+<a class="ui-btn ui-btn-outline" href="{% url 'historial_academico' %}">Ver historial</a></section>
+<section class="ui-card"><div class="table-responsive"><table class="table">
+<thead><tr><th>Materia</th><th>Competencia</th><th>Registros</th><th>Inicial (%)</th><th>Reciente (%)</th><th>Cambio (puntos porcentuales)</th></tr></thead>
+<tbody>{% for fila in filas %}<tr>
+<td>{{ fila.materia }}</td><td>{{ fila.competencia }}</td><td>{{ fila.respuestas }}</td>
+<td>{% if fila.antes is not None %}{{ fila.antes }}{% else %}Insuficiente{% endif %}</td>
+<td>{% if fila.despues is not None %}{{ fila.despues }}{% else %}Insuficiente{% endif %}</td>
+<td>{% if fila.cambio is not None %}{{ fila.cambio }}{% else %}No calculable{% endif %}</td>
+</tr>{% empty %}<tr><td colspan="6">Todavía no existen respuestas registradas para comparar.</td></tr>{% endfor %}
+</tbody></table></div></section></div>
+{% endblock %}
