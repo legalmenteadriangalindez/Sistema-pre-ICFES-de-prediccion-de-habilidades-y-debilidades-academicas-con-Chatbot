@@ -1,0 +1,20 @@
+{% extends 'app_shell.html' %}
+{% block title %}Importar matrículas{% endblock %}
+{% block content %}
+<div class="dash portal-page"><section class="section-hero"><span class="eyebrow">GESTIÓN ACADÉMICA</span><h1>Importación segura de matrículas</h1>
+<p>Admite CSV UTF-8 o XLSX de hasta 2 MB y 500 filas. Los estudiantes, cursos y años deben existir previamente. Un archivo inválido no modifica la base de datos.</p>
+<a class="ui-btn ui-btn-outline" href="{% url 'descargar_plantilla_matriculas' %}">Descargar plantilla CSV</a>
+<a class="ui-btn ui-btn-outline" href="{% url 'admin_matriculas_familias' %}">Volver a matrículas</a></section>
+<section class="ui-card"><h2>Cargar matrículas de estudiantes existentes</h2>
+<p>Columnas exactas: <code>documento,curso_id,anio</code>. Los documentos deben conservar ceros iniciales; en Excel utiliza formato de texto para esa columna.</p>
+<form method="post" enctype="multipart/form-data">{% csrf_token %}
+<label for="archivo-matriculas">Archivo CSV o XLSX</label>
+<input id="archivo-matriculas" type="file" name="archivo" accept=".csv,.xlsx" required>
+<button type="submit" class="ui-btn ui-btn-primary">Validar e importar</button></form>
+<p>Las filas ya matriculadas en el mismo curso y año se omiten. Si existe otra matrícula en ese año, se rechaza el archivo completo para revisión.</p>
+</section>
+<section class="ui-card"><h2>Exportaciones académicas</h2>
+<p>Los informes de matrícula pueden descargarse como CSV desde el menú académico. Se registran en la bitácora de operaciones.</p>
+<a class="ui-btn ui-btn-outline" href="{% url 'exportar_reporte_matriculas' %}">Exportar informe CSV</a></section>
+</div>
+{% endblock %}
