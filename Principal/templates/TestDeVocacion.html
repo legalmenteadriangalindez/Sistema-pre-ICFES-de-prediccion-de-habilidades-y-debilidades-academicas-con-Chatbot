@@ -4,6 +4,7 @@
 {% block content %}
 <div class="dash practice-page">
 <section class="page-intro"><span class="eyebrow"><i class="fas fa-clipboard-question"></i> ENTRENAMIENTO POR ÁREAS</span><h1>Cuestionarios de práctica</h1><p>Elige una materia, responde las preguntas y revisa tus resultados con explicaciones para seguir aprendiendo.</p></section>
+<section class="ui-card"><h2>Refuerzo personalizado con preguntas revisadas</h2><p>La práctica adaptativa selecciona preguntas aprobadas según tus respuestas anteriores. Los cuestionarios tradicionales siguen disponibles.</p><a class="ui-btn ui-btn-outline" href="{% url 'practica_adaptativa' %}">Iniciar práctica adaptativa</a></section>
 <div class="practice-header"><div><span class="eyebrow">ELIGE CÓMO PRACTICAR</span><h2>¿Qué quieres repasar hoy?</h2></div><a class="pill-button outline" href="{% url 'home' %}#chatContainer"><i class="fas fa-robot"></i> Tutor con IA</a></div>
 <form method="post" action="{% url 'test' %}" class="subject-grid" aria-label="Seleccionar materia">{% csrf_token %}
 <button type="submit" name="materia" value="Lectura Critica" class="subject-card"><i class="fas fa-book-open-reader"></i><strong>Lectura crítica</strong><small>Analiza textos y fortalece tu comprensión.</small><span>Comenzar <b>→</b></span></button>
