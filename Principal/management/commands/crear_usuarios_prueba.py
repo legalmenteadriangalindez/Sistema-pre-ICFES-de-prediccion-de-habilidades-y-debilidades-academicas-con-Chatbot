@@ -102,12 +102,21 @@ class Command(BaseCommand):
 
     @transaction.atomic
     def handle(self, *args, **options):
-        if not settings.DEBUG or os.environ.get("DJANGO_ENV", "development").strip().lower() == "production":
-            raise CommandError("Comando disponible únicamente en desarrollo local con DEBUG=True.")
+        demo_publico = settings.DEMO_MODE
+        if not demo_publico and not settings.DEBUG:
+            raise CommandError("El sembrado solo está permitido en desarrollo o demo.")
+        if demo_publico and options["resetear_claves"]:
+            raise CommandError("No se permite restablecer contraseñas en demo público.")
 
-        clave = os.environ.get("PREICFES_DEMO_PASSWORD", CLAVE_DESARROLLO)
-        if len(clave) < 12:
-            raise CommandError("PREICFES_DEMO_PASSWORD debe tener al menos 12 caracteres.")
+        clave = os.environ.get(
+            "PREICFES_DEMO_PASSWORD",
+            "" if demo_publico else CLAVE_DESARROLLO,
+        )
+        if len(clave) < (20 if demo_publico else 12):
+            raise CommandError(
+                "PREICFES_DEMO_PASSWORD debe configurarse de forma privada y "
+                "tener al menos 20 caracteres en Render."
+            )
 
         roles = {
             nombre: Rol.objects.get_or_create(
@@ -139,7 +148,7 @@ class Command(BaseCommand):
         creados = 0
         restauradas = 0
 
-        for datos in CUENTAS:
+        for datos in (d for d in CUENTAS if not demo_publico or not d.get("superusuario")):
             admin = datos.get("superusuario", False)
             usuario, nuevo = User.objects.get_or_create(
                 username=datos["username"],
@@ -210,9 +219,15 @@ class Command(BaseCommand):
             f"Datos demo preparados: {creados} usuarios nuevos; "
             f"{restauradas} contraseñas restablecidas; 2 estudiantes matriculados."
         ))
-        self.stdout.write("Usuarios: " + ", ".join(d["username"] for d in CUENTAS))
-        self.stdout.write("Contraseña de prueba (todos): " + clave)
-        self.stdout.write(self.style.WARNING(
-            "Solo para desarrollo local. No reutilices esta contraseña en producción. "
-            "Si ya existen, las contraseñas solo cambian con --resetear-claves."
-        ))
+        if demo_publico:
+            self.stdout.write(
+                "Demo público con estudiantes y docentes ficticios. "
+                "La contraseña solo está en las variables privadas de Render."
+            )
+        else:
+            self.stdout.write("Usuarios: " + ", ".join(d["username"] for d in CUENTAS))
+            self.stdout.write("Contraseña de prueba (todos): " + clave)
+            self.stdout.write(self.style.WARNING(
+                "Solo para desarrollo local. No reutilices esta contraseña en producción. "
+                "Si ya existen, las contraseñas solo cambian con --resetear-claves."
+            ))
