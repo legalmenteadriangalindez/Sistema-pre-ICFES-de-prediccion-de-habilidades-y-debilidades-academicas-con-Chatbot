@@ -6,9 +6,8 @@ mocks y las URLs históricas continúen funcionando.
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
 from django.shortcuts import redirect, render
-
-from django.conf import settings
 
 # En Render Free la IA está deshabilitada. Evitar cargar Chroma, torch y
 # sentence-transformers al importar las rutas del sitio público.
@@ -29,8 +28,6 @@ from .selectores import es_gestor
 
 @login_required
 def home(request, *, render_func=render):
-    if settings.DEMO_MODE:
-        return render_func(request, "TutorDemoLimitado.html")
     usuario = request.user
     if es_gestor(usuario):
         return redirect("admin_gestion_users")
@@ -40,6 +37,23 @@ def home(request, *, render_func=render):
         return redirect("acudiente")
 
     estudiante = estudiante_de_usuario(usuario)
+    if settings.DEMO_MODE:
+        # Mantener la misma interfaz y estadísticas académicas del modo local,
+        # sin crear memoria vectorial ni llamar al motor Ollama.
+        if request.method != "GET":
+            return HttpResponseForbidden("El chat no está disponible en la demo.")
+        from Principal.services.tutor_chat_page import estadisticas_inicio
+
+        contexto = {
+            "demo_mode": True,
+            "chat_id": "demo",
+            "historial": [],
+            "chats": [],
+            "chat_error": None,
+            "fuentes_validadas": [],
+        }
+        contexto.update(estadisticas_inicio(estudiante))
+        return render_func(request, "home.html", contexto)
     chat_id = seleccionar_chat_id(request)
     chatbot = chatbotManager.get_chatbot(str(usuario.id))
     contexto = contexto_portada(chatbot, chat_id, estudiante)

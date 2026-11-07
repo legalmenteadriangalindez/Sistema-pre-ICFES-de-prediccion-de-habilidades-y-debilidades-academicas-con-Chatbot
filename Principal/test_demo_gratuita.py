@@ -61,6 +61,70 @@ class DemoGratuitaTests(TestCase):
         usuarios = get_user_model().objects
         self.assertTrue(usuarios.filter(username="estudiante_ana").exists())
         self.assertTrue(usuarios.filter(username="docente_demo").exists())
-        self.assertFalse(usuarios.filter(username="admin_demo").exists())
+        self.assertTrue(usuarios.filter(username="admin_demo").exists())
+        administrador = usuarios.get(username="admin_demo")
+        self.assertFalse(administrador.is_superuser)
+        self.assertFalse(administrador.is_staff)
         self.assertFalse(usuarios.filter(is_superuser=True).exists())
         self.assertNotIn("Clave-Ficticia", salida.getvalue())
+
+
+    def test_administracion_local_visible_pero_solo_lectura(self):
+        lectura = self.factory.get("/admin_gestion_users/")
+        self.assertIsNone(self.resolver(lectura, "admin_gestion_users"))
+        edicion = self.factory.post("/admin_gestion_users/", {"form": "usuarios"})
+        respuesta = self.resolver(edicion, "admin_gestion_users")
+        self.assertEqual(respuesta.status_code, 403)
+
+    def test_contrasenas_compartidas_no_se_pueden_cambiar_desde_web(self):
+        petición = self.factory.post(
+            "/accounts/password_change/", {"old_password": "X"}
+        )
+        respuesta = self.resolver(petición, "password_change")
+        self.assertEqual(respuesta.status_code, 403)
+
+    @patch.dict("os.environ", {
+        "PREICFES_DEMO_PASSWORD": "Clave-Ficticia-Larga-De-Render-2026!"
+    })
+    def test_tablero_estudiante_usa_home_original_sin_chatbot(self):
+        call_command("crear_usuarios_prueba", stdout=io.StringIO())
+        user = get_user_model().objects.get(username="estudiante_ana")
+        self.client.force_login(user)
+
+        with patch(
+            "Principal.view_modules.chatbot.chatbotManager", None
+        ):
+            respuesta = self.client.get("/")
+        self.assertEqual(respuesta.status_code, 200)
+        self.assertTemplateUsed(respuesta, "home.html")
+        self.assertContains(respuesta, "TU ESPACIO DE APRENDIZAJE")
+        self.assertContains(respuesta, "IA no disponible")
+        self.assertContains(respuesta, "Evaluaciones realizadas")
+        self.assertNotContains(respuesta, 'id="chat-prompt"')
+        self.assertEqual(self.client.post("/").status_code, 403)
+
+    @patch.dict("os.environ", {
+        "PREICFES_DEMO_PASSWORD": "Clave-Ficticia-Larga-De-Render-2026!"
+    })
+    def test_cuestionarios_locales_funcionan_sin_ollama(self):
+        call_command("crear_usuarios_prueba", stdout=io.StringIO())
+        user = get_user_model().objects.get(username="estudiante_ana")
+        self.client.force_login(user)
+
+        respuesta = self.client.post("/testDeVocacion/", {
+            "materia": "Matematicas",
+        })
+        self.assertEqual(respuesta.status_code, 200)
+        self.assertContains(respuesta, "Si 3x + 5 = 20")
+        preguntas = self.client.session.get("prueba_materia_preguntas")
+        self.assertEqual(len(preguntas), 2)
+        self.assertEqual(preguntas[0]["competencia"], "Ecuaciones lineales")
+        self.assertEqual(preguntas[0]["respuesta_correcta"], "B")
+
+        resultado = self.client.post("/testDeVocacion/", {
+            "verificar_cuestionario": "1",
+            "respuesta_0": "B",
+            "respuesta_1": "C",
+        })
+        self.assertEqual(resultado.status_code, 200)
+        self.assertContains(resultado, "2 de 2")

@@ -148,8 +148,10 @@ class Command(BaseCommand):
         creados = 0
         restauradas = 0
 
-        for datos in (d for d in CUENTAS if not demo_publico or not d.get("superusuario")):
-            admin = datos.get("superusuario", False)
+        for datos in CUENTAS:
+            # El rol ADMIN puede consultar pantallas sintéticas del proyecto,
+            # pero nunca se convierte en superusuario Django en Render Free.
+            admin = datos.get("superusuario", False) and not demo_publico
             usuario, nuevo = User.objects.get_or_create(
                 username=datos["username"],
                 defaults={
