@@ -191,6 +191,30 @@ class GestionEscolarIntegralTests(TestCase):
         self.assertEqual(reporte.status_code, 200)
         self.assertEqual(reporte.context["total_matriculas_activas"], 1)
 
+    def test_post_manipulado_no_reasigna_matricula_ni_historias(self):
+        self.client.force_login(self.admin)
+        original = self.matricula
+        intento = IntentoEvaluacion.objects.create(
+            estudiante=self.estudiantes[0], materia="Matemáticas",
+            total_preguntas=10, aciertos=7,
+        )
+        asignada = ActividadAsignada.objects.create(
+            matricula=original, actividad=self.actividad_legacy, completada=True,
+        )
+        # La petición intenta transferir identidad y curso al alumno ajeno.
+        respuesta = self.client.post(reverse("admin_editar_matricula", args=[original.pk]), {
+            "estudiante": self.estudiantes[1].pk,
+            "curso": self.curso_b.pk,
+            "anio_lectivo": self.anio.pk,
+            "activa": "on",
+        })
+        self.assertEqual(respuesta.status_code, 200)
+        original.refresh_from_db()
+        self.assertEqual(original.estudiante_id, self.estudiantes[0].pk)
+        self.assertEqual(original.curso_id, self.curso.pk)
+        self.assertEqual(IntentoEvaluacion.objects.get(pk=intento.pk).estudiante_id, self.estudiantes[0].pk)
+        self.assertTrue(ActividadAsignada.objects.filter(pk=asignada.pk).exists())
+
     def test_vinculos_familiares_crear_editar_y_revocar(self):
         self.client.force_login(self.admin)
         url = reverse("admin_matriculas_familias")
