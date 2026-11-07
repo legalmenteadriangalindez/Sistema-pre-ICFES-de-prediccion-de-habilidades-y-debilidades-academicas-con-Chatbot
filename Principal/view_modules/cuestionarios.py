@@ -2,6 +2,7 @@
 import logging
 import unicodedata
 
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
@@ -68,7 +69,13 @@ def test(request, *, generar_quizes_func=generar_quizes, generar_material_func=g
             contexto["preguntas_ingles"] = preguntas_para_estudiante(preguntas)
         else:
             try:
-                preguntas = normalizar_preguntas(generar_quizes_func(materia, 1), materia)
+                if settings.DEMO_MODE:
+                    from Principal.services.cuestionarios_demo import generar_quiz_demo
+
+                    generadas = generar_quiz_demo(materia)
+                else:
+                    generadas = generar_quizes_func(materia, 1)
+                preguntas = normalizar_preguntas(generadas, materia)
             except ValueError as error:
                 contexto["error_prueba"] = str(error)
             except Exception:
@@ -82,12 +89,13 @@ def test(request, *, generar_quizes_func=generar_quizes, generar_material_func=g
                     {**pregunta, "materia": materia} for pregunta in preguntas
                 ]
                 contexto["preguntas"] = preguntas_para_estudiante(preguntas)
-                try:
-                    contexto["materiales_recomendados"] = generar_material_func(preguntas)
-                except Exception:
-                    logging.getLogger(__name__).exception(
-                        "No fue posible generar materiales recomendados para la prueba"
-                    )
+                if not settings.DEMO_MODE:
+                    try:
+                        contexto["materiales_recomendados"] = generar_material_func(preguntas)
+                    except Exception:
+                        logging.getLogger(__name__).exception(
+                            "No fue posible generar materiales recomendados para la prueba"
+                        )
     return render(request, "TestDeVocacion.html", contexto)
 # ********************************TEST***************************************
 
