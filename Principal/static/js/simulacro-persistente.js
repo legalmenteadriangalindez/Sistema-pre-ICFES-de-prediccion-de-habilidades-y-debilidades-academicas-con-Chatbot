@@ -27,6 +27,7 @@
   const csrf = document.querySelector('input[name="csrfmiddlewaretoken"]')?.value;
   let current = 0;
   let pending = Promise.resolve();
+  let hasSaveError = false;
 
   const update = () => {
     questions.forEach((question, i) => {
@@ -74,10 +75,12 @@
           if (!response.ok) throw new Error('No se pudo guardar la respuesta');
           return response.json();
         }).then(() => {
+          hasSaveError = false;
           feedback.textContent = 'Respuesta guardada en el servidor.';
           update();
         }).catch(() => {
-          feedback.textContent = 'Error al guardar. No finalices sin comprobar la conexión.';
+          hasSaveError = true;
+          feedback.textContent = 'Error al guardar. Revisa la conexión antes de finalizar.';
         });
       });
     });
@@ -98,9 +101,21 @@
       if (form.dataset.readyToSubmit === '1') return;
       event.preventDefault();
       await pending;
+      if (hasSaveError) {
+        feedback.textContent = 'Hay respuestas no guardadas. Recupera la conexión e inténtalo otra vez.';
+        return;
+      }
       form.dataset.readyToSubmit = '1';
       form.submit();
     });
+  });
+  window.addEventListener('online', () => {
+    if (!hasSaveError) return;
+    feedback.textContent = 'Conexión recuperada. Guarda de nuevo la última respuesta.';
+    const seleccion = questions.find((question) => question.querySelector('input:checked'));
+    seleccion?.querySelector('input:checked')?.dispatchEvent(
+      new Event('change', { bubbles: true })
+    );
   });
   update();
 })();
