@@ -8,7 +8,6 @@ from Principal.models import (
 
 def get_records(record:dict):
     if record:
-        print(f"es es mi registro---------------{type(record)}")
         level_name = record["general_level"]
         area = record["area"]
         strong_areas = record["strong_areas"]
