@@ -19,6 +19,7 @@
       <details class="account-actions">
         <summary title="Más acciones para {{ table_item.username }}">⋮</summary>
         <div class="account-actions-popover">
+          <a class="ui-btn ui-btn-outline" href="{% url 'admin_editar_usuario' table_item.pk %}">Editar datos</a>
           <form method="post">
             {% csrf_token %}
             <input type="hidden" name="form" value="asignar_rol">
