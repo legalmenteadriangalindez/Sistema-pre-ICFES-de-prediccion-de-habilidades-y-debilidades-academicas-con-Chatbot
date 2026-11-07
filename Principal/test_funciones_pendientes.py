@@ -1,8 +1,5 @@
 """Pruebas sintéticas: repaso, consentimiento, progreso y datos administrativos."""
-import csv
-import io
 from datetime import date
-from types import SimpleNamespace
 
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
