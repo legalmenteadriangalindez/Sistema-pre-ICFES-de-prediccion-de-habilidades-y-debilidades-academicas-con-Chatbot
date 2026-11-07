@@ -80,6 +80,12 @@
 <a class="sidebar-settings" href="{% url 'configuraciones' %}"><i class="fas fa-gear"></i> Configuración</a>
 </aside>{% endif %}
 <main class="app-main" id="contenido">
+{% if demo_mode %}
+<div class="alert alert-warning mx-3 mt-3 mb-2" role="status">
+ <strong>Demostración pública:</strong> solo datos ficticios. El chatbot está temporalmente desactivado.
+ Las cuentas compartidas no deben utilizarse para guardar información personal.
+</div>
+{% endif %}
 {% include "components/notifications.html" %}
 {% block content %}{% endblock %}
 <footer class="app-footer"><span>Pre-ICFES · Preparación académica Saber 11</span><span>Prácticas educativas no oficiales del ICFES</span></footer>
