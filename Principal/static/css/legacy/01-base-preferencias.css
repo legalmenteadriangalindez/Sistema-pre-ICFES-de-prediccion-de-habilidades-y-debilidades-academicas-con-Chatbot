@@ -1,0 +1,188 @@
+/* Compatibilidad visual con las páginas heredadas de Pre-ICFES.
+ * Este archivo sigue siendo necesario para Inicio de sesión y Registro,
+ * que no heredan app_shell.html. Evitar añadir nuevos componentes aquí.
+ * La aplicación autenticada utiliza después design-tokens.css,
+ * ui-2026.css y ui-polish.css; estilos por vista se cargan al final.
+ */
+
+html,body{
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+h1{
+    color: #D91E0D;
+    margin: auto;
+}
+
+body{
+    display: flex;
+    flex-direction: column;
+    background-color: #F2F2F2;
+    /* background-image: url('../img/Background.jpg'); */
+    /* background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed; */
+}
+
+/* hubicar el pie de pagina abajo del todo  */
+main{
+   flex: 1;
+}
+
+
+
+/* barra de navegacion */
+nav{
+    background-color: #A68B6A;  
+    display: flex;
+    gap: 2%;
+    min-height: 100px;
+
+
+}
+
+/* margen del nav */
+nav a{
+    text-decoration: none;
+    display:inline-block;
+    margin: auto;
+    color: inherit;
+    font-size: 105%;
+}
+
+nav a:hover{
+    color: #D91E0D;
+    transform: translateX(3px);
+}
+
+nav div{
+    display:inline-block;
+    margin: auto;
+}
+
+
+
+
+
+#modoOscuroContainer{
+     position: absolute;
+     z-index: 9999;
+     margin-top: 7%;
+}
+
+/* botones del nav  */
+nav button{
+    margin: auto;
+}
+
+/* slide fuente  */
+#tamañoFuente{
+    width: 10%;
+    margin: auto;
+}
+
+/* slide contraste  */
+#contraste{
+    width: 10%;
+    margin: auto;
+}
+
+
+
+
+#carrusel{
+    min-height: 400px;
+    max-height: 600px;
+    overflow: hidden;
+}
+
+#carrusel .carousel-item{
+    height: 100%;
+}
+
+#carrusel .carousel-item img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#carrusel .carousel-inner{
+    height: 100%;
+}
+
+
+.dark-mode-toggle{
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: white;
+    padding: 12px 18px;
+    border-radius: 30px;
+    box-shadow: 0 8px 16px black ;
+    transition: all 0.3s ease;
+}
+
+.dark-mode-toggle.dark{
+    background-color: #333;
+    color: white;
+}
+
+.toggle-switch{
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.toggle-switch input{
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.slider{
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #333;
+    transition: .4s;
+    border-radius: 34px;
+
+}
+
+
+.slider:before{
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+
+input:checked + .slider {
+    background-color: #D91E0D;
+}
+
+
+input:checked + .slider:before{
+    transform: translateX(26px);
+}
+
