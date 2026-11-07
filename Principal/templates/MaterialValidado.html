@@ -1,0 +1,14 @@
+{% extends 'app_shell.html' %}
+{% block title %}Material docente validado{% endblock %}
+{% block content %}
+<div class="dash portal-page"><section class="section-hero"><span class="eyebrow">BANCO REVISADO</span><h1>Material B-{{ pregunta.pk }}</h1>
+<p>{{ pregunta.materia }} · {{ pregunta.competencia }} · versión {{ pregunta.numero_version }}. Pregunta creada o revisada por docentes; no es contenido oficial del ICFES.</p>
+<a class="ui-btn ui-btn-outline" href="{% url 'home' %}">Volver al tutor</a></section>
+<section class="ui-card">
+{% if pregunta.contexto %}<blockquote>{{ pregunta.contexto }}</blockquote>{% endif %}
+<h2>{{ pregunta.enunciado }}</h2>
+<ol>{% for letra, opcion in pregunta.opciones.items %}<li>{{ letra }}. {{ opcion }}</li>{% endfor %}</ol>
+<p><strong>Respuesta:</strong> {{ pregunta.respuesta_correcta }}</p>
+<p><strong>Explicación validada:</strong> {{ pregunta.explicacion }}</p>
+</section></div>
+{% endblock %}

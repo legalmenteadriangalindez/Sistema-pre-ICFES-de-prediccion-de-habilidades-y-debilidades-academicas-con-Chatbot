@@ -1,6 +1,6 @@
 {% extends 'home_admin_academico.html' %}
 {% block title %}Matrículas y vínculos familiares{% endblock %}
-{% block content %}
+{% block content %}<section class="ui-card"><h2>Gestión en lote</h2><p>Importa matrículas de estudiantes existentes desde CSV o XLSX, valida cupos y exporta reportes.</p><a class="ui-btn ui-btn-outline" href="{% url 'cargar_matriculas' %}">Importar desde Excel / CSV</a> <a class="ui-btn ui-btn-outline" href="{% url 'exportar_reporte_matriculas' %}">Exportar reporte</a></section>
 <div class="dash portal-page">
 <section class="section-hero"><span class="eyebrow">ADMINISTRACIÓN ESCOLAR</span><h1>Matrículas y vínculos familiares</h1>
 <p>Una matrícula por estudiante y año; cupos de cursos controlados. Desactivar conserva el historial y evita borrados de evaluaciones.</p></section>

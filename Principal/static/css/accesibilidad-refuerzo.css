@@ -1,0 +1,52 @@
+/* Ajustes accesibles optativos y preferencias de movimiento del sistema. */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid #f59e0b;
+  outline-offset: 3px;
+}
+
+.accessibility-controls {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.accessibility-controls button {
+  min-height: 42px;
+  border: 1px solid currentcolor;
+  border-radius: 0.55rem;
+  padding: 0.45rem 0.65rem;
+  background: transparent;
+  color: inherit;
+}
+
+body.accessible-text {
+  font-size: 115%;
+  line-height: 1.7;
+}
+
+body.accessible-contrast {
+  background: #fff;
+  color: #111;
+}
+
+body.accessible-contrast .ui-card,
+body.accessible-contrast .app-topbar,
+body.accessible-contrast .app-sidebar {
+  background: #fff;
+  color: #111;
+  border: 2px solid #111;
+}
+
+body.accessible-contrast a,
+body.accessible-contrast .ui-btn {
+  text-decoration: underline;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

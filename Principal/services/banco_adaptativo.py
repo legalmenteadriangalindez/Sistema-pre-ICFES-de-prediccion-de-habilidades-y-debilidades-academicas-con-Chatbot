@@ -3,6 +3,7 @@ from collections import defaultdict
 
 from Principal.models import PreguntaBanco, RespuestaEvaluacion
 from Principal.services.seguimiento import _materia
+from Principal.services.repasos_espaciados import repasos_pendientes
 
 MAX_PREGUNTAS = 5
 
@@ -54,6 +55,8 @@ def seleccionar_adaptativas(estudiante, cantidad=MAX_PREGUNTAS):
         intento__estudiante=estudiante, pregunta_banco__isnull=False,
     ).values_list("pregunta_banco_id", flat=True))
 
+    pendientes = {repaso.pregunta_id for repaso in repasos_pendientes(estudiante)}
+
     def ordenar(pregunta):
         foco = (
             0 if (pregunta.materia, pregunta.competencia.casefold()) in debiles
@@ -61,11 +64,11 @@ def seleccionar_adaptativas(estudiante, cantidad=MAX_PREGUNTAS):
             else 2
         )
         dificultad = {"BASICA": 0, "MEDIA": 1, "ALTA": 2}[pregunta.dificultad]
-        return (pregunta.pk in usados, foco, dificultad, pregunta.pk)
+        return (pregunta.pk not in pendientes, pregunta.pk in usados, foco, dificultad, pregunta.pk)
 
     preguntas.sort(key=ordenar)
     elegidas = []
-    if not debiles and not areas_debiles:
+    if not debiles and not areas_debiles and not pendientes:
         # Sin diagnóstico: empezar con variedad de materias para medir mejor.
         vistos = set()
         for pregunta in preguntas:

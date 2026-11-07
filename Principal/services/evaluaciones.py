@@ -5,6 +5,7 @@ from collections import defaultdict
 from django.db import transaction
 
 from Principal.models import IntentoEvaluacion, RespuestaEvaluacion
+from Principal.services.repasos_espaciados import registrar_resultados_repaso
 
 LETRAS_OPCIONES = ("A", "B", "C", "D")
 
@@ -126,6 +127,7 @@ def calificar_y_guardar_evaluacion(estudiante, materia, preguntas, datos_respues
                 for detalle in detalles
             ]
         )
+        registrar_resultados_repaso(estudiante, detalles)
 
     competencias = [
         {
