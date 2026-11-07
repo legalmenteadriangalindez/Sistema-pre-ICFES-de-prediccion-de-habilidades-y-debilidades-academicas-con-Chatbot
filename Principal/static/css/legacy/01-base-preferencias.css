@@ -20,7 +20,7 @@ body{
     display: flex;
     flex-direction: column;
     background-color: #F2F2F2;
-    /* background-image: url('../img/Background.jpg'); */
+    /* Fondo fotográfico histórico desactivado: evitar referencias rotas. */
     /* background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed; */
