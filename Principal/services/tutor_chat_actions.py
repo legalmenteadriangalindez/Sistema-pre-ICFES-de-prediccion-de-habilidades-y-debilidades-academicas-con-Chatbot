@@ -29,6 +29,12 @@ def procesar_post_chat(request, chatbot, contexto, estudiante, chat_id, render_f
     prompt = request.POST.get("prompt", "").strip()
     pdf = request.FILES.get("archivo")
     audio = request.FILES.get("audio")
+    if (prompt or pdf or audio) and not tutor_autorizado(estudiante):
+        contexto["chat_error"] = (
+            "Para utilizar el tutor con IA, incluido el envío de audio o PDF, "
+            "un acudiente vinculado debe autorizarlo."
+        )
+        return render_func(request, "home.html", contexto)
     try:
         if pdf:
             validar_pdf(pdf)
@@ -52,12 +58,6 @@ def procesar_post_chat(request, chatbot, contexto, estudiante, chat_id, render_f
         contexto["historial"] = []
 
     if prompt:
-        if not tutor_autorizado(estudiante):
-            contexto["chat_error"] = (
-                "Para utilizar IA con menores, un acudiente vinculado debe "
-                "autorizarla desde su panel familiar."
-            )
-            return render_func(request, "home.html", contexto)
         resumen = construir_contexto_academico(estudiante)
         fuentes_texto, fuentes = contexto_con_fuentes(estudiante, prompt)
         if fuentes_texto:

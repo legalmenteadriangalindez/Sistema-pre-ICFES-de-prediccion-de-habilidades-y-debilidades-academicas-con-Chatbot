@@ -11,7 +11,7 @@ from django.views.decorators.http import require_http_methods, require_POST
 from Principal.forms_intervencion import IntervencionForm
 from Principal.models import IntervencionAcademica, Matricula
 from Principal.services.seguimiento_intervenciones import contar_evidencias
-from Principal.services.avisos_academicos import emitir_aviso
+from Principal.services.avisos_academicos import emitir_aviso, emitir_aviso_familiar
 from .docentes import matriculas_permitidas_docente
 from .selectores import _estudiante, _tiene_rol
 
@@ -44,6 +44,11 @@ def intervenciones_docente(request):
             intervencion.matricula.estudiante.persona.perfil_user.user,
             "INTERVENCION", "Nuevo plan de recuperación",
             "Tu docente registró un plan de refuerzo. Consúltalo en Mis intervenciones.",
+            f"intervencion-{intervencion.pk}",
+        )
+        emitir_aviso_familiar(
+            intervencion.matricula.estudiante, "INTERVENCION_FAMILIAR",
+            "Un estudiante vinculado tiene un nuevo plan académico.",
             f"intervencion-{intervencion.pk}",
         )
         messages.success(request, "Plan de intervención asignado al estudiante.")

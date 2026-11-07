@@ -1,9 +1,10 @@
 """Pruebas sintéticas: repaso, consentimiento, progreso y datos administrativos."""
 from datetime import date
+from unittest.mock import MagicMock
 
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import TestCase
+from django.test import RequestFactory, TestCase
 from django.urls import reverse
 
 from Principal.models import (
@@ -245,3 +246,50 @@ class MejorasPrioritariasTests(TestCase):
             usuario, "ACTIVIDAD", "Otro aviso", "No permitido",
             "actividad-nueva",
         ))
+
+    def test_archivos_sin_prompt_requieren_permiso_del_acudiente(self):
+        from Principal.services.tutor_chat_actions import procesar_post_chat
+
+        archivo = SimpleUploadedFile("voz.webm", b"audio-de-prueba", content_type="audio/webm")
+        request = RequestFactory().post("/", {"audio": archivo})
+        request.user = self.alumnos[0]
+        contexto = {}
+        chatbot = MagicMock()
+        renderizar = MagicMock(return_value="sin-procesar")
+        respuesta = procesar_post_chat(
+            request, chatbot, contexto, self.estudiantes[0],
+            "default", renderizar,
+        )
+        self.assertEqual(respuesta, "sin-procesar")
+        self.assertIn("acudiente", contexto["chat_error"])
+        chatbot.chat.assert_not_called()
+
+    def test_avisos_familiares_exigen_preferencia_y_vinculo(self):
+        from Principal.services.avisos_academicos import emitir_aviso_familiar
+
+        emitir_aviso_familiar(
+            self.estudiantes[0], "INTERVENCION", "Seguimiento familiar.",
+            "caso-sin-permiso",
+        )
+        self.assertEqual(NotificacionAcademica.objects.filter(
+            usuario=self.padre,
+        ).count(), 0)
+        self.client.force_login(self.padre)
+        self.client.post(reverse("mis_avisos"), {
+            "accion": "preferencias", "recibir_avisos": "on",
+            "avisos_familiares": "on",
+        })
+        emitir_aviso_familiar(
+            self.estudiantes[0], "INTERVENCION", "Seguimiento familiar.",
+            "caso-autorizado",
+        )
+        self.assertEqual(NotificacionAcademica.objects.filter(
+            usuario=self.padre,
+        ).count(), 1)
+        emitir_aviso_familiar(
+            self.estudiantes[1], "INTERVENCION", "Alumno no vinculado.",
+            "caso-ajeno",
+        )
+        self.assertEqual(NotificacionAcademica.objects.filter(
+            usuario=self.padre,
+        ).count(), 1)

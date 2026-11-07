@@ -21,10 +21,12 @@
 - Auditoría/privacidad: rastrea operaciones sensibles con metadatos
   mínimos, amplía el JSON de exportación propia, registra autorización
   y revocación del tutor IA por un acudiente formalmente vinculado.
-  La IA para menores requiere esa autorización.
+  La IA para menores requiere esa autorización, también para cargar
+  PDF o audio aunque se envíen sin una pregunta de texto.
 - Notificaciones: bandeja de avisos internos de retroalimentación y
   planes de intervención, sin correos o SMS externos, con control de
-  preferencias y marcado de lectura.
+  preferencias y marcado de lectura. Los avisos familiares solo llegan
+  a acudientes vinculados que habilitan expresamente esa preferencia.
 - Accesibilidad: controles de contraste y tamaño de letra, foco visible,
   reducción de movimiento y recuperación de estado visual. En el
   simulacro, un error de guardado bloquea la finalización hasta
