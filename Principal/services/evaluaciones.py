@@ -112,6 +112,7 @@ def calificar_y_guardar_evaluacion(estudiante, materia, preguntas, datos_respues
             [
                 RespuestaEvaluacion(
                     intento=intento,
+                    pregunta_banco_id=detalle.get("id_banco"),
                     numero=detalle["id"],
                     competencia=detalle["competencia"][:100],
                     enunciado=detalle["contexto"],
