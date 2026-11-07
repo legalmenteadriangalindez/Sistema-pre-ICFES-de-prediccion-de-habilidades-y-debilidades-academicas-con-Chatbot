@@ -35,25 +35,33 @@ if os.environ.get("DJANGO_MULTIINSTITUCION", "false").strip().lower() in {
         "Multiinstitución está deshabilitada: falta aislamiento integral "
         "de cuentas, matrículas, informes, tutor, archivos y permisos."
     )
-DEBUG_DEFAULT = "false" if ENVIRONMENT == "production" else "true"
+DEMO_MODE = ENVIRONMENT == "demo"
+PUBLIC_ENVIRONMENT = ENVIRONMENT in {"production", "demo"}
+DEBUG_DEFAULT = "false" if PUBLIC_ENVIRONMENT else "true"
 DEBUG = os.environ.get("DJANGO_DEBUG", DEBUG_DEFAULT).strip().lower() in {"1", "true", "yes", "on"}
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "")
 if not SECRET_KEY:
-    if ENVIRONMENT == "production" or not DEBUG:
+    if PUBLIC_ENVIRONMENT or not DEBUG:
         raise ImproperlyConfigured("Define DJANGO_SECRET_KEY en el entorno de producción.")
     SECRET_KEY = "django-insecure-solo-desarrollo-no-usar-en-produccion"
-if ENVIRONMENT == "production" and DEBUG:
+if PUBLIC_ENVIRONMENT and DEBUG:
     raise ImproperlyConfigured("DJANGO_DEBUG debe ser False en producción.")
 if ENVIRONMENT == "production" and not os.environ.get("DJANGO_ALLOWED_HOSTS", "").strip():
     raise ImproperlyConfigured(
         "Producción requiere DJANGO_ALLOWED_HOSTS con dominio explícito."
     )
 
+render_demo_host = (
+    os.environ.get("RENDER_EXTERNAL_HOSTNAME", "").strip() if DEMO_MODE else ""
+)
 ALLOWED_HOSTS = [
     host.strip()
     for host in os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,[::1]").split(",")
     if host.strip()
 ]
+
+if render_demo_host and render_demo_host not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(render_demo_host)
 
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = "Lax"
@@ -63,14 +71,14 @@ SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
 
 # HTTPS obligatorio solo en producción. En local se conserva HTTP.
-SECURE_SSL_REDIRECT = ENVIRONMENT == "production"
-SECURE_HSTS_SECONDS = 31536000 if ENVIRONMENT == "production" else 0
+SECURE_SSL_REDIRECT = PUBLIC_ENVIRONMENT
+SECURE_HSTS_SECONDS = 31536000 if PUBLIC_ENVIRONMENT else 0
 SECURE_HSTS_INCLUDE_SUBDOMAINS = False
 SECURE_HSTS_PRELOAD = False
 # Habilitar solo cuando el proxy de confianza sanea X-Forwarded-Proto.
 SECURE_PROXY_SSL_HEADER = (
     ("HTTP_X_FORWARDED_PROTO", "https")
-    if ENVIRONMENT == "production"
+    if PUBLIC_ENVIRONMENT
     and os.environ.get("DJANGO_TRUST_PROXY_SSL_HEADER", "").lower() in {"1", "true", "yes"}
     else None
 )
@@ -79,6 +87,8 @@ CSRF_TRUSTED_ORIGINS = [
     for origin in os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")
     if origin.strip()
 ]
+if DEMO_MODE and render_demo_host:
+    CSRF_TRUSTED_ORIGINS.append(f"https://{render_demo_host}")
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_REFERRER_POLICY = "same-origin"
 
@@ -104,6 +114,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'Principal.middleware_demo.BloqueoDemoMiddleware',
 ]
 
 ROOT_URLCONF = 'ProyectoDeGrado.urls'
@@ -132,7 +143,7 @@ WSGI_APPLICATION = 'ProyectoDeGrado.wsgi.application'
 # En desarrollo se conserva SQLite. En producción se exige PostgreSQL con
 # DATABASE_URL y nunca se permite una base efímera de contenedor.
 database_url = os.environ.get("DATABASE_URL", "").strip()
-if ENVIRONMENT == "production" and not database_url:
+if PUBLIC_ENVIRONMENT and not database_url:
     raise ImproperlyConfigured(
         "Producción requiere DATABASE_URL (PostgreSQL persistente)."
     )
@@ -140,7 +151,7 @@ if ENVIRONMENT == "production" and not database_url:
 if database_url:
     import dj_database_url
 
-    if ENVIRONMENT == "production" and not database_url.startswith(
+    if PUBLIC_ENVIRONMENT and not database_url.startswith(
         ("postgresql://", "postgres://")
     ):
         raise ImproperlyConfigured("Producción requiere PostgreSQL.")
@@ -204,7 +215,7 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / "staticfiles"
 # El manifiesto solo existe después de collectstatic en producción.
 # En local y CI, Django sigue resolviendo las rutas de /static/ como siempre.
-if ENVIRONMENT == "production":
+if PUBLIC_ENVIRONMENT:
     STORAGES = {
         "default": {
             "BACKEND": "django.core.files.storage.FileSystemStorage"
@@ -220,10 +231,16 @@ MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / "media"
 # Almacenamiento sensible: en producción debe apuntar a volumen persistente.
 raw_data_root = os.environ.get("DJANGO_DATA_ROOT", "").strip()
-if ENVIRONMENT == "production":
+if PUBLIC_ENVIRONMENT:
     if not raw_data_root or not Path(raw_data_root).is_absolute():
         raise ImproperlyConfigured(
-            "Producción requiere DJANGO_DATA_ROOT con ruta absoluta persistente."
+            "Producción/demo requiere DJANGO_DATA_ROOT con ruta absoluta."
+        )
+    if DEMO_MODE and not Path(raw_data_root).resolve().is_relative_to(
+        Path("/tmp")
+    ):
+        raise ImproperlyConfigured(
+            "El demo gratuito debe usar /tmp; el almacenamiento es efímero."
         )
 DATA_ROOT = Path(raw_data_root).expanduser().resolve() if raw_data_root else None
 # Adjuntos y Chroma/LangGraph por usuario nunca se publican mediante MEDIA_URL.
