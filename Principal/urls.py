@@ -4,9 +4,15 @@ from . import views # import de la vista
 from .simulacros_views import simulacros
 from .historial_views import historial_academico 
 from django.urls import path, include  # librerias nesesarias para hacer la referencia desde url.py del proyecto
-from .view_modules import docentes as docente_ops, admin_operaciones, admin_escolar 
+from .view_modules import docentes as docente_ops, admin_operaciones, admin_escolar
+from .view_modules import banco_preguntas as banco_ops, practica_adaptativa as adaptativo_ops 
 
 urlpatterns = [
+  path("banco-preguntas/", banco_ops.banco_preguntas, name="banco_preguntas"),
+  path("banco-preguntas/<int:pregunta_id>/editar/", banco_ops.editar_pregunta_banco, name="editar_pregunta_banco"),
+  path("banco-preguntas/<int:pregunta_id>/enviar/", banco_ops.enviar_pregunta_revision, name="enviar_pregunta_revision"),
+  path("banco-preguntas/<int:pregunta_id>/revisar/", banco_ops.revisar_pregunta_banco, name="revisar_pregunta_banco"),
+  path("practica-adaptativa/", adaptativo_ops.practica_adaptativa, name="practica_adaptativa"),
   path("panel-docente/actividad/<int:actividad_id>/editar/", docente_ops.editar_actividad_docente, name="editar_actividad_docente"),
   path("panel-docente/estudiante/<int:matricula_id>/", docente_ops.detalle_estudiante_docente, name="detalle_estudiante_docente"),
   path("gestion/usuarios/<int:usuario_id>/editar/", admin_operaciones.editar_usuario, name="admin_editar_usuario"),
