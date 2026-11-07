@@ -1,0 +1,14 @@
+{% extends 'home_admin_academico.html' %}
+{% block title %}Matrículas y vínculos familiares{% endblock %}
+{% block content %}
+<div class="dash portal-page">
+<section class="section-hero"><span class="eyebrow">ADMINISTRACIÓN ESCOLAR</span><h1>Matrículas y vínculos familiares</h1>
+<p>Una matrícula por estudiante y año; cupos de cursos controlados. Desactivar conserva el historial y evita borrados de evaluaciones.</p></section>
+<div class="portal-layout">
+<section class="ui-card"><h2>Crear matrícula</h2><form method="post" class="portal-form">{% csrf_token %}<input type="hidden" name="tipo" value="matricula">{{ form_matricula.as_p }}<button class="ui-btn ui-btn-primary" type="submit">Guardar matrícula</button></form></section>
+<section class="ui-card"><h2>Vincular acudiente a estudiante</h2><form method="post" class="portal-form">{% csrf_token %}<input type="hidden" name="tipo" value="vinculo">{{ form_vinculo.as_p }}<button class="ui-btn ui-btn-primary" type="submit">Guardar vínculo</button></form></section>
+</div>
+<section class="ui-card"><h2>Matrículas (hasta 300 registros recientes)</h2><div class="table-responsive"><table class="table"><thead><tr><th>Estudiante</th><th>Curso</th><th>Año</th><th>Estado</th><th>Editar</th></tr></thead><tbody>{% for m in matriculas %}<tr><td>{{ m.estudiante.persona.nombre }} {{ m.estudiante.persona.apellido }}</td><td>{{ m.curso.grado.nombre }} · {{ m.curso.nombre }}</td><td>{{ m.anio_lectivo.anio }}</td><td>{% if m.activa %}Activa{% else %}Inactiva{% endif %}</td><td><a href="{% url 'admin_editar_matricula' m.pk %}">Editar o desactivar</a></td></tr>{% empty %}<tr><td colspan="5">No hay matrículas.</td></tr>{% endfor %}</tbody></table></div></section>
+<section class="ui-card"><h2>Vínculos familiares (hasta 300)</h2><div class="table-responsive"><table class="table"><thead><tr><th>Estudiante</th><th>Acudiente</th><th>Relación</th><th>Acciones</th></tr></thead><tbody>{% for v in vinculos %}<tr><td>{{ v.estudiante.persona.nombre }} {{ v.estudiante.persona.apellido }}</td><td>{{ v.acudiente.persona.nombre }} {{ v.acudiente.persona.apellido }}</td><td>{{ v.relacion.descripcion }}</td><td><a href="{% url 'admin_editar_vinculo' v.pk %}">Editar</a><form method="post" action="{% url 'admin_desvincular_familiar' v.pk %}" data-confirm="¿Quitar acceso de este acudiente al estudiante?">{% csrf_token %}<button type="submit" class="ui-btn ui-btn-outline">Desvincular</button></form></td></tr>{% empty %}<tr><td colspan="4">No hay vínculos.</td></tr>{% endfor %}</tbody></table></div></section>
+</div>
+{% endblock %}
