@@ -105,6 +105,8 @@ jobs:
           DJANGO_DEBUG: "false"
           DJANGO_SECRET_KEY: ci-clave-de-prueba-no-usar-en-produccion-clave-muy-larga
           DJANGO_ALLOWED_HOSTS: ejemplo.test
+          DATABASE_URL: postgresql://ci:ci@127.0.0.1:5432/ci
+          DJANGO_DATA_ROOT: /tmp/preicfes-ci-persistente
         run: python manage.py check --deploy
 
   browser:
