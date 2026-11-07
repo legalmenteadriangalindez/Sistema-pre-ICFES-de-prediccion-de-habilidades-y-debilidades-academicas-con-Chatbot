@@ -35,6 +35,10 @@ if not SECRET_KEY:
     SECRET_KEY = "django-insecure-solo-desarrollo-no-usar-en-produccion"
 if ENVIRONMENT == "production" and DEBUG:
     raise ImproperlyConfigured("DJANGO_DEBUG debe ser False en producción.")
+if ENVIRONMENT == "production" and not os.environ.get("DJANGO_ALLOWED_HOSTS", "").strip():
+    raise ImproperlyConfigured(
+        "Producción requiere DJANGO_ALLOWED_HOSTS con dominio explícito."
+    )
 
 ALLOWED_HOSTS = [
     host.strip()
@@ -84,6 +88,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -115,16 +120,41 @@ WSGI_APPLICATION = 'ProyectoDeGrado.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-database_path = Path(os.environ.get("DJANGO_DB_PATH", "local.sqlite3"))
-if not database_path.is_absolute():
-    database_path = BASE_DIR / database_path
+# En desarrollo se conserva SQLite. En producción se exige PostgreSQL con
+# DATABASE_URL y nunca se permite una base efímera de contenedor.
+database_url = os.environ.get("DATABASE_URL", "").strip()
+if ENVIRONMENT == "production" and not database_url:
+    raise ImproperlyConfigured(
+        "Producción requiere DATABASE_URL (PostgreSQL persistente)."
+    )
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": database_path,
+if database_url:
+    import dj_database_url
+
+    if ENVIRONMENT == "production" and not database_url.startswith(
+        ("postgresql://", "postgres://")
+    ):
+        raise ImproperlyConfigured("Producción requiere PostgreSQL.")
+    DATABASES = {
+        "default": dj_database_url.parse(
+            database_url,
+            conn_max_age=600,
+            conn_health_checks=True,
+            ssl_require=os.environ.get(
+                "DJANGO_DB_SSL_REQUIRE", "false"
+            ).strip().lower() in {"1", "true", "yes"},
+        )
     }
-}
+else:
+    database_path = Path(os.environ.get("DJANGO_DB_PATH", "local.sqlite3"))
+    if not database_path.is_absolute():
+        database_path = BASE_DIR / database_path
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": database_path,
+        }
+    }
 
 
 # Password validation
@@ -162,11 +192,32 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    }
+}
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / "media"
-# Adjuntos privados: nunca publicar esta ubicación con MEDIA_URL.
-PRIVATE_UPLOAD_ROOT = BASE_DIR / ".private-media"
+# Almacenamiento sensible: en producción debe apuntar a volumen persistente.
+raw_data_root = os.environ.get("DJANGO_DATA_ROOT", "").strip()
+if ENVIRONMENT == "production":
+    if not raw_data_root or not Path(raw_data_root).is_absolute():
+        raise ImproperlyConfigured(
+            "Producción requiere DJANGO_DATA_ROOT con ruta absoluta persistente."
+        )
+DATA_ROOT = Path(raw_data_root).expanduser().resolve() if raw_data_root else None
+# Adjuntos y Chroma/LangGraph por usuario nunca se publican mediante MEDIA_URL.
+PRIVATE_UPLOAD_ROOT = (
+    DATA_ROOT / "uploads" if DATA_ROOT else BASE_DIR / ".private-media"
+)
+USER_DATA_ROOT = (
+    DATA_ROOT / "users"
+    if DATA_ROOT
+    else BASE_DIR / "ProyectoDeGrado" / "DATABASES" / "USERS"
+)
 
 STATICFILES_DIRS = [
     BASE_DIR / "Principal" / "static",
@@ -189,4 +240,7 @@ EMAIL_BACKEND = os.environ.get(
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "Pre-ICFES <local@pre-icfes.test>")
 
 # Artefacto ML privado y local. Nunca exponer vía STATIC_URL o MEDIA_URL.
-PREDICCION_MODELO_PATH = BASE_DIR / ".local-data" / "prediccion" / "modelo.json"
+PREDICCION_MODELO_PATH = (
+    DATA_ROOT / "prediccion" / "modelo.json"
+    if DATA_ROOT else BASE_DIR / ".local-data" / "prediccion" / "modelo.json"
+)
