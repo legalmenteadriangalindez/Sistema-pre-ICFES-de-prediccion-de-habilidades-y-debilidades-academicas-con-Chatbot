@@ -11,6 +11,7 @@ from django.views.decorators.http import require_http_methods, require_POST
 from Principal.forms_intervencion import IntervencionForm
 from Principal.models import IntervencionAcademica, Matricula
 from Principal.services.seguimiento_intervenciones import contar_evidencias
+from Principal.services.avisos_academicos import emitir_aviso
 from .docentes import matriculas_permitidas_docente
 from .selectores import _estudiante, _tiene_rol
 
@@ -39,6 +40,12 @@ def intervenciones_docente(request):
             intervencion.aciertos_inicial = aciertos
             intervencion.total_inicial = total
         intervencion.save()
+        emitir_aviso(
+            intervencion.matricula.estudiante.persona.perfil_user.user,
+            "INTERVENCION", "Nuevo plan de recuperación",
+            "Tu docente registró un plan de refuerzo. Consúltalo en Mis intervenciones.",
+            f"intervencion-{intervencion.pk}",
+        )
         messages.success(request, "Plan de intervención asignado al estudiante.")
         return redirect("intervenciones_docente")
 
