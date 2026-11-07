@@ -1,0 +1,15 @@
+{% extends 'app_shell.html' %}
+{% block title %}Tutor IA no disponible en demo{% endblock %}
+{% block content %}
+<div class="dash">
+<section class="section-hero">
+<span class="eyebrow">DEMOSTRACIÓN GRATUITA</span>
+<h1>Tutor con IA deshabilitado en el servidor gratuito</h1>
+<p>Esta demo no almacena conversaciones ni archivos de estudiantes:
+el servicio no tiene disco privado persistente ni motor Ollama instalado.</p>
+<p>Puedes continuar con los cuestionarios, simulacros y el seguimiento de
+la cuenta sintética de prueba. Para utilizar el tutor completo, ejecútalo
+en local con Ollama y almacenamiento seguro.</p>
+<a class="ui-btn ui-btn-primary" href="{% url 'simulacros' %}">Ver simulacros</a>
+</section></div>
+{% endblock %}

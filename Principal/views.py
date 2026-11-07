@@ -5,7 +5,12 @@ Conservar estos símbolos permite mantener las rutas y los mocks históricos.
 """
 from django.shortcuts import render
 
-from Principal.IA.LangGraph.graph_chatbot.chatbot import chatbotManager
+from django.conf import settings
+
+if not settings.DEMO_MODE:
+    from Principal.IA.LangGraph.graph_chatbot.chatbot import chatbotManager
+else:
+    chatbotManager = None
 from Principal.services.gestion_view_test import generar_quizes, generar_material
 from Principal.services.verificacion_correo import enviar_verificacion
 

@@ -150,3 +150,28 @@ jobs:
             playwright-report/
           if-no-files-found: ignore
           retention-days: 7
+
+  render-free:
+    name: "Render Free: instalación mínima"
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      DJANGO_ENV: demo
+      DJANGO_DEBUG: "false"
+      DJANGO_SECRET_KEY: "ci-clave-sintetica-exclusiva-para-pruebas-gratis-2026"
+      DJANGO_DATA_ROOT: /tmp/preicfes-demo-ci
+      DJANGO_TRUST_PROXY_SSL_HEADER: "true"
+      RENDER_EXTERNAL_HOSTNAME: demo-example.onrender.com
+      DATABASE_URL: postgresql://ci:ci@127.0.0.1:5432/ci
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Instalar solo las dependencias ligeras
+        run: python -m pip install -r requirements-demo.txt
+      - name: Validar imports, configuración y archivos estáticos
+        run: |
+          python manage.py check
+          python manage.py collectstatic --noinput
