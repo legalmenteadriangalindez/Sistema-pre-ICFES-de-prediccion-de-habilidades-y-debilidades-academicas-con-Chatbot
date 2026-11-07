@@ -40,8 +40,15 @@ def seed_e2e():
     from datetime import date
 
     from Principal.models import (
-        AnioLectivo, AsignacionDocenteCurso, Curso, Estudiante, Grado,
-        Matricula, Persona, Rol, Sexo,
+        AnioLectivo,
+        AsignacionDocenteCurso,
+        Curso,
+        Estudiante,
+        Grado,
+        Matricula,
+        Persona,
+        Rol,
+        Sexo,
     )
 
     rol_docente, _ = Rol.objects.get_or_create(nombre="DOCENTE")
