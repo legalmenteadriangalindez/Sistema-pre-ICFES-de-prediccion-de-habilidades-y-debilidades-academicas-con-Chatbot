@@ -6,6 +6,7 @@ from django.core.exceptions import PermissionDenied
 from Principal.models import (
     ActividadAsignada, AnalisisCognitivo, Estudiante, MaterialAsignado,
     Matricula, PerfilPedagogico, PerfilUsuario, Persona, RecomendacionVocacional,
+    RetroalimentacionDocente,
 )
 from .selectores import _estudiante
 
@@ -50,7 +51,8 @@ def actividadesUsuario(request):
     if not matricula:
         return render(request, "actividadesUsuario.html", {
             "error": "No existe una matrícula activa asociada a esta cuenta.",
-            "actividades": [], "total_actividades": 0, "total_completadas": 0
+            "actividades": [], "total_actividades": 0, "total_completadas": 0,
+            "retroalimentaciones_docentes": []
         })
     if request.method == "POST" and request.POST.get("marcar_completada"):
         identificador = request.POST.get("actividad_id")
@@ -66,6 +68,9 @@ def actividadesUsuario(request):
     return render(request, "actividadesUsuario.html", {
         "actividades": actividades,
         "total_actividades": actividades.count(),
-        "total_completadas": actividades.filter(completada=True).count()
+        "total_completadas": actividades.filter(completada=True).count(),
+        "retroalimentaciones_docentes": RetroalimentacionDocente.objects.filter(
+            matricula=matricula
+        ).select_related("docente")[:20],
     })
 
