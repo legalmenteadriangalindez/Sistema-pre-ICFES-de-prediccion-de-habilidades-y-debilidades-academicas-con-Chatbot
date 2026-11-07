@@ -32,13 +32,10 @@
                 <td>{{g.id}}</td>
                 <td>{{g.nombre}}</td>
                 <td>{{g.activo}}</td>
-                <td><button class="btn btn-sm btn-primary">Editar</button></td>
+                <td><a class="btn btn-sm btn-primary" href="{% url 'admin_editar_catalogo' 'grados' g.pk %}">Editar</a></td>
                 <td><form method="post" action="{% url 'eliminar_admin_gestion_academico' 'grados' g.id %}" class="d-inline">{% csrf_token %}<button type="submit"  class="btn btn-sm btn-danger">Eliminar</button></form></td>
                 <td>
-                  <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="user1" checked>
-                    <label class="form-check-label" for="user1"></label>
-                  </div>
+                  <small>Cambiar desde Editar</small>
                 </td>
             </tr>
             {%endfor%}
@@ -68,7 +65,7 @@
                 <th>ID del usuario</th>
                 <th>Nombre de la Curso </th>
                 <th>Grado</th>
-                <th>Jornada</th>
+                
                 <th>Cupo Maximo</th>
                 <th>Estado</th>
                 <th>editar</th>
@@ -82,17 +79,14 @@
                 <td>{{c.id}}</td>
                 <td>{{c.nombre}}</td>
                 <td>{{c.grado.nombre }}</td>
-                <td>{{c.jornada.nombre}}</td>
+                
                 <td>{{c.cupo_maximo}}</td>
                 <td>{{c.activo}}</td>
 
-                <td><button class="btn btn-sm btn-primary">Editar</button></td>
+                <td><a class="btn btn-sm btn-primary" href="{% url 'admin_editar_catalogo' 'cursos' c.pk %}">Editar</a></td>
                 <td><form method="post" action="{% url 'eliminar_admin_gestion_academico' 'cursos' c.id %}" class="d-inline">{% csrf_token %}<button type="submit"  class="btn btn-sm btn-danger">Eliminar</button></form></td>
                 <td>
-                  <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="user1" checked>
-                    <label class="form-check-label" for="user1"></label>
-                  </div>
+                  <small>Cambiar desde Editar</small>
                 </td>
             </tr>
             {%endfor%}
@@ -133,16 +127,13 @@
             <tr>
                 <td>{{anio.id}}</td>
                 <td>{{anio.anio}}</td>
-                <td>{{anio.fecha_inico}}</td>
+                <td>{{anio.fecha_inicio}}</td>
                 <td>{{anio.fecha_fin}}</td>
                 <td>{{anio.activo}}</td>
-                <td><button class="btn btn-sm btn-primary">Editar</button></td>
+                <td><a class="btn btn-sm btn-primary" href="{% url 'admin_editar_catalogo' 'anios' anio.pk %}">Editar</a></td>
                 <td><form method="post" action="{% url 'eliminar_admin_gestion_academico' 'anios' anio.id %}" class="d-inline">{% csrf_token %}<button type="submit"  class="btn btn-sm btn-danger">Eliminar</button></form></td>
                 <td>
-                  <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="user1" checked>
-                    <label class="form-check-label" for="user1"></label>
-                  </div>
+                  <small>Cambiar desde Editar</small>
                 </td>
             </tr>
             {%endfor%}
@@ -181,13 +172,10 @@
                 <td>{{m.id}}</td>
                 <td>{{m.nombre}}</td>
                 <td>{{m.activo}}</td>
-                <td><button class="btn btn-sm btn-primary">Editar</button></td>
+                <td><a class="btn btn-sm btn-primary" href="{% url 'admin_editar_catalogo' 'materias' m.pk %}">Editar</a></td>
                 <td><form method="post" action="{% url 'eliminar_admin_gestion_academico' 'materias' m.id %}" class="d-inline">{% csrf_token %}<button type="submit"  class="btn btn-sm btn-danger">Eliminar</button></form></td>
                 <td>
-                  <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="user1" checked>
-                    <label class="form-check-label" for="user1"></label>
-                  </div>
+                  <small>Cambiar desde Editar</small>
                 </td>
             </tr>
             {%endfor%}

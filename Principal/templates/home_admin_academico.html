@@ -14,6 +14,8 @@
 <a href="{% url 'gestion_acudientes_estudiantes' %}" {% if request.resolver_match.url_name == 'gestion_acudientes_estudiantes' %}aria-current="page"{% endif %}><i class="fas fa-user-group"></i> Estudiantes y acudientes</a>
 <a href="{% url 'admin_gestion_db' %}" {% if request.resolver_match.url_name == 'admin_gestion_db' %}aria-current="page"{% endif %}><i class="fas fa-database"></i> Base de datos</a>
 <a href="{% url 'admin_asignaciones_docentes' %}" {% if request.resolver_match.url_name == 'admin_asignaciones_docentes' %}aria-current="page"{% endif %}><i class="fas fa-user-shield"></i> Permisos docentes</a>
+<a href="{% url 'admin_matriculas_familias' %}" {% if request.resolver_match.url_name == 'admin_matriculas_familias' %}aria-current="page"{% endif %}><i class="fas fa-school"></i> Matrículas y familias</a>
+<a href="{% url 'admin_reportes_academicos' %}" {% if request.resolver_match.url_name == 'admin_reportes_academicos' %}aria-current="page"{% endif %}><i class="fas fa-chart-simple"></i> Reportes</a>
 <a href="{% url 'validacion_prediccion' %}" {% if request.resolver_match.url_name == 'validacion_prediccion' %}aria-current="page"{% endif %}><i class="fas fa-chart-line"></i> Validación predictiva</a>
 {% endblock %}
 {% block sidebar_quick %}

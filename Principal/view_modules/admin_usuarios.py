@@ -5,7 +5,8 @@ from django.db import transaction
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
 
-from Principal.forms import PersonaForm, UserRegisterForm
+from Principal.forms import UserRegisterForm
+from .admin_operaciones import CrearPersonaAdminForm
 from Principal.models import (
     Curso, Estudiante, IntentoEvaluacion, PerfilUsuario, Persona, Rol,
 )
@@ -18,7 +19,7 @@ def gestion_users(request):
     users = User.objects.all().order_by('-date_joined', 'pk')
     personas = Persona.objects.all().order_by('nombre')
     form_usuarios = UserRegisterForm()
-    form_personas = PersonaForm()
+    form_personas = CrearPersonaAdminForm()
     error_admin = None
     if request.method == 'POST':
         tipo_form = request.POST.get('form', '')
@@ -34,7 +35,7 @@ def gestion_users(request):
                         perfil.roles.add(rol)
                 return redirect('admin_gestion_users')
         elif tipo_form == 'personas':
-            form_personas = PersonaForm(request.POST)
+            form_personas = CrearPersonaAdminForm(request.POST)
             if form_personas.is_valid():
                 form_personas.save()
                 return redirect('admin_gestion_users')

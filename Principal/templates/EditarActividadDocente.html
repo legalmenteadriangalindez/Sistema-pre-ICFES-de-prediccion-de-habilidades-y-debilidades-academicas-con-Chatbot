@@ -1,0 +1,15 @@
+{% extends 'app_shell.html' %}
+{% block title %}Editar actividad docente{% endblock %}
+{% block content %}
+<div class="dash portal-page">
+  <section class="section-hero"><h1>Editar actividad</h1><p>Solo puedes modificar tus actividades. Los trabajos completados conservan su contenido original.</p></section>
+  <section class="ui-card">
+    <h2>{{ actividad.titulo }}</h2>
+    <form method="post" class="portal-form">{% csrf_token %}
+      {{ formulario.as_p }}
+      <button type="submit" class="ui-btn ui-btn-primary">Guardar cambios</button>
+      <a class="ui-btn ui-btn-outline" href="{% url 'panel_docente' %}">Cancelar</a>
+    </form>
+  </section>
+</div>
+{% endblock %}

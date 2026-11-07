@@ -2,6 +2,7 @@
   <td>{{ table_item.nombre }} {{ table_item.apellido }}</td>
   <td>{{ table_item.documento }}</td>
   <td>
+    <a class="ui-btn ui-btn-outline" href="{% url 'admin_editar_persona' table_item.pk %}">Editar</a>
     <form method="post" action="{% url 'eliminar_admin_gestion_users' 'personas' table_item.pk %}" data-confirm="¿Eliminar a esta persona y sus datos relacionados?">
       {% csrf_token %}
       <button type="submit" class="ui-btn ui-btn-danger">Eliminar</button>

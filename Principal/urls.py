@@ -3,9 +3,21 @@ from . import portal_academico, privacy_views, prediction_views
 from . import views # import de la vista
 from .simulacros_views import simulacros
 from .historial_views import historial_academico 
-from django.urls import path, include  # librerias nesesarias para hacer la referencia desde url.py del proyecto 
+from django.urls import path, include  # librerias nesesarias para hacer la referencia desde url.py del proyecto
+from .view_modules import docentes as docente_ops, admin_operaciones, admin_escolar 
 
 urlpatterns = [
+  path("panel-docente/actividad/<int:actividad_id>/editar/", docente_ops.editar_actividad_docente, name="editar_actividad_docente"),
+  path("panel-docente/estudiante/<int:matricula_id>/", docente_ops.detalle_estudiante_docente, name="detalle_estudiante_docente"),
+  path("gestion/usuarios/<int:usuario_id>/editar/", admin_operaciones.editar_usuario, name="admin_editar_usuario"),
+  path("gestion/personas/<int:persona_id>/editar/", admin_operaciones.editar_persona, name="admin_editar_persona"),
+  path("gestion/estudiantes/<int:estudiante_id>/editar/", admin_operaciones.editar_necesidades_estudiante, name="admin_editar_necesidades_estudiante"),
+  path("gestion/catalogos/<str:tipo>/<int:registro_id>/editar/", admin_operaciones.editar_catalogo, name="admin_editar_catalogo"),
+  path("gestion/matriculas/", admin_escolar.gestion_matriculas_familias, name="admin_matriculas_familias"),
+  path("gestion/matriculas/<int:matricula_id>/editar/", admin_escolar.editar_matricula, name="admin_editar_matricula"),
+  path("gestion/vinculos/<int:vinculo_id>/editar/", admin_escolar.editar_vinculo_familiar, name="admin_editar_vinculo"),
+  path("gestion/vinculos/<int:vinculo_id>/desvincular/", admin_escolar.desvincular_familiar, name="admin_desvincular_familiar"),
+  path("gestion/reportes/", admin_escolar.reportes_academicos_admin, name="admin_reportes_academicos"),
   path('historial-academico/', historial_academico, name='historial_academico'),
   path('simulacros/', simulacros, name='simulacros'),
   path('orientacion-vocacional/', portal_academico.orientacion_vocacional, name='orientacion_vocacional'),
