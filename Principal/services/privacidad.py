@@ -18,7 +18,11 @@ def eliminar_directorios_de_cuenta(user_id):
     identificador = str(int(user_id))
     raices = (
         Path(settings.PRIVATE_UPLOAD_ROOT),
-        Path(settings.USER_DATA_ROOT),
+        (
+            Path(settings.DATA_ROOT) / "users"
+            if settings.DATA_ROOT
+            else Path(settings.BASE_DIR) / "ProyectoDeGrado" / "DATABASES" / "USERS"
+        ),
     )
     for raiz in raices:
         objetivo = raiz / identificador
