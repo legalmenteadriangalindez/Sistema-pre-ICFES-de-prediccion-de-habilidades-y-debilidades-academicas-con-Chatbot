@@ -10,7 +10,7 @@
     <p>Para registrar estudiantes, crea primero su cuenta y su persona si todavía no existen.</p>
     <div class="table-responsive"><table class="table"><thead><tr><th>Estudiante</th><th>Documento</th><th>Necesidades educativas</th><th>Acciones</th></tr></thead><tbody>
       {% for e in estudiantes %}<tr><td>{{ e.persona.nombre }} {{ e.persona.apellido }}</td><td>{{ e.persona.documento }}</td><td>{{ e.necesidades_especiales|default:"Sin registrar"|truncatechars:60 }}</td>
-      <td><a href="{% url 'admin_editar_persona' e.persona_id %}">Editar persona</a>
+      <td><a href="{% url 'admin_editar_persona' e.persona_id %}">Editar persona</a> · <a href="{% url 'admin_editar_necesidades_estudiante' e.pk %}">Editar necesidades</a>
         <form method="post" action="{% url 'eliminar_gestion_acudientes_estudiantes' 'estudiantes' e.pk %}" data-confirm="¿Eliminar solo el perfil estudiantil sin relaciones académicas?">{% csrf_token %}<button type="submit" class="ui-btn ui-btn-outline">Eliminar perfil sin referencias</button></form></td></tr>
       {% empty %}<tr><td colspan="4">No hay estudiantes.</td></tr>{% endfor %}
     </tbody></table></div>
