@@ -5,6 +5,7 @@
 {% block content %}
 <div class="dash exam-page">
   <section class="section-hero"><span class="eyebrow"><i class="far fa-calendar-check"></i> Práctica Saber 11</span><h1>Simulacros de práctica</h1><p>Entrena tus conocimientos a tu ritmo. Preguntas originales de práctica, no oficiales del ICFES.</p></section>
+  <section class="ui-card"><h2>Simulacro avanzado recuperable</h2><p>Dos bloques de 25 preguntas originales, guardado automático, pausa y reanudación desde otro dispositivo. Es práctica, no examen oficial.</p><a class="ui-btn ui-btn-primary" href="{% url 'simulacro_avanzado' %}">Abrir simulacro recuperable</a></section>
   {% if error %}<div class="ui-alert ui-alert-warning" role="alert">{{ error }}</div>{% endif %}
   {% if not simulacro and not resultado %}
   <div class="exam-intro-layout">
