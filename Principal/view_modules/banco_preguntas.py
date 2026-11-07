@@ -38,13 +38,14 @@ class PreguntaBancoForm(forms.ModelForm):
     class Meta:
         model = PreguntaBanco
         fields = (
-            "materia", "competencia", "dificultad", "contexto", "enunciado",
+            "materia", "competencia", "evidencia", "dificultad", "contexto", "enunciado",
             "opcion_a", "opcion_b", "opcion_c", "opcion_d", "opciones",
             "respuesta_correcta", "explicacion",
         )
         widgets = {
             "materia": forms.Select(attrs={"class": "form-select"}),
             "competencia": forms.TextInput(attrs={"class": "form-control"}),
+            "evidencia": forms.TextInput(attrs={"class": "form-control", "placeholder": "Evidencia de aprendizaje asociada"}),
             "dificultad": forms.Select(attrs={"class": "form-select"}),
             "contexto": forms.Textarea(attrs={"class": "form-control", "rows": 3}),
             "enunciado": forms.Textarea(attrs={"class": "form-control", "rows": 3}),
@@ -86,6 +87,7 @@ def generar_borrador_ia(materia, usuario):
 
     objeto = PreguntaBanco(
         materia=materia, competencia=pregunta["competencia"][:100],
+        evidencia="",  # El revisor humano puede completar la evidencia.
         dificultad="MEDIA", contexto=pregunta["contexto"][:5000],
         enunciado=pregunta["pregunta"][:2000],
         opciones=opciones,
