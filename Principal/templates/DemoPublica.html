@@ -24,7 +24,13 @@ footer { color:#59677a; margin-top:3rem; }
 <p>PRE-ICFES · VERSIÓN DE DEMOSTRACIÓN</p>
 <h1>Practica, identifica fortalezas y mejora tus competencias.</h1>
 <p>Explora las funciones de la plataforma en un entorno gratuito, con usuarios y datos ficticios.</p>
+{% if user.is_authenticated %}
+<a class="button" href="{% url 'simulacros' %}">Realizar simulacro</a>
+<a class="button" href="{% url 'progreso_competencias' %}">Consultar mi progreso</a>
+<a class="button" href="{% url 'agenda_repasos' %}">Ver mis repasos</a>
+{% else %}
 <a class="button" href="{% url 'login' %}">Ingresar con cuenta de prueba</a>
+{% endif %}
 </header>
 <section aria-labelledby="funciones"><h2 id="funciones">Funciones disponibles en el proyecto</h2>
 <div class="features">
