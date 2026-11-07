@@ -1,7 +1,8 @@
 # ====================================================IMPORTACIONES ===========================================================
 
 
-from Principal.IA.LangGraph.graph import init_graph_evaluation,init_graph_generator, graph_gen_compile,graph_evaluation_compiled
+# Los grafos de Ollama se importan cuando se usan, no en cada arranque
+# de Django ni en el servidor gratuito (que deshabilita IA).
 
 
 #*****************************************IMORTACIONES****************************************
@@ -10,6 +11,8 @@ from Principal.IA.LangGraph.graph import init_graph_evaluation,init_graph_genera
 
 # ===========================================FUNCION PARA GENERAR N CANDIDAD DE QUIZ===========================================================
 def generar_quizes(materia: str, cantidad: int)->list[dict]:
+    from Principal.IA.LangGraph.graph import init_graph_generator, graph_gen_compile
+
     state= init_graph_generator(materia)
     for _ in range(cantidad):
         state = graph_gen_compile.invoke(state)
@@ -22,6 +25,8 @@ def generar_quizes(materia: str, cantidad: int)->list[dict]:
 # ===========================================FUNCION PARA GENERAR MATERIAL RECOMENDADO===========================================================
 
 def generar_material(preguntas: list[dict])->list[dict]:
+    from Principal.IA.LangGraph.graph import init_graph_evaluation, graph_evaluation_compiled
+
     state = init_graph_evaluation(preguntas)
     state = graph_evaluation_compiled.invoke(state)
     
