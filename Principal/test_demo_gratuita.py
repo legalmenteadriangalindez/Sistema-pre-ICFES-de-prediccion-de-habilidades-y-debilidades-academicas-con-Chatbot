@@ -4,6 +4,7 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AnonymousUser
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.management import call_command
 from django.http import HttpResponse
@@ -24,7 +25,9 @@ class DemoGratuitaTests(TestCase):
         return self.middleware.process_view(request, lambda r: None, (), {})
 
     def test_portada_publica_no_expone_datos(self):
-        respuesta = demo_publica(self.factory.get("/"))
+        request = self.factory.get("/")
+        request.user = AnonymousUser()
+        respuesta = demo_publica(request)
         self.assertEqual(respuesta.status_code, 200)
         self.assertIn(b"datos ficticios", respuesta.content)
         self.assertIn(b"30", respuesta.content)
