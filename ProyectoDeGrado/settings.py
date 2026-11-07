@@ -202,11 +202,19 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STORAGES = {
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# El manifiesto solo existe después de collectstatic en producción.
+# En local y CI, Django sigue resolviendo las rutas de /static/ como siempre.
+if ENVIRONMENT == "production":
+    STORAGES = {
+        "default": {
+            "BACKEND": "django.core.files.storage.FileSystemStorage"
+        },
+        "staticfiles": {
+            "BACKEND": (
+                "whitenoise.storage.CompressedManifestStaticFilesStorage"
+            )
+        },
     }
-}
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / "media"
