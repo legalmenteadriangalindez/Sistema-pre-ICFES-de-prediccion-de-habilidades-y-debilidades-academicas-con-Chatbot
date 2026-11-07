@@ -8,7 +8,14 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
-from Principal.IA.LangGraph.graph_chatbot.chatbot import chatbotManager
+from django.conf import settings
+
+# En Render Free la IA está deshabilitada. Evitar cargar Chroma, torch y
+# sentence-transformers al importar las rutas del sitio público.
+if not settings.DEMO_MODE:
+    from Principal.IA.LangGraph.graph_chatbot.chatbot import chatbotManager
+else:
+    chatbotManager = None
 from Principal.models import PerfilUsuario
 from Principal.services.tutor_chat_actions import procesar_post_chat
 from Principal.services.tutor_chat_page import (
