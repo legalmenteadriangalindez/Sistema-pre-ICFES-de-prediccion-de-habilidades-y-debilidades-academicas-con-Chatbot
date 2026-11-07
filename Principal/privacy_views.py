@@ -5,7 +5,10 @@ from django.shortcuts import render
 from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_GET
 
+from Principal.services.privacidad_educativa import registrar_auditoria
 from .models import (
+    ConsentimientoTutorIA, NotificacionAcademica, RegistroAuditoria,
+    RepasoEspaciado,
     ActividadAsignada, Estudiante, IntentoEvaluacion, Matricula, Persona,
     PerfilUsuario, PlanEstudioSemanal, RecomendacionVocacional, RespuestaEvaluacion,
 )
@@ -66,6 +69,24 @@ def exportar_mis_datos(request):
             matricula__in=matriculas
         ).select_related("carrera").order_by("fecha")
 
+        consentimiento = ConsentimientoTutorIA.objects.filter(estudiante=estudiante).first()
+        resultado["consentimiento_ia"] = {
+            "autorizado": consentimiento.autorizado,
+            "registrado_en": consentimiento.registrado_en,
+            "actualizado_en": consentimiento.actualizado_en,
+        } if consentimiento else None
+        resultado["repasos_espaciados"] = [
+            {
+                "materia": repaso.pregunta.materia,
+                "competencia": repaso.pregunta.competencia,
+                "version": repaso.pregunta.numero_version,
+                "intervalo_dias": repaso.intervalo_dias,
+                "proximo_repaso": repaso.proximo_repaso,
+            }
+            for repaso in RepasoEspaciado.objects.filter(
+                estudiante=estudiante,
+            ).select_related("pregunta")[:500]
+        ]
         resultado["estudiante"] = {
             "necesidades_especiales": estudiante.necesidades_especiales,
             "matriculas": [{
@@ -118,6 +139,18 @@ def exportar_mis_datos(request):
             } for recomendacion in recomendaciones],
         }
 
+    resultado["mis_avisos"] = list(
+        NotificacionAcademica.objects.filter(usuario=usuario).values(
+            "categoria", "titulo", "mensaje", "fecha", "leida_en",
+        )[:500]
+    )
+    resultado["mis_operaciones"] = list(
+        RegistroAuditoria.objects.filter(actor=usuario).values(
+            "accion", "recurso", "fecha",
+        )[:500]
+    )
+    registrar_auditoria(usuario, "EXPORTAR_MIS_DATOS", "Cuenta", usuario.pk)
     respuesta = JsonResponse(resultado, json_dumps_params={"ensure_ascii": False, "indent": 2})
     respuesta["Content-Disposition"] = 'attachment; filename="mis-datos-preicfes.json"'
+    respuesta["Cache-Control"] = "no-store"
     return respuesta
