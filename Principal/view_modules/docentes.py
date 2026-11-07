@@ -11,6 +11,7 @@ from Principal.models import (
     Matricula, NivelAprendizaje, RetroalimentacionDocente, Tema,
 )
 from .selectores import _tiene_rol
+from Principal.services.avisos_academicos import emitir_aviso
 
 
 def matriculas_permitidas_docente(user):
@@ -130,8 +131,14 @@ def panel_docente(request):
             if not 10 <= len(texto) <= 1000:
                 error = "La retroalimentación debe tener entre 10 y 1000 caracteres."
             else:
-                RetroalimentacionDocente.objects.create(
+                comentario = RetroalimentacionDocente.objects.create(
                     matricula=matricula, docente=request.user, texto=texto,
+                )
+                emitir_aviso(
+                    matricula.estudiante.persona.perfil_user.user,
+                    "RETROALIMENTACION", "Nueva retroalimentación docente",
+                    "Tienes una nueva observación docente sobre tus actividades.",
+                    f"retroalimentacion-{comentario.pk}",
                 )
                 exito = "Retroalimentación guardada y disponible para el estudiante."
         else:
