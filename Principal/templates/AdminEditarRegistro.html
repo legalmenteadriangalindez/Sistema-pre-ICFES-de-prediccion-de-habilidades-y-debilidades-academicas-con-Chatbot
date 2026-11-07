@@ -1,0 +1,10 @@
+{% extends 'home_admin_academico.html' %}
+{% block title %}{{ titulo }}{% endblock %}
+{% block content %}
+<div class="dash portal-page"><section class="section-hero"><span class="eyebrow">GESTIÓN SEGURA</span><h1>{{ titulo }}</h1>
+<p>La edición actualiza el registro existente sin recrear cuentas ni eliminar relaciones.</p></section>
+<section class="ui-card"><form method="post" class="portal-form">{% csrf_token %}{{ formulario.as_p }}
+<button type="submit" class="ui-btn ui-btn-primary">Guardar cambios</button>
+<a class="ui-btn ui-btn-outline" href="{% url volver %}">Cancelar</a></form></section>
+</div>
+{% endblock %}
