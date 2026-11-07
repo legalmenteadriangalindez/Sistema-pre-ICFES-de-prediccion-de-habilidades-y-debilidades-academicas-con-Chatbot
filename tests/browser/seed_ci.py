@@ -35,7 +35,6 @@ def seed_e2e():
     student.save()
     PerfilUsuario.objects.get_or_create(user=student)
 
-
     # Banco de preguntas: dos docentes y un estudiante completamente ficticios.
     from datetime import date
 
@@ -59,7 +58,8 @@ def seed_e2e():
         anio=2026,
         defaults={
             "fecha_inicio": date(2026, 1, 1),
-            "fecha_fin": date(2026, 12, 31), "activo": True,
+            "fecha_fin": date(2026, 12, 31),
+            "activo": True,
         },
     )
     for nombre in ("docente_e2e", "revisor_e2e"):
@@ -70,7 +70,9 @@ def seed_e2e():
         perfil, _ = PerfilUsuario.objects.get_or_create(user=usuario)
         perfil.roles.add(rol_docente)
         AsignacionDocenteCurso.objects.get_or_create(
-            docente=perfil, curso=curso, anio_lectivo=anio,
+            docente=perfil,
+            curso=curso,
+            anio_lectivo=anio,
             defaults={"activo": True},
         )
 
@@ -80,16 +82,19 @@ def seed_e2e():
     persona, _ = Persona.objects.get_or_create(
         perfil_user=perfil_alumno,
         defaults={
-            "nombre": "Estudiante", "apellido": "E2E",
+            "nombre": "Estudiante",
+            "apellido": "E2E",
             "documento": "E2E-SINTETICO-001",
             "fecha_nacimiento": date(2009, 1, 1),
-            "direccion": "Solo prueba", "telefono": "00000000",
+            "direccion": "Solo prueba",
+            "telefono": "00000000",
             "sexo": sexo,
         },
     )
     alumno, _ = Estudiante.objects.get_or_create(persona=persona)
     Matricula.objects.get_or_create(
-        estudiante=alumno, anio_lectivo=anio,
+        estudiante=alumno,
+        anio_lectivo=anio,
         defaults={"curso": curso, "activa": True},
     )
 
