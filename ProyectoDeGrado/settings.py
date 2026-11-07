@@ -26,6 +26,15 @@ load_dotenv(BASE_DIR / ".env")
 # No guardar claves reales en el repositorio. En producción se exige configurar
 # DJANGO_SECRET_KEY y DJANGO_DEBUG=False desde el entorno.
 ENVIRONMENT = os.environ.get("DJANGO_ENV", "development").strip().lower()
+# El proyecto aún no garantiza aislamiento de múltiples colegios.
+# Rechazar explícitamente cualquier intento de activar ese modo.
+if os.environ.get("DJANGO_MULTIINSTITUCION", "false").strip().lower() in {
+    "true", "1", "yes", "on"
+}:
+    raise ImproperlyConfigured(
+        "Multiinstitución está deshabilitada: falta aislamiento integral "
+        "de cuentas, matrículas, informes, tutor, archivos y permisos."
+    )
 DEBUG_DEFAULT = "false" if ENVIRONMENT == "production" else "true"
 DEBUG = os.environ.get("DJANGO_DEBUG", DEBUG_DEFAULT).strip().lower() in {"1", "true", "yes", "on"}
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "")
