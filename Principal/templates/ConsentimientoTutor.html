@@ -1,0 +1,18 @@
+{% extends 'app_shell.html' %}
+{% block title %}Autorización de IA educativa{% endblock %}
+{% block content %}
+<div class="dash portal-page"><section class="section-hero"><span class="eyebrow">PRIVACIDAD Y FAMILIA</span><h1>Autorización para el tutor con IA</h1>
+<p>Solo puedes decidir por estudiantes menores vinculados formalmente a tu cuenta como acudiente. Puedes revocar la autorización en cualquier momento.</p>
+<a class="ui-btn ui-btn-outline" href="{% url 'acudiente' %}">Seguimiento familiar</a></section>
+{% for fila in filas %}<section class="ui-card"><h2>{{ fila.estudiante.persona.nombre }} {{ fila.estudiante.persona.apellido }}</h2>
+{% if fila.menor %}
+<p>Estado actual: {% if fila.autorizado %}Autorizado{% else %}No autorizado{% endif %}.</p>
+<p>El tutor puede usar resultados académicos propios para personalizar las explicaciones. Evita enviar documentos personales o sensibles en el chat.</p>
+<form method="post">{% csrf_token %}<input type="hidden" name="estudiante" value="{{ fila.estudiante.pk }}">
+{% if fila.autorizado %}<button class="ui-btn ui-btn-outline" name="decision" value="revocar">Revocar autorización</button>
+{% else %}<button class="ui-btn ui-btn-primary" name="decision" value="autorizar">Autorizar tutor IA</button>{% endif %}
+</form>
+{% else %}<p>El estudiante es mayor de edad; no necesita autorización de un acudiente para esta función.</p>{% endif %}
+</section>{% empty %}<section class="ui-card"><p>No hay estudiantes vinculados a tu perfil.</p></section>{% endfor %}
+</div>
+{% endblock %}
