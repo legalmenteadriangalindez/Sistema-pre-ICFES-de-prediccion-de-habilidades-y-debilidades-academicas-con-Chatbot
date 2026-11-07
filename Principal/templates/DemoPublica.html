@@ -1,0 +1,42 @@
+{% load static %}
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pre-ICFES · Demostración gratuita</title>
+<style>
+:root { color-scheme: light; font-family: system-ui, sans-serif; }
+body { margin:0; background:#f3f6fc; color:#152648; }
+main { max-width:1000px; margin:auto; padding:clamp(24px,6vw,76px); }
+header { background:linear-gradient(125deg,#152c65,#356cb7); color:white; padding:2.6rem; border-radius:1.3rem; }
+h1 { font-size:clamp(2rem,5vw,3.5rem); line-height:1.1; }
+a { color:#164b94; } header a { color:white; }
+.features { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:1rem; margin-block:2rem; }
+article { background:white; border:1px solid #d5dce9; border-radius:0.8rem; padding:1.2rem; }
+button,.button { display:inline-block; padding:.8rem 1.25rem; background:#fff; color:#143568; border-radius:.65rem; font-weight:700; text-decoration:none; }
+a:focus-visible { outline:3px solid #ffb52c; outline-offset:3px; }
+.notice { border-left:5px solid #db8e1c; background:#fff4d9; padding:1rem; margin-block:1.2rem; }
+footer { color:#59677a; margin-top:3rem; }
+</style>
+</head>
+<body><main><header>
+<p>PRE-ICFES · VERSIÓN DE DEMOSTRACIÓN</p>
+<h1>Practica, identifica fortalezas y mejora tus competencias.</h1>
+<p>Explora las funciones de la plataforma en un entorno gratuito, con usuarios y datos ficticios.</p>
+<a class="button" href="{% url 'login' %}">Ingresar con cuenta de prueba</a>
+</header>
+<section aria-labelledby="funciones"><h2 id="funciones">Funciones disponibles en el proyecto</h2>
+<div class="features">
+<article><h3>Simulacros y cuestionarios</h3><p>Preguntas de práctica, resultados y evaluaciones recuperables.</p></article>
+<article><h3>Seguimiento académico</h3><p>Diagnóstico por competencias, planes de estudio y evolución.</p></article>
+<article><h3>Repaso adaptativo</h3><p>Práctica de refuerzo y revisión espaciada de respuestas.</p></article>
+<article><h3>Herramientas docentes</h3><p>Banco de preguntas, revisión y planificación de intervenciones.</p></article>
+</div></section>
+<section class="notice" role="note"><strong>Importante:</strong>
+ esta instancia no admite matrículas reales, archivos personales ni chat de IA.
+ No utilices datos privados: las pruebas realizadas aquí son ficticias y pueden desaparecer.
+ La base de datos gratuita de Render vence después de 30 días y el servidor puede tardar en despertar.
+</section>
+<footer>Pre-ICFES · Demostración técnica no oficial, sin relación con el ICFES.</footer>
+</main></body></html>
