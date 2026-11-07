@@ -20,6 +20,9 @@
  {% if turn.respuesta %}<div class="chat-row left"><span class="bubble-avatar bot"><i class="fas fa-robot"></i></span><div class="chat-message-group"><span class="message-author">Tutor Pre-ICFES</span><div class="message-bubble bot-bubble">{{ turn.respuesta|linebreaksbr }}</div></div></div>{% endif %}
 {% empty %}<div class="chat-empty"><img src="{% static 'img/ai-tutor.svg' %}" alt=""><span class="eyebrow">¡HOLA! SOY TU TUTOR PRE-ICFES</span><h3>¿Qué aprenderemos hoy?</h3><p>Podemos repasar Matemáticas, Lectura Crítica, Ciencias o cualquier tema que quieras reforzar.</p></div>{% endfor %}
 </div>
+{% if fuentes_validadas %}<aside class="ui-card" aria-label="Fuentes del tutor"><strong>Material docente utilizado como contexto</strong>
+<p>Estas referencias son materiales aprobados, no pruebas de que todas las afirmaciones de la IA sean correctas.</p>
+<ul>{% for fuente in fuentes_validadas %}<li><a href="{% url 'material_validado' fuente.id %}">{{ fuente.titulo }}</a></li>{% endfor %}</ul></aside>{% endif %}
 {% if chat_error %}<div class="chat-alert" role="alert"><i class="fas fa-circle-exclamation"></i> {{ chat_error }}</div>{% endif %}
 <div class="chat-suggestions"><span>Prueba preguntando:</span><button type="button" data-chat-suggestion="Explícame las fracciones con un ejemplo sencillo."><i class="fas fa-calculator"></i> Fracciones</button><button type="button" data-chat-suggestion="Ayúdame a preparar lectura crítica para Saber 11."><i class="fas fa-book-open"></i> Lectura crítica</button><button type="button" data-chat-suggestion="Hazme 5 preguntas de ciencias naturales para practicar."><i class="fas fa-flask"></i> Practicar ciencias</button></div>
 </div>
