@@ -1,0 +1,553 @@
+/* Login, perfil y cambio de contraseña. Colores heredados de design-tokens.css. */
+.preicfes-ui.auth-mode .app-layout {
+  display: block;
+  min-height: calc(100vh - 78px);
+}
+
+.preicfes-ui.auth-mode .app-main {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: calc(100vh - 78px);
+  padding: clamp(16px, 3vw, 38px) clamp(14px, 3vw, 42px) 0 !important;
+}
+
+.preicfes-ui.auth-mode .auth-page {
+  display: grid;
+  flex: 1;
+  place-items: center;
+  width: min(100%, 940px);
+  margin: 0 auto;
+  padding: 10px 0 28px;
+}
+
+.preicfes-ui .auth-shell {
+  display: grid;
+  grid-template-columns: minmax(0, .92fr) minmax(380px, 1.08fr);
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--ds-border);
+  border-radius: 26px;
+  background: var(--ds-surface);
+  box-shadow: var(--ds-shadow-card);
+}
+
+.preicfes-ui .auth-aside {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 520px;
+  overflow: hidden;
+  padding: clamp(30px, 4vw, 52px);
+  color: var(--ds-white);
+  background: linear-gradient(145deg, #092b73 0%, #0754c9 58%, #3c91df 100%);
+}
+
+.preicfes-ui .auth-aside::before,
+.preicfes-ui .auth-aside::after {
+  position: absolute;
+  z-index: -1;
+  display: block;
+  content: "";
+  border: 1px solid rgba(255, 255, 255, .16);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.preicfes-ui .auth-aside::before {
+  top: -115px;
+  right: -94px;
+  width: 300px;
+  height: 300px;
+  box-shadow: 0 0 0 25px rgba(255, 255, 255, .035), 0 0 0 55px rgba(255, 255, 255, .025);
+}
+
+.preicfes-ui .auth-aside::after {
+  right: 12%;
+  bottom: -180px;
+  width: 320px;
+  height: 320px;
+  box-shadow: 0 0 0 28px rgba(255, 255, 255, .035);
+}
+
+.preicfes-ui .auth-brand-mark {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  margin-bottom: 32px;
+  border: 1px solid rgba(255, 255, 255, .24);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .12);
+  color: var(--ds-white);
+  font-size: 25px;
+}
+
+.preicfes-ui .auth-eyebrow,
+.preicfes-ui .auth-kicker {
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1.45px;
+  text-transform: uppercase;
+}
+
+.preicfes-ui .auth-eyebrow {
+  color: #d7eaff;
+}
+
+.preicfes-ui .auth-aside h1 {
+  max-width: 390px;
+  margin: 10px 0 13px;
+  color: var(--ds-white);
+  font-family: var(--ds-font-heading);
+  font-size: clamp(27px, 3.2vw, 38px);
+  font-weight: 800;
+  letter-spacing: -.045em;
+  line-height: 1.12;
+}
+
+.preicfes-ui .auth-aside p {
+  max-width: 375px;
+  margin: 0;
+  color: #e2efff;
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.preicfes-ui .auth-aside-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  max-width: 360px;
+  margin-top: 35px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, .24);
+  color: #e2efff;
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.preicfes-ui .auth-aside-note i {
+  margin-top: 2px;
+  color: #ffcb4b;
+}
+
+.preicfes-ui .auth-main {
+  align-self: center;
+  width: 100%;
+  padding: clamp(28px, 4vw, 54px);
+}
+
+.preicfes-ui .auth-kicker {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--ds-brand);
+}
+
+.preicfes-ui .auth-main h2 {
+  margin: 0;
+  color: var(--ds-navy);
+  font-family: var(--ds-font-heading);
+  font-size: clamp(25px, 2.7vw, 32px);
+  font-weight: 800;
+  letter-spacing: -.045em;
+  line-height: 1.2;
+}
+
+.preicfes-ui .auth-description {
+  margin: 9px 0 24px;
+  color: var(--ds-muted);
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.preicfes-ui .auth-form {
+  display: grid;
+  gap: 18px;
+}
+
+.preicfes-ui .auth-field {
+  min-width: 0;
+}
+
+.preicfes-ui .auth-field > label {
+  display: block;
+  margin: 0 0 7px;
+  color: #284669;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.preicfes-ui .auth-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 50px;
+  padding: 0 13px;
+  border: 1px solid #cbdcf0;
+  border-radius: 13px;
+  background: #fcfeff;
+  transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+}
+
+.preicfes-ui .auth-control:focus-within {
+  border-color: #69a8e8;
+  background: var(--ds-white);
+  box-shadow: 0 0 0 4px #e8f3ff;
+}
+
+.preicfes-ui .auth-control > i {
+  flex: 0 0 auto;
+  color: #6e87a5;
+  font-size: 14px;
+}
+
+.preicfes-ui .auth-control input.auth-input {
+  flex: 1 1 auto;
+  width: 0;
+  min-width: 0;
+  min-height: 46px;
+  padding: 9px 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #183b65;
+  font: inherit;
+  font-size: 13px;
+  box-shadow: none;
+}
+
+.preicfes-ui .auth-control input.auth-input::placeholder {
+  color: #8a9db5;
+  opacity: 1;
+}
+
+.preicfes-ui .auth-control input.auth-input:focus-visible {
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+.preicfes-ui .password-toggle {
+  display: grid;
+  flex: 0 0 34px;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: #527092;
+  cursor: pointer;
+}
+
+.preicfes-ui .password-toggle:hover {
+  background: #edf5ff;
+  color: var(--ds-brand);
+}
+
+.preicfes-ui .password-toggle:focus-visible {
+  outline: 3px solid var(--ds-focus);
+  outline-offset: 2px;
+}
+
+.preicfes-ui .auth-submit {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 3px;
+  font-size: 13px;
+}
+
+.preicfes-ui .auth-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0 0 18px;
+  padding: 12px 14px;
+  border: 1px solid #ffd5d8;
+  border-radius: 12px;
+  background: #fff5f5;
+  color: #a62434;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.preicfes-ui .auth-alert i {
+  margin-top: 2px;
+}
+
+.preicfes-ui .auth-field-error {
+  margin: 6px 0 0;
+  color: #b42336;
+  font-size: 11px;
+}
+
+.preicfes-ui .auth-help {
+  margin-top: 8px;
+  color: #6f829b;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.preicfes-ui .auth-help ul {
+  margin: 6px 0 0;
+  padding-left: 18px;
+}
+
+.preicfes-ui .auth-footer {
+  margin: 22px 0 0;
+  color: #71849d;
+  font-size: 12px;
+  text-align: center;
+}
+
+.preicfes-ui .auth-footer a {
+  color: var(--ds-link);
+  font-weight: 800;
+}
+
+.preicfes-ui .auth-footer a:hover {
+  color: var(--ds-brand-strong);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.preicfes-ui.auth-mode .app-footer {
+  width: 100%;
+  margin-top: auto;
+}
+
+.preicfes-ui.profile-mode .account-profile-page {
+  max-width: 1440px;
+}
+
+.preicfes-ui .account-profile-intro {
+  position: relative;
+  overflow: hidden;
+  border-radius: 23px;
+  background: linear-gradient(110deg, #fff 0%, #edf6ff 65%, #d8ecff 100%);
+  box-shadow: 0 12px 33px rgba(26, 97, 186, .06);
+}
+
+.preicfes-ui .account-profile-intro::after {
+  position: absolute;
+  top: -58px;
+  right: -15px;
+  width: 195px;
+  height: 195px;
+  border: 1px solid #c6def7;
+  border-radius: 50%;
+  box-shadow: 0 0 0 18px rgba(255, 255, 255, .25), 0 0 0 42px rgba(255, 255, 255, .18);
+  content: "";
+  pointer-events: none;
+}
+
+.preicfes-ui .account-profile-grid {
+  align-items: start;
+}
+
+.preicfes-ui .account-card {
+  height: 100%;
+  padding: clamp(20px, 2.5vw, 29px);
+  background: rgba(255, 255, 255, .96);
+}
+
+.preicfes-ui .account-card .widget-title h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 17px;
+}
+
+.preicfes-ui .account-card .widget-title h2 i {
+  color: var(--ds-brand);
+}
+
+.preicfes-ui .account-security {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 4px 0 17px;
+  padding: 14px;
+  border: 1px solid #d9e9fa;
+  border-radius: 14px;
+  background: #f4f9ff;
+}
+
+.preicfes-ui .account-security-icon {
+  display: grid;
+  flex: 0 0 34px;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 11px;
+  background: #e2f1ff;
+  color: var(--ds-brand);
+}
+
+.preicfes-ui .account-security strong {
+  display: block;
+  margin: 0 0 3px;
+  color: #163967;
+  font-size: 12px;
+}
+
+.preicfes-ui .account-security p {
+  margin: 0;
+  color: #627b98;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.preicfes-ui .account-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.preicfes-ui .account-actions .pill-button {
+  flex: 1 1 150px;
+}
+
+.preicfes-ui .auth-done-shell {
+  grid-template-columns: minmax(0, .92fr) minmax(380px, 1.08fr);
+}
+
+.preicfes-ui .auth-done-main {
+  text-align: center;
+}
+
+.preicfes-ui .auth-success-mark {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 18px;
+  border: 1px solid #bdebd9;
+  border-radius: 18px;
+  background: #e8fbf3;
+  color: #07835f;
+  font-size: 23px;
+}
+
+.preicfes-ui .auth-done-main .auth-description {
+  margin-bottom: 20px;
+}
+
+@media (max-width: 900px) {
+  .preicfes-ui.auth-mode .auth-page {
+    width: min(100%, 680px);
+  }
+
+  .preicfes-ui .auth-shell {
+    grid-template-columns: minmax(0, .78fr) minmax(340px, 1.22fr);
+  }
+
+  .preicfes-ui .auth-aside {
+    padding: 30px;
+  }
+
+  .preicfes-ui .auth-main {
+    padding: 30px;
+  }
+}
+
+@media (max-width: 720px) {
+  .preicfes-ui.auth-mode .app-layout,
+  .preicfes-ui.auth-mode .app-main {
+    min-height: 0;
+  }
+
+  .preicfes-ui.auth-mode .app-main {
+    padding: 16px 13px 0 !important;
+  }
+
+  .preicfes-ui.auth-mode .auth-page {
+    flex: initial;
+    width: 100%;
+    padding: 4px 0 18px;
+  }
+
+  .preicfes-ui .auth-shell,
+  .preicfes-ui .auth-done-shell {
+    grid-template-columns: 1fr;
+    border-radius: 21px;
+  }
+
+  .preicfes-ui .auth-aside {
+    min-height: 0;
+    padding: 23px 23px 21px;
+  }
+
+  .preicfes-ui .auth-brand-mark {
+    width: 46px;
+    height: 46px;
+    margin-bottom: 17px;
+    border-radius: 14px;
+    font-size: 20px;
+  }
+
+  .preicfes-ui .auth-aside h1 {
+    font-size: 25px;
+    margin: 8px 0;
+  }
+
+  .preicfes-ui .auth-aside p {
+    font-size: 12px;
+  }
+
+  .preicfes-ui .auth-aside-note {
+    margin-top: 15px;
+    padding-top: 13px;
+    font-size: 11px;
+  }
+
+  .preicfes-ui .auth-main {
+    padding: 25px 23px 26px;
+  }
+
+  .preicfes-ui .account-actions {
+    flex-direction: column;
+  }
+
+  .preicfes-ui .account-actions .pill-button {
+    flex: initial;
+    width: 100%;
+  }
+
+  .preicfes-ui .account-security {
+    margin-top: 4px;
+  }
+
+  .preicfes-ui .account-profile-intro::after {
+    right: -120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .preicfes-ui .auth-shell {
+    margin: 0;
+  }
+
+  .preicfes-ui .auth-aside {
+    padding: 20px 18px;
+  }
+
+  .preicfes-ui .auth-main {
+    padding: 23px 18px;
+  }
+
+  .preicfes-ui .auth-main h2 {
+    font-size: 25px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preicfes-ui .auth-control,
+  .preicfes-ui .password-toggle {
+    transition: none;
+  }
+}
