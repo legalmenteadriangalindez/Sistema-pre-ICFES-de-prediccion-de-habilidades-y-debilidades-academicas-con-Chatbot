@@ -120,7 +120,8 @@ def collect_reference_inventory(files: list[Path]) -> dict[str, object]:
             elif asset.lower().startswith("js/"):
                 js_refs[normalize_asset(asset, "js")].add(source)
 
-    for path in CSS_ROOT.rglob("*.css") if CSS_ROOT.exists() else []:
+    css_paths = CSS_ROOT.rglob("*.css") if CSS_ROOT.exists() else []
+    for path in css_paths:
         content = read_text(path)
         source = rel(path)
         for match in re.finditer(
@@ -265,7 +266,8 @@ def query_candidates(files: list[Path]) -> list[dict[str, object]]:
                     }
                 )
 
-    for path in TEMPLATES_ROOT.rglob("*.html") if TEMPLATES_ROOT.exists() else []:
+    template_paths = TEMPLATES_ROOT.rglob("*.html") if TEMPLATES_ROOT.exists() else []
+    for path in template_paths:
         lines = read_text(path).splitlines()
         loop_start: int | None = None
         for index, line in enumerate(lines, start=1):
