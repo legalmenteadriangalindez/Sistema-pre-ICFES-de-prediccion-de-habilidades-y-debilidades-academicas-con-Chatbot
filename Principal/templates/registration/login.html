@@ -1,51 +1,80 @@
 {% extends "home.html" %}
 {% load static %}
-{% block title %} inicio de sesion {% endblock %}
-
+{% block title %}Iniciar sesión{% endblock %}
+{% block theme_class %}auth-mode{% endblock %}
 {% block extra_head %}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">  <!-- referencia a estilos  --> 
-    <link rel="stylesheet" href="{% static 'css/logins.css' %}">  <!-- referencia a estilos  -->      
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'css/account-pages.css' %}">
 {% endblock %}
 
-{% block content %}  
+{% block content %}
+<section class="auth-page" aria-labelledby="login-title">
+  <div class="auth-shell">
+    <aside class="auth-aside">
+      <span class="auth-brand-mark" aria-hidden="true"><i class="fas fa-graduation-cap"></i></span>
+      <span class="auth-eyebrow">PREPARACIÓN SABER 11</span>
+      <h1>Tu próximo avance empieza aquí</h1>
+      <p>Ingresa a tu espacio de aprendizaje y continúa practicando a tu ritmo.</p>
+      <div class="auth-aside-note">
+        <i class="fas fa-compass" aria-hidden="true"></i>
+        <span>Simulacros, recomendaciones y seguimiento académico en un solo lugar.</span>
+      </div>
+    </aside>
 
-
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-4">
-
-      <h1 class="text-center mb-4">Iniciar sesión 👤</h1>
+    <div class="auth-main">
+      <span class="auth-kicker">Qué bueno tenerte de vuelta</span>
+      <h2 id="login-title">Iniciar sesión</h2>
+      <p class="auth-description">Usa tu nombre de usuario y contraseña para continuar.</p>
 
       {% if form.errors %}
-        <div class="alert alert-danger">
-          Usuario o contraseña incorrectos.
+        <div class="auth-alert" role="alert">
+          <i class="fas fa-circle-exclamation" aria-hidden="true"></i>
+          <span>El usuario o la contraseña no coinciden. Revisa los datos e inténtalo de nuevo.</span>
         </div>
       {% endif %}
 
-      <form method="post">
+      <form method="post" class="auth-form">
         {% csrf_token %}
+        {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
 
-        <div class="mb-3 input-container" >
-          <label class="form-label">Usuario:</label>
-          <div class="input-username">
-             {{ form.username }}
+        <div class="auth-field">
+          <label for="{{ form.username.id_for_label }}">Nombre de usuario</label>
+          <div class="auth-control">
+            <i class="far fa-user" aria-hidden="true"></i>
+            {{ form.username }}
           </div>
+          {% for error in form.username.errors %}
+            <p class="auth-field-error">{{ error }}</p>
+          {% endfor %}
         </div>
 
-        <div class="mb-3 input-container">
-          <label class="form-label">Contraseña:</label>
-          <div class="input-password">  
-             {{ form.password }}
+        <div class="auth-field">
+          <label for="{{ form.password.id_for_label }}">Contraseña</label>
+          <div class="auth-control">
+            <i class="fas fa-lock" aria-hidden="true"></i>
+            {{ form.password }}
+            <button class="password-toggle" type="button" data-password-toggle data-password-name="la contraseña" aria-label="Mostrar la contraseña" aria-controls="{{ form.password.id_for_label }}" aria-pressed="false">
+              <i class="far fa-eye" aria-hidden="true"></i>
+              <span class="visually-hidden" data-password-toggle-label>Mostrar contraseña</span>
+            </button>
           </div>
+          {% for error in form.password.errors %}
+            <p class="auth-field-error">{{ error }}</p>
+          {% endfor %}
         </div>
 
-        <button type="submit" class="btn-login">
-          Iniciar sesión
+        <button class="pill-button solid auth-submit" type="submit">
+          Entrar a mi cuenta <i class="fas fa-arrow-right" aria-hidden="true"></i>
         </button>
       </form>
 
+      <p class="auth-footer">¿Aún no tienes cuenta? <a href="{% url 'registro' %}">Crear una cuenta</a></p>
     </div>
   </div>
-</div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+  {{ block.super }}
+  <script src="{% static 'js/account-pages.js' %}" defer></script>
 {% endblock %}

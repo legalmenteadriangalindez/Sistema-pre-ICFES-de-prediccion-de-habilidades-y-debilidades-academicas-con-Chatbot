@@ -20,12 +20,22 @@ from Principal.demo_views import demo_publica
 from django.urls import include, path
 from django.contrib.auth import views as auth_views
 from Principal.health_views import healthz, readyz
+from Principal.account_forms import PreICFESAuthenticationForm, PreICFESPasswordChangeForm
 
 urlpatterns = [
     path("healthz/", healthz, name="healthz"),
     path("readyz/", readyz, name="readyz"),
     path('admin/', admin.site.urls),
     path("",include("Principal.urls")), # referencia a las urls de la app Principal 
+    # Vistas de autenticación con formularios y plantillas de la identidad Pre-ICFES.
+    path('accounts/login/', auth_views.LoginView.as_view(
+        template_name='registration/login.html',
+        authentication_form=PreICFESAuthenticationForm,
+    ), name='login'),
+    path('accounts/password_change/', auth_views.PasswordChangeView.as_view(
+        template_name='registration/password_change_form.html',
+        form_class=PreICFESPasswordChangeForm,
+    ), name='password_change'),
     path('accounts/', include('django.contrib.auth.urls')),
 ]
 
