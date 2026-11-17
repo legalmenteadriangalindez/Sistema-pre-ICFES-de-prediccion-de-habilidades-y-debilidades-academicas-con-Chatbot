@@ -8,7 +8,6 @@ from Principal.simulacros_views import simulacros
 from Principal.view_modules import (
     banco_preguntas as banco_ops,
     calidad_banco,
-    docente_ops,
     intervenciones,
     material_validado,
     progreso_competencias,
@@ -16,6 +15,7 @@ from Principal.view_modules import (
     simulacro_avanzado,
     versiones_banco,
 )
+from Principal.view_modules import docentes as docente_ops
 from Principal.view_modules import practica_adaptativa as adaptativo_ops
 from Principal.view_modules import avisos, consentimientos, import_export
 
