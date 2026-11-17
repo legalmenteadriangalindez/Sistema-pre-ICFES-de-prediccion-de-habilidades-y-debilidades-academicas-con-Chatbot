@@ -551,3 +551,94 @@
     transition: none;
   }
 }
+
+
+/* Edición de perfil: mismas tarjetas, campos y acciones de la cuenta. */
+.preicfes-ui.profile-mode .profile-edit-page {
+  max-width: 1120px;
+}
+
+.preicfes-ui .profile-edit-form {
+  display: grid;
+  gap: 16px;
+}
+
+.preicfes-ui .profile-edit-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.preicfes-ui .profile-edit-card {
+  min-width: 0;
+}
+
+.preicfes-ui .profile-edit-card-wide {
+  grid-column: 1 / -1;
+}
+
+.preicfes-ui .profile-edit-card .auth-description {
+  margin-bottom: 18px;
+}
+
+.preicfes-ui .profile-edit-card .auth-form {
+  gap: 14px;
+}
+
+.preicfes-ui .profile-edit-card .auth-control select.auth-input,
+.preicfes-ui .profile-edit-card .auth-control textarea.auth-input {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #183b65;
+  font: inherit;
+  font-size: 13px;
+}
+
+.preicfes-ui .profile-edit-card .auth-control textarea.auth-input {
+  min-height: 96px;
+  padding: 12px 0;
+  resize: vertical;
+}
+
+.preicfes-ui .profile-edit-card .auth-control select.auth-input {
+  min-height: 44px;
+  padding: 9px 0;
+}
+
+.preicfes-ui .profile-edit-card .auth-control select.auth-input:focus-visible,
+.preicfes-ui .profile-edit-card .auth-control textarea.auth-input:focus-visible {
+  outline: 0;
+}
+
+.preicfes-ui .profile-edit-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.preicfes-ui .profile-edit-actions .pill-button {
+  min-width: 168px;
+}
+
+@media (max-width: 780px) {
+  .preicfes-ui .profile-edit-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .preicfes-ui .profile-edit-card-wide {
+    grid-column: auto;
+  }
+
+  .preicfes-ui .profile-edit-actions {
+    flex-direction: column-reverse;
+  }
+
+  .preicfes-ui .profile-edit-actions .pill-button {
+    width: 100%;
+  }
+}
