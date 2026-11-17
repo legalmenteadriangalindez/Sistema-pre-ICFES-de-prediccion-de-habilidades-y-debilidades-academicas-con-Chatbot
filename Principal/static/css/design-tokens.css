@@ -23,6 +23,9 @@
   --ds-muted-polish: #607797;
   --ds-sky: #edf6ff;
   --ds-focus: #ffc234;
+  --ds-danger: #c92138;
+  --ds-danger-surface: #fff5f5;
+  --ds-danger-border: #ffccd2;
 
   /* Tipografía */
   --ds-font-body: 'DM Sans', system-ui, sans-serif;
