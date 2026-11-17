@@ -219,8 +219,16 @@ La auditoría agrega un workflow separado que:
 - Publica el HTML de cobertura como artefacto.
 - No cambia la ejecución normal de main.
 
-La cifra de cobertura se incorpora después de finalizar el workflow; no se inventa ni se
-estima a partir del número de pruebas.
+Resultado obtenido en la ejecución final:
+
+- PostgreSQL 16.
+- 211 pruebas.
+- 49,4 segundos.
+- 100% de pruebas exitosas.
+- 79% de cobertura de código de producción, excluyendo migraciones y archivos de prueba.
+
+La cifra se obtiene de coverage report -m y queda publicada junto con el HTML de cobertura
+del commit auditado.
 
 ## PostgreSQL
 
