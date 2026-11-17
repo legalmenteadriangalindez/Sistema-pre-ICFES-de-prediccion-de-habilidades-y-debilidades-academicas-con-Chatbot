@@ -104,6 +104,71 @@ La clasificación definitiva se obtiene con el artefacto phase1-inventory genera
 scripts/audit_phase1.py. Un archivo sin referencia estática puede ser usado por imports,
 tests, nombres dinámicos o despliegues anteriores.
 
+## Resultado automatizado de la auditoría
+
+La ejecución del workflow de esta rama produjo el siguiente resumen:
+
+- 74 plantillas HTML.
+- 36 hojas CSS.
+- 12 módulos JavaScript.
+- 71 rutas detectadas y 68 nombres únicos.
+- No se detectaron nombres de ruta duplicados.
+- No se detectaron patrones de URL duplicados.
+- Se detectó demo_publica como nombre sin referencia estática directa.
+- Se detectaron 51 candidatos de consultas de lectura dentro de bucles o relaciones anidadas.
+
+### Plantillas candidatas
+
+- Carreras.html.
+- PerfilDeUsuarioAdminAcademico.html.
+- TutorDemoLimitado.html.
+- components/tables/people_header.html.
+- components/tables/person_row.html.
+- components/tables/user_row.html.
+- components/tables/users_header.html.
+- cordinador.html.
+- docentes.html.
+- editarPerfilDeUsuario.html.
+- gestion_admin.html.
+- registration/password_change_done.html.
+
+La plantilla registration/login.html ya se reconoce como usada por template_name y no debe
+tratarse como heredada.
+
+### CSS candidatos
+
+- configuraciones.css.
+- legacy/01-base-preferencias.css hasta legacy/10-refresh-oscuro-paginas.css.
+- logins.css.
+- registers.css.
+- registros.css.
+- test.css.
+
+Estos archivos son candidatos estáticos, no eliminaciones aprobadas. styles.css importa
+parte del legado y debe conservarse hasta completar la revisión visual y de referencias.
+
+### JavaScript
+
+No se detectaron módulos JavaScript sin referencia estática. La carga actual queda cubierta
+por app_shell.html, los bloques específicos de las páginas y los componentes existentes.
+
+### Consultas prioritarias
+
+El auditor encontró consultas de lectura dentro de bucles en:
+
+- Principal/view_modules/acudientes.py, líneas 25, 28, 29 y 35.
+- Principal/services/importacion_matriculas.py, líneas 89 y 105.
+- Principal/services/avisos_academicos.py, línea 29.
+- Principal/services/repasos_espaciados.py, líneas 19 y 24.
+- Principal/view_modules/consentimientos.py, línea 59.
+- Principal/view_modules/vocacional.py, líneas 41 y 71.
+- Principal/view_modules/admin_escolar.py, línea 182.
+- Varias plantillas con relaciones anidadas dentro de for.
+
+El resultado es heurístico. Antes de corregirlo se debe medir cada flujo con
+CaptureQueriesContext y agregar select_related/prefetch_related solamente donde exista
+un aumento real de consultas.
+
 ## URLs
 
 La aplicación tiene dos niveles de enrutamiento:
