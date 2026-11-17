@@ -1,4 +1,9 @@
-/* Login, perfil y cambio de contraseña. Colores heredados de design-tokens.css. */
+/* Login, perfil y cambio de contraseña. Colores heredados de design-tokens.css.
+   La misma capa funciona en app_shell para perfiles y en auth_shell para
+   autenticación pública. */
+.preicfes-ui.auth-mode .auth-main-layout .auth-page {
+  min-height: calc(100vh - 118px);
+}
 .preicfes-ui.auth-mode .app-layout {
   display: block;
   min-height: calc(100vh - 78px);
@@ -228,6 +233,28 @@
 .preicfes-ui .auth-control input.auth-input:focus-visible {
   outline: 0 !important;
   box-shadow: none !important;
+}
+
+.preicfes-ui .auth-control :is(select.auth-input, textarea.auth-input) {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #183b65;
+  font: inherit;
+  font-size: 13px;
+}
+
+.preicfes-ui .auth-control textarea.auth-input {
+  min-height: 96px;
+  padding: 12px 0;
+  resize: vertical;
+}
+
+.preicfes-ui .auth-control :is(select.auth-input, textarea.auth-input):focus-visible {
+  outline: 0;
 }
 
 .preicfes-ui .password-toggle {
