@@ -8,7 +8,6 @@ las relaciones que ya utiliza la aplicación.
 from .modelos.academico import (
     AnioLectivo,
     AsignacionDocenteCurso,
-    Acudiente,
     Boletin,
     Curso,
     Estudiante,
@@ -39,7 +38,7 @@ from .modelos.aprendizaje import (
 from .modelos.chat import Conversacion, Mensaje, RolMessage
 from .modelos.evaluaciones import IntentoEvaluacion, RespuestaEvaluacion
 from .modelos.identidad import (
-    Acudiente as IdentidadAcudiente,
+    Acudiente,
     PerfilUsuario,
     Persona,
     RelacionAcudiente,
@@ -64,9 +63,6 @@ from .funciones_pendientes_models import (
     RegistroAuditoria,
     RepasoEspaciado,
 )
-
-# Acudiente se importa con su nombre histórico desde identidad.py.
-Acudiente = IdentidadAcudiente
 
 __all__ = (
     "Rol",
