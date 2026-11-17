@@ -36,7 +36,7 @@ RENDER_RE = re.compile(
     re.IGNORECASE | re.DOTALL,
 )
 TEMPLATE_NAME_RE = re.compile(
-    r"\btemplate_name\s*=\s*["']([^"']+\.html)["']",
+    r"\btemplate_name\s*=\s*[\"']([^\"']+\.html)[\"']",
     re.IGNORECASE,
 )
 STATIC_RE = re.compile(r"{%\s*static\s+[\"']([^\"']+)[\"']", re.IGNORECASE)
