@@ -35,18 +35,18 @@ de contraseña siguen usando el control de mostrar/ocultar y comparten
 
 ### 3. Capas CSS consolidadas
 
-- `design-tokens.css) es la fuente única de colores, estados, tipografías,
+- `design-tokens.css` es la fuente única de colores, estados, tipografías,
   espacios, radios y sombras.
-- `components.css) es la fuente única de botones compartidos, foco visible y
+- `components.css` es la fuente única de botones compartidos, foco visible y
   utilidades accesibles. Los bloques duplicados de botones se retiraron de
-  `ui-2026.css) y `ui-polish.css).
-- `auth-base.css) contiene únicamente la base pública de autenticación:
+  `ui-2026.css` y `ui-polish.css`.
+- `auth-base.css` contiene únicamente la base pública de autenticación:
   cuerpo, shell principal, pie, verificación y utilidades del registro.
-- `account-pages.css) conserva los componentes de cuenta (formulario, perfil,
-  cambio de contraseña) y ahora puede funcionar tanto con `app_shell) como
+- `account-pages.css` conserva los componentes de cuenta (formulario, perfil,
+  cambio de contraseña) y ahora puede funcionar tanto con `app_shell` como
   con `auth_shell`.
-- `dashboard-legacy.css) encapsula los diez imports históricos del dashboard.
-  `styles.css) queda como fachada de compatibilidad para plantillas antiguas.
+- `dashboard-legacy.css` encapsula los diez imports históricos del dashboard.
+  `styles.css` queda como fachada de compatibilidad para plantillas antiguas.
 
 ## Referencias confirmadas
 
@@ -55,13 +55,13 @@ JavaScript y Python del árbol de la rama.
 
 ### Referencias actuales
 
-- `app_shell.html) carga `dashboard-legacy.css), tokens, componentes y
+- `app_shell.html) carga `dashboard-legacy.css`, tokens, componentes y
   las capas actuales del dashboard.
 - `auth_shell.html) carga únicamente las capas públicas descritas arriba.
-- `PerfilDeUsuarios.html) y `PerfilEditar.html) continúan en
+- `PerfilDeUsuarios.html` y `PerfilEditar.html` continúan en
   `app_shell.html) porque son vistas autenticadas de perfil y mantienen su
   integración con navegación y sesión.
-- `account-pages.js) queda centralizado en `auth_shell.html).
+- `account-pages.js` queda centralizado en `auth_shell.html).
 
 ### Referencias heredadas conservadas
 
@@ -70,11 +70,11 @@ eliminaron:
 
 | Archivo | Referencias heredadas |
 | --- | --- |
-| `styles.css) | `PerfilDeUsuario.html`, `PerfilDeUsuarioAdminAcademico.html`, `acudiente.html`, `admin_gestion_academica.html`, `admin_gestion_db.html`, `cordinador.html`, `docentes.html`, `editarPerfilDeUsuario.html`, `gestion_admin.html` |
-| `register.css) | Las plantillas de registro/gestión históricas anteriores |
-| `perfile.css) | Las tres plantillas de perfil históricas |
-| `inicioDeSesiones.css) | `InicioSesion.html`, plantilla heredada no usada por el flujo actual |
-| `legacy/01..10) | Se cargan mediante `dashboard-legacy.css` para el dashboard actual |
+| `styles.css` | `PerfilDeUsuario.html`, `PerfilDeUsuarioAdminAcademico.html`, `acudiente.html`, `admin_gestion_academica.html`, `admin_gestion_db.html`, `cordinador.html`, `docentes.html`, `editarPerfilDeUsuario.html`, `gestion_admin.html` |
+| `register.css` | Las plantillas de registro/gestión históricas anteriores |
+| `perfile.css` | Las tres plantillas de perfil históricas |
+| `inicioDeSesiones.css` | `InicioSesion.html`, plantilla heredada no usada por el flujo actual |
+| `legacy/01..10` | Se cargan mediante `dashboard-legacy.css` para el dashboard actual |
 
 Mientras esas plantillas existan, retirar sus archivos rompería la
 compatibilidad de renderizado. La siguiente fase puede retirar primero las
@@ -111,8 +111,8 @@ las descarga ni depende de sus selectores.
 ## Pendientes seguros
 
 1. Convertir o retirar las plantillas históricas que todavía enlazan
-   `styles.css`, `register.css`, `perfile.css) e
-   `inicioDeSesiones.css).
+   `styles.css`, `register.css`, `perfile.css` e
+   `inicioDeSesiones.css`.
 2. Tras esa conversión, repetir la misma auditoría y eliminar las fachadas y
    los imports de `legacy/` que ya no tengan consumidores.
 3. Ejecutar la suite Django, PostgreSQL, cobertura, Playwright y la validación
