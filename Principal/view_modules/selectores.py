@@ -1,34 +1,10 @@
-"""Selectores y permisos compartidos por los portales y paneles administrativos.
+"""Fachada de selectores de consultas y permisos compartidos.
 
-Estos helpers mantienen las mismas reglas que los controladores previos.
+Las vistas históricas siguen importando desde este módulo; las consultas viven
+en `Principal.consultas` por dominio.
 """
-from django.db.models import Q
 
-from Principal.models import (
-    AsignacionDocenteCurso, Estudiante, Matricula, PerfilUsuario, Persona,
-)
+from Principal.consultas.academico import _matricula
+from Principal.consultas.identidad import _estudiante, _tiene_rol, es_gestor
 
-def es_gestor(request_user):
-    if not request_user.is_authenticated:
-        return False
-    if request_user.is_superuser:
-        return True
-    return PerfilUsuario.objects.filter(
-        user=request_user, roles__nombre__iexact="ADMIN"
-    ).exists()
-
-def _tiene_rol(user, nombre):
-    return user.is_authenticated and (user.is_superuser or PerfilUsuario.objects.filter(
-        user=user, roles__nombre__iexact=nombre
-    ).exists())
-
-
-def _estudiante(user):
-    perfil = PerfilUsuario.objects.filter(user=user).first()
-    persona = Persona.objects.filter(perfil_user=perfil).first() if perfil else None
-    return Estudiante.objects.filter(persona=persona).first() if persona else None
-
-
-def _matricula(estudiante):
-    return Matricula.objects.filter(estudiante=estudiante, activa=True).first() if estudiante else None
-
+__all__ = ("es_gestor", "_tiene_rol", "_estudiante", "_matricula")
