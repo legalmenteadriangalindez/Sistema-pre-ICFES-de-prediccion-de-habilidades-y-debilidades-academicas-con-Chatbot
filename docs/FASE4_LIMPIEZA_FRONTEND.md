@@ -55,13 +55,13 @@ JavaScript y Python del árbol de la rama.
 
 ### Referencias actuales
 
-- `app_shell.html) carga `dashboard-legacy.css`, tokens, componentes y
+- `app_shell.html` carga `dashboard-legacy.css`, tokens, componentes y
   las capas actuales del dashboard.
-- `auth_shell.html) carga únicamente las capas públicas descritas arriba.
+- `auth_shell.html` carga únicamente las capas públicas descritas arriba.
 - `PerfilDeUsuarios.html` y `PerfilEditar.html` continúan en
-  `app_shell.html) porque son vistas autenticadas de perfil y mantienen su
+  `app_shell.html` porque son vistas autenticadas de perfil y mantienen su
   integración con navegación y sesión.
-- `account-pages.js` queda centralizado en `auth_shell.html).
+- `account-pages.js` queda centralizado en `auth_shell.html`.
 
 ### Referencias heredadas conservadas
 
