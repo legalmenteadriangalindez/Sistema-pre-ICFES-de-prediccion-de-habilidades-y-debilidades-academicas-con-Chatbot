@@ -1,0 +1,12 @@
+/* Compatibilidad del dashboard con la capa histórica.
+   Las pantallas de autenticación no cargan este archivo. */
+@import url("./legacy/01-base-preferencias.css");
+@import url("./legacy/02-chat-controles.css");
+@import url("./legacy/03-chat-historial-modo-oscuro.css");
+@import url("./legacy/04-footer-lista-chats.css");
+@import url("./legacy/05-responsive-navegacion.css");
+@import url("./legacy/06-modales-chat.css");
+@import url("./legacy/07-refresh-estructura.css");
+@import url("./legacy/08-refresh-componentes.css");
+@import url("./legacy/09-refresh-chat-footer.css");
+@import url("./legacy/10-refresh-oscuro-paginas.css");
