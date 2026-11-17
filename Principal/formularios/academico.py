@@ -2,7 +2,7 @@
 
 from django import forms
 
-from ..models import Boletin, Estudiante, Matricula, Nota, Observacion, Persona
+from ..models import Boletin, Estudiante, Nota, Observacion, Persona
 
 
 class NotaForm(forms.ModelForm):
