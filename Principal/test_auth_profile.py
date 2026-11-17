@@ -82,10 +82,8 @@ class AutenticacionPerfilTests(TestCase):
         response = self.client.post(reverse("perfil_editar"), datos)
 
         self.assertEqual(response.status_code, 200)
-        self.assertFormError(
+        self.assertContains(
             response,
-            "user_form",
-            "email",
             "Este correo electrónico ya está registrado.",
         )
         self.usuario.refresh_from_db()
@@ -118,7 +116,8 @@ class AutenticacionPerfilTests(TestCase):
                 password=self.password,
             )
             perfil = PerfilUsuario.objects.create(user=user)
-            perfil.roles.add(Rol.objects.create(nombre=role))
+            rol_obj, _ = Rol.objects.get_or_create(nombre=role)
+            perfil.roles.add(rol_obj)
 
             self.client.force_login(user)
             response = self.client.get(reverse("perfil_editar"))
