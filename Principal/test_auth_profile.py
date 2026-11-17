@@ -30,7 +30,7 @@ class AutenticacionPerfilTests(TestCase):
             last_name="Prueba",
         )
         perfil = PerfilUsuario.objects.create(user=user)
-        perfil.roles.add(Rol.objects.create(nombre=rol))
+        rol_obj, _ = Rol.objects.get_or_create(nombre=rol)\n        perfil.roles.add(rol_obj)
         persona = Persona.objects.create(
             perfil_user=perfil,
             nombre="Nombre",
