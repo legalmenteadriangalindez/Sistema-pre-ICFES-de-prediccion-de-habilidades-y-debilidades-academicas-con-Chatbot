@@ -394,35 +394,4 @@ body.preicfes-ui {
   margin-top:18px
 }
 
-.preicfes-ui .pill-button {
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:9px;
-  border-radius:12px;
-  padding:10px 16px;
-  min-height:43px;
-  font-size:12px!important;
-  font-weight:900;
-  border:1px solid transparent;
-  line-height:1.35;
-  text-decoration:none!important;
-  transition:transform .18s,box-shadow .18s
-}
-
-.preicfes-ui .pill-button:hover {
-  transform:translateY(-1px)
-}
-
-.preicfes-ui .pill-button.solid {
-  background:linear-gradient(130deg,#0863de,#032f95);
-  color:var(--ds-white)!important;
-  border-color:#0655c0;
-  box-shadow:0 7px 16px #0651bf32
-}
-
-.preicfes-ui .pill-button.outline {
-  background:var(--ds-white);
-  color:#0753bc;
-  border-color:#b8d5f8
-}
+/* Shared button primitives live in components.css. */

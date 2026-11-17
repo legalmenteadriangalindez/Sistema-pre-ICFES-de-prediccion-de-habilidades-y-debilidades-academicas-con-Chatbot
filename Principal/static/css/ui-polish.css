@@ -63,55 +63,8 @@
   letter-spacing:-.052em
 }
 
-.preicfes-ui .pill-button,.preicfes-ui .ui-btn {
-  display:inline-flex;
-  justify-content:center;
-  align-items:center;
-  gap:var(--ds-space-2);
-  min-height:var(--ds-button-min-height);
-  padding:10px 17px;
-  border-radius:var(--ds-button-radius);
-  font-weight:750;
-  font-size:13px;
-  text-align:center;
-  text-decoration:none;
-  transition:transform .17s ease,box-shadow .17s ease,background .17s ease,border .17s ease
-}
-
-.preicfes-ui .pill-button:hover:not(:disabled),.preicfes-ui .ui-btn:hover:not(:disabled) {
-  transform:translateY(-1px);
-  box-shadow:0 12px 25px #0a56ad26
-}
-
-.preicfes-ui :is(.pill-button,.ui-btn).solid,.preicfes-ui .ui-btn-primary {
-  color:var(--ds-white);
-  background:linear-gradient(120deg,#075edb,#05399f);
-  border:1px solid #105fc9
-}
-
-.preicfes-ui .ui-btn-outline {
-  background:var(--ds-white);
-  color:#074caf;
-  border:1px solid #bed6f5
-}
-
-.preicfes-ui .ui-btn-danger {
-  background:#fff5f5;
-  color:#c92138;
-  border:1px solid #ffccd2
-}
-
-.preicfes-ui .ui-btn:disabled,.preicfes-ui .pill-button:disabled {
-  opacity:.56;
-  cursor:not-allowed;
-  box-shadow:none;
-  transform:none
-}
-
-.preicfes-ui a:focus-visible,.preicfes-ui button:focus-visible,.preicfes-ui input:focus-visible,.preicfes-ui textarea:focus-visible,.preicfes-ui select:focus-visible {
-  outline:3px solid #ffbe2c!important;
-  outline-offset:3px!important
-}
+/* Shared button primitives live in components.css. */
+/* Shared focus ring lives in components.css. */
 
 .preicfes-ui .app-footer {
   margin-top:32px;

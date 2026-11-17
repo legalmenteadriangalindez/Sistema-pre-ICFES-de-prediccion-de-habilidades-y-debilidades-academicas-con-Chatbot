@@ -1,0 +1,143 @@
+/* Base visual independiente para las pantallas públicas de autenticación. */
+.preicfes-ui.auth-mode,
+.preicfes-ui.auth-mode * {
+  box-sizing: border-box;
+}
+
+.preicfes-ui.auth-mode {
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(circle at 88% 6%, #e7f3ff 0, transparent 34%),
+    var(--ds-canvas);
+  color: var(--ds-ink);
+  font-family: var(--ds-font-body);
+}
+
+.preicfes-ui.auth-mode .auth-main-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 54px);
+}
+
+.preicfes-ui.auth-mode .auth-main-layout > .app-notifications {
+  width: min(100% - 28px, 940px);
+  margin: 16px auto 0;
+}
+
+.preicfes-ui.auth-mode .auth-site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 22px;
+  min-height: 54px;
+  padding: 17px 20px;
+  border-top: 1px solid var(--ds-border);
+  background: rgba(255, 255, 255, .74);
+  color: var(--ds-muted);
+  font-size: 11px;
+  text-align: center;
+}
+
+.preicfes-ui.auth-mode .skip-link {
+  position: fixed;
+  z-index: 1000;
+  top: 10px;
+  left: 10px;
+  padding: 9px 13px;
+  border-radius: 10px;
+  background: var(--ds-navy);
+  color: var(--ds-white);
+  transform: translateY(-160%);
+  transition: transform .18s ease;
+}
+
+.preicfes-ui.auth-mode .skip-link:focus {
+  transform: translateY(0);
+}
+
+.preicfes-ui.auth-mode .auth-registration-form {
+  gap: 15px;
+}
+
+.preicfes-ui.auth-mode .auth-section-title {
+  margin: 7px 0 0;
+  color: var(--ds-navy);
+  font-family: var(--ds-font-heading);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: -.02em;
+}
+
+.preicfes-ui.auth-mode .auth-section-title:first-child {
+  margin-top: 0;
+}
+
+.preicfes-ui.auth-mode .auth-registration-divider {
+  height: 1px;
+  margin: 2px 0 1px;
+  border: 0;
+  background: var(--ds-border);
+}
+
+.preicfes-ui.auth-mode .verification-page {
+  width: min(100%, 720px);
+}
+
+.preicfes-ui.auth-mode .verification-card {
+  width: 100%;
+  padding: clamp(28px, 5vw, 54px);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-card-radius);
+  background: var(--ds-surface);
+  box-shadow: var(--ds-shadow-card);
+  text-align: center;
+}
+
+.preicfes-ui.auth-mode .verification-icon {
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  margin: 0 auto 18px;
+  border: 1px solid #c7def7;
+  border-radius: 19px;
+  background: var(--ds-sky);
+  color: var(--ds-brand);
+  font-size: 25px;
+}
+
+.preicfes-ui.auth-mode .verification-card h1 {
+  margin: 8px 0 12px;
+  color: var(--ds-navy);
+  font-family: var(--ds-font-heading);
+  font-size: clamp(25px, 4vw, 34px);
+  letter-spacing: -.045em;
+}
+
+.preicfes-ui.auth-mode .verification-card p {
+  max-width: 570px;
+  margin: 0 auto 22px;
+  color: var(--ds-muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.preicfes-ui.auth-mode .verification-card .pill-button {
+  min-width: 185px;
+}
+
+@media (max-width: 720px) {
+  .preicfes-ui.auth-mode .auth-main-layout > .app-notifications {
+    width: calc(100% - 26px);
+    margin-top: 13px;
+  }
+
+  .preicfes-ui.auth-mode .auth-site-footer {
+    padding: 14px 13px;
+  }
+
+  .preicfes-ui.auth-mode .verification-card {
+    padding: 28px 20px;
+  }
+}

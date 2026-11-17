@@ -10,9 +10,9 @@ class NotaForm(forms.ModelForm):
         model = Nota
         fields = "__all__"
         widgets = {
-            "matricula": forms.Select(attrs={"class": "input-select"}),
-            "asignacion": forms.Select(attrs={"class": "input-select"}),
-            "valor": forms.NumberInput(attrs={"class": "input-field"}),
+            "matricula": forms.Select(attrs={"class": "input-select auth-input"}),
+            "asignacion": forms.Select(attrs={"class": "input-select auth-input"}),
+            "valor": forms.NumberInput(attrs={"class": "input-field auth-input"}),
         }
 
 
@@ -21,10 +21,10 @@ class BoletinForm(forms.ModelForm):
         model = Boletin
         fields = "__all__"
         widgets = {
-            "matricula": forms.Select(attrs={"class": "input-select"}),
-            "promedio_periodo": forms.NumberInput(attrs={"class": "input-field"}),
+            "matricula": forms.Select(attrs={"class": "input-select auth-input"}),
+            "promedio_periodo": forms.NumberInput(attrs={"class": "input-field auth-input"}),
             "observaciones_generales": forms.Textarea(
-                attrs={"class": "input-text-area", "rows": 3}
+                attrs={"class": "input-text-area auth-input", "rows": 3}
             ),
         }
 
@@ -34,10 +34,10 @@ class ObservacionForm(forms.ModelForm):
         model = Observacion
         fields = "__all__"
         widgets = {
-            "matricula": forms.Select(attrs={"class": "input-select"}),
-            "asignacion": forms.Select(attrs={"class": "input-select"}),
+            "matricula": forms.Select(attrs={"class": "input-select auth-input"}),
+            "asignacion": forms.Select(attrs={"class": "input-select auth-input"}),
             "texto": forms.Textarea(
-                attrs={"class": "input-text-area", "rows": 3}
+                attrs={"class": "input-text-area auth-input", "rows": 3}
             ),
         }
 
@@ -48,15 +48,15 @@ class PersonaForm(forms.ModelForm):
         exclude = ["perfil_user"]
 
         widgets = {
-            "nombre": forms.TextInput(attrs={"class": "input-field"}),
-            "apellido": forms.TextInput(attrs={"class": "input-field"}),
-            "documento": forms.TextInput(attrs={"class": "input-field"}),
+            "nombre": forms.TextInput(attrs={"class": "input-field auth-input"}),
+            "apellido": forms.TextInput(attrs={"class": "input-field auth-input"}),
+            "documento": forms.TextInput(attrs={"class": "input-field auth-input"}),
             "fecha_nacimiento": forms.DateInput(
-                attrs={"type": "date", "class": "input-field"}
+                attrs={"type": "date", "class": "input-field auth-input"}
             ),
-            "direccion": forms.TextInput(attrs={"class": "input-field"}),
-            "telefono": forms.TextInput(attrs={"class": "input-field"}),
-            "sexo": forms.Select(attrs={"class": "input-select"}),
+            "direccion": forms.TextInput(attrs={"class": "input-field auth-input"}),
+            "telefono": forms.TextInput(attrs={"class": "input-field auth-input"}),
+            "sexo": forms.Select(attrs={"class": "input-select auth-input"}),
         }
 
 
@@ -65,7 +65,7 @@ class RegistroEstudianteForm(forms.ModelForm):
     class Meta:
         model = Estudiante
         fields = ["necesidades_especiales"]
-        widgets = {"necesidades_especiales": forms.Textarea(attrs={"class": "input-text-area", "rows": 3})}
+        widgets = {"necesidades_especiales": forms.Textarea(attrs={"class": "input-text-area auth-input", "rows": 3})}
 
 
 class EstudianteForm(forms.ModelForm):
@@ -75,6 +75,6 @@ class EstudianteForm(forms.ModelForm):
 
         widgets = {
             "necesidades_especiales": forms.Textarea(
-                attrs={"class": "input-text-area", "rows": 3}
+                attrs={"class": "input-text-area auth-input", "rows": 3}
             ),
         }

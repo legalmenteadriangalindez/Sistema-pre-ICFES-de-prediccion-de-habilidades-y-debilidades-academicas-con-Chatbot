@@ -68,8 +68,8 @@ class CssQualityTests(unittest.TestCase):
     def test_orden_de_cascada_y_estilos_especificos_al_final(self):
         html = (TEMPLATES / "app_shell.html").read_text(encoding="utf-8")
         orden = [
-            "css/styles.css", "css/design-tokens.css",
-            "css/ui-2026.css", "css/ui-2026-chat.css",
+            "css/dashboard-legacy.css", "css/design-tokens.css",
+            "css/components.css", "css/ui-2026.css", "css/ui-2026-chat.css",
             "css/ui-2026-pages.css", "css/ui-2026-academico.css",
             "css/ui-polish.css", "css/ui-polish-evaluaciones.css",
             "css/ui-polish-administracion.css",
@@ -93,6 +93,7 @@ class CssQualityTests(unittest.TestCase):
             "--ds-canvas", "--ds-border", "--ds-focus", "--ds-font-body",
             "--ds-font-heading", "--ds-space-2", "--ds-button-min-height",
             "--ds-button-radius", "--ds-card-radius", "--ds-shadow-card",
+            "--ds-danger", "--ds-danger-surface", "--ds-danger-border",
         }
         self.assertTrue(requeridas.issubset(definidas))
         for pagina in (
@@ -101,6 +102,7 @@ class CssQualityTests(unittest.TestCase):
             "ui-polish-evaluaciones.css",
             "ui-polish-administracion.css", "ui-polish-preferencias.css",
             "portal-academico.css", "plan-semanal.css",
+            "components.css", "auth-base.css", "account-pages.css",
         ):
             contenido = (STYLES / pagina).read_text(encoding="utf-8")
             faltantes = set(re.findall(r"var\((--ds-[a-z0-9-]+)", contenido)) - definidas

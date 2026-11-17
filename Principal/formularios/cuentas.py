@@ -9,15 +9,15 @@ class UserRegisterForm(UserCreationForm):
 
     email = forms.EmailField(
         required=True,
-        widget=forms.EmailInput(attrs={"class": "input-field"})
+        widget=forms.EmailInput(attrs={"class": "input-field auth-input"})
     )
     username = forms.CharField(
-        widget=forms.TextInput(attrs={"class": "input-field"})
+        widget=forms.TextInput(attrs={"class": "input-field auth-input"})
     )
     password1 = forms.CharField(
         label="Contraseña",
         widget=forms.PasswordInput(attrs={
-            "class": "input-field",
+            "class": "input-field auth-input",
             "placeholder": "Ingrese su contraseña"
         })
     )
@@ -25,7 +25,7 @@ class UserRegisterForm(UserCreationForm):
     password2 = forms.CharField(
         label="Confirmar contraseña",
         widget=forms.PasswordInput(attrs={
-            "class": "input-field",
+            "class": "input-field auth-input",
             "placeholder": "Ingrese nuevamente su contraseña"
         })
     )
@@ -33,9 +33,9 @@ class UserRegisterForm(UserCreationForm):
         model = User
         fields = ["username", "email", "password1", "password2"]
         widgets = {
-            "username": forms.TextInput(attrs={"class": "input-field"}),
-            "email": forms.EmailInput(attrs={"class": "input-field"}),
-            "password1": forms.PasswordInput(attrs={"class": "input-field"})
+            "username": forms.TextInput(attrs={"class": "input-field auth-input"}),
+            "email": forms.EmailInput(attrs={"class": "input-field auth-input"}),
+            "password1": forms.PasswordInput(attrs={"class": "input-field auth-input"})
         }
 
     def clean_email(self):

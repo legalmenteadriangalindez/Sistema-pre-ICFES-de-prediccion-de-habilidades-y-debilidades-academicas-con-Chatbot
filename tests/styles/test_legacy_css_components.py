@@ -1,8 +1,4 @@
-"""Garantía de equivalencia byte a byte de la hoja CSS heredada.
-
-El manifiesto debe cargar los fragmentos en la secuencia original exacta.
-Un cambio accidental de estilo, media query o posición hace fallar la prueba.
-"""
+"""Garantía de equivalencia del CSS histórico y de sus puntos de carga."""
 import hashlib
 import re
 import unittest
@@ -10,6 +6,7 @@ from pathlib import Path
 
 CSS = Path(__file__).resolve().parents[2] / "Principal" / "static" / "css"
 LEGACY = CSS / "legacy"
+TEMPLATES = Path(__file__).resolve().parents[2] / "Principal" / "templates"
 ORIGINAL_BLOB_SHA = "80858521cbe3990690c5785d87127a06318808af"
 PARTS = (
     "01-base-preferencias.css",
@@ -27,7 +24,7 @@ PARTS = (
 
 class LegacyCssComponentsTests(unittest.TestCase):
     def test_manifiesto_importa_todos_los_componentes_en_orden(self):
-        manifest = (CSS / "styles.css").read_text(encoding="utf-8")
+        manifest = (CSS / "dashboard-legacy.css").read_text(encoding="utf-8")
         imports = re.findall(
             r'@import\s+url\(["\']\./legacy/([^"\']+)["\']\)\s*;',
             manifest,
@@ -35,16 +32,42 @@ class LegacyCssComponentsTests(unittest.TestCase):
         self.assertEqual(imports, list(PARTS))
         self.assertEqual(len(imports), len(set(imports)))
 
+    def test_fachada_historica_apunta_al_manifiesto_nuevo(self):
+        compat = (CSS / "styles.css").read_text(encoding="utf-8")
+        self.assertIn('@import url("./dashboard-legacy.css");', compat)
+
     def test_fragmentos_reconstruyen_exactamente_el_css_original(self):
         content = b"".join((LEGACY / part).read_bytes() for part in PARTS)
         header = b"blob " + str(len(content)).encode("ascii") + b"\0"
         self.assertEqual(hashlib.sha1(header + content).hexdigest(), ORIGINAL_BLOB_SHA)
 
-    def test_no_se_cambian_scripts_ni_orden_de_capas(self):
-        html = (Path(__file__).resolve().parents[2] / "Principal" / "templates" / "app_shell.html").read_text(encoding="utf-8")
-        self.assertLess(html.index("css/styles.css"), html.index("css/design-tokens.css"))
-        self.assertLess(html.index("css/design-tokens.css"), html.index("css/ui-2026.css"))
-        self.assertLess(html.index("css/ui-2026.css"), html.index("css/ui-polish.css"))
+    def test_dashboard_y_auth_tienen_cascadas_independientes(self):
+        dashboard = (TEMPLATES / "app_shell.html").read_text(encoding="utf-8")
+        orden = [
+            "css/dashboard-legacy.css",
+            "css/design-tokens.css",
+            "css/components.css",
+            "css/ui-2026.css",
+            "css/ui-polish.css",
+        ]
+        posiciones = [dashboard.index(item) for item in orden]
+        self.assertEqual(posiciones, sorted(posiciones))
+
+        auth = (TEMPLATES / "auth_shell.html").read_text(encoding="utf-8")
+        for required in (
+            "css/design-tokens.css",
+            "css/components.css",
+            "css/auth-base.css",
+            "css/account-pages.css",
+        ):
+            self.assertIn(required, auth)
+        for forbidden in (
+            "css/dashboard-legacy.css",
+            "css/ui-2026.css",
+            "css/ui-polish.css",
+            "cdn.jsdelivr.net/npm/bootstrap",
+        ):
+            self.assertNotIn(forbidden, auth)
 
 
 if __name__ == "__main__":
