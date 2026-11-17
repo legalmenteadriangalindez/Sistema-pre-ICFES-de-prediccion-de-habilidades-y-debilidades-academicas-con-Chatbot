@@ -1,0 +1,31 @@
+{% load static %}
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0647b4">
+<title>{% block title %}Cuenta{% endblock %} · Pre-ICFES</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+{# La autenticación solo carga tokens, componentes y estilos propios; no hereda el dashboard. #}
+<link href="{% static 'css/design-tokens.css' %}" rel="stylesheet">
+<link href="{% static 'css/components.css' %}" rel="stylesheet">
+<link href="{% static 'css/auth-base.css' %}" rel="stylesheet">
+<link href="{% static 'css/account-pages.css' %}" rel="stylesheet">
+<link href="{% static 'css/notifications.css' %}" rel="stylesheet">
+{% block extra_head %}{% endblock %}
+</head>
+<body class="preicfes-ui {% block theme_class %}auth-mode{% endblock %}">
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<main class="auth-main-layout" id="contenido">
+{% include "components/notifications.html" %}
+{% block content %}{% endblock %}
+</main>
+<footer class="auth-site-footer">
+  <span>Pre-ICFES · Preparación académica Saber 11</span>
+  <span>Prácticas educativas no oficiales del ICFES</span>
+</footer>
+<script src="{% static 'js/account-pages.js' %}" defer></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>
