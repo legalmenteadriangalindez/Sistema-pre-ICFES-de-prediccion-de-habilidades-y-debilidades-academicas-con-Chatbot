@@ -87,9 +87,9 @@ def normalize_asset(value: str, kind: str) -> str:
     if value.startswith("/static/"):
         value = value[len("/static/") :]
     if value.startswith(prefix):
-        return value
+        return value[len(prefix):]
     if value.startswith("/") and value[1:].startswith(prefix):
-        return value[1:]
+        return value[1 + len(prefix):]
     return value
 
 
@@ -104,6 +104,8 @@ def collect_reference_inventory(files: list[Path]) -> dict[str, object]:
         for match in TEMPLATE_RE.finditer(content):
             template_refs[normalize_template(match.group(1))].add(source)
         for match in RENDER_RE.finditer(content):
+            template_refs[normalize_template(match.group(1))].add(source)
+        for match in TEMPLATE_NAME_RE.finditer(content):
             template_refs[normalize_template(match.group(1))].add(source)
 
         for match in STATIC_RE.finditer(content):
@@ -246,6 +248,15 @@ def query_candidates(files: list[Path]) -> list[dict[str, object]]:
     findings: list[dict[str, object]] = []
     for path in files:
         if path.suffix != ".py":
+            continue
+        # Test factories intentionally issue ORM writes inside loops; they are
+        # not application N+1 candidates and would drown the runtime findings.
+        if (
+            path.name.startswith("test_")
+            or path.name == "tests.py"
+            or "tests" in path.parts
+            or "scripts" in path.parts
+        ):
             continue
         try:
             tree = ast.parse(read_text(path), filename=str(path))
