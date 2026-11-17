@@ -1,0 +1,95 @@
+name: Auditoría Fase 1
+
+on:
+  pull_request:
+    paths:
+      - "Principal/**"
+      - "ProyectoDeGrado/**"
+      - "tests/**"
+      - "scripts/**"
+      - "requirements*.txt"
+      - "package.json"
+      - ".github/workflows/phase1-audit.yml"
+  push:
+    branches:
+      - audit/fase1-inventario
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  static-inventory:
+    name: Inventario estático
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validar sintaxis del auditor
+        run: python -m py_compile scripts/audit_phase1.py
+      - name: Generar inventario
+        run: python scripts/audit_phase1.py --output phase1-inventory.md
+      - name: Mostrar inventario en logs
+        run: cat phase1-inventory.md
+      - name: Publicar inventario
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase1-inventory
+          path: phase1-inventory.md
+          retention-days: 14
+
+  postgres-coverage:
+    name: PostgreSQL y cobertura
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: preicfes_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d preicfes_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DJANGO_ENV: development
+      DJANGO_DEBUG: "true"
+      DJANGO_SECRET_KEY: fase1-ci-no-usar-en-produccion
+      DJANGO_ALLOWED_HOSTS: 127.0.0.1,localhost
+      DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/preicfes_test
+      DJANGO_DB_SSL_REQUIRE: "false"
+      OLLAMA_BASE_URL: http://127.0.0.1:11434
+      OLLAMA_MODEL: llama3:8b
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+          python -m pip install "coverage>=7.6,<8"
+      - name: Preparar base PostgreSQL
+        run: python manage.py migrate --noinput
+      - name: Ejecutar pruebas con cobertura
+        run: coverage run --branch --source=Principal manage.py test Principal --verbosity 1
+      - name: Publicar resumen de cobertura
+        run: |
+          coverage report -m --omit="*/migrations/*,*/test_*.py,*/tests.py"
+          coverage html -d coverage-html --omit="*/migrations/*,*/test_*.py,*/tests.py"
+      - name: Publicar reporte de cobertura
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase1-coverage
+          path: coverage-html
+          retention-days: 14
