@@ -24,9 +24,10 @@ TEXT_SUFFIXES = {
     ".py", ".html", ".css", ".js", ".cjs", ".md", ".toml", ".yml", ".yaml", ".txt"
 }
 QUERY_METHODS = {
-    "all", "annotate", "bulk_create", "count", "create", "delete", "exists",
-    "filter", "first", "get", "get_or_create", "last", "latest", "aggregate",
-    "prefetch_related", "select_related", "update", "update_or_create",
+    # Lecturas que pueden provocar N+1. Las escrituras de seed/importación
+    # se excluyen porque son operaciones intencionalmente repetidas.
+    "all", "annotate", "count", "exists", "filter", "first", "get",
+    "last", "latest", "aggregate", "prefetch_related", "select_related",
 }
 TEMPLATE_RE = re.compile(
     r"{%\s*(?:extends|include)\s+[\"']([^\"']+)[\"']", re.IGNORECASE
@@ -260,6 +261,7 @@ def query_candidates(files: list[Path]) -> list[dict[str, object]]:
             or path.name == "tests.py"
             or "tests" in path.parts
             or "scripts" in path.parts
+            or ("management" in path.parts and "commands" in path.parts)
         ):
             continue
         try:
@@ -269,14 +271,20 @@ def query_candidates(files: list[Path]) -> list[dict[str, object]]:
         for loop in [
             node for node in ast.walk(tree) if isinstance(node, (ast.For, ast.AsyncFor))
         ]:
+            seen_lines: set[int] = set()
             for node in ast.walk(loop):
                 if node is loop or not isinstance(node, ast.Call) or not is_queryset_call(node):
                     continue
+                # select_related().first() appears as two nested calls on one
+                # line; report one candidate per source line.
+                if node.lineno in seen_lines:
+                    continue
+                seen_lines.add(node.lineno)
                 findings.append(
                     {
                         "file": rel(path),
                         "line": node.lineno,
-                        "reason": "Consulta ORM dentro de un bucle; revisar posible N+1.",
+                        "reason": "Consulta ORM de lectura dentro de un bucle; revisar posible N+1.",
                         "query": query_chain(node),
                     }
                 )
