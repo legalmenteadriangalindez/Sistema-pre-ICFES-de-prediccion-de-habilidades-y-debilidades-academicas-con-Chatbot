@@ -64,10 +64,7 @@
 }
 
 /* Shared button primitives live in components.css. */
-.preicfes-ui a:focus-visible,.preicfes-ui button:focus-visible,.preicfes-ui input:focus-visible,.preicfes-ui textarea:focus-visible,.preicfes-ui select:focus-visible {
-  outline:3px solid #ffbe2c!important;
-  outline-offset:3px!important
-}
+/* Shared focus ring lives in components.css. */
 
 .preicfes-ui .app-footer {
   margin-top:32px;
