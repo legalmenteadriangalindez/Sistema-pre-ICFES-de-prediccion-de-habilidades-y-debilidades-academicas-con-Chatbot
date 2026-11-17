@@ -35,6 +35,10 @@ RENDER_RE = re.compile(
     r"\b(?:render|render_to_response)\s*\([^)]*?[\"']([^\"']+\.html)[\"']",
     re.IGNORECASE | re.DOTALL,
 )
+TEMPLATE_NAME_RE = re.compile(
+    r"\btemplate_name\s*=\s*["']([^"']+\.html)["']",
+    re.IGNORECASE,
+)
 STATIC_RE = re.compile(r"{%\s*static\s+[\"']([^\"']+)[\"']", re.IGNORECASE)
 DIRECT_ASSET_RE = re.compile(
     r"(?:href|src|url)\s*=\s*[\"'][^\"']*?((?:css|js)/[^\"')?#]+)",
