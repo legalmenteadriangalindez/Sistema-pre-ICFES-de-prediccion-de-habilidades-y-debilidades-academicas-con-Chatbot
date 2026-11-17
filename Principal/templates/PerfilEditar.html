@@ -1,0 +1,104 @@
+{% extends "app_shell.html" %}
+{% load static %}
+{% block title %}Editar perfil{% endblock %}
+{% block theme_class %}profile-mode{% endblock %}
+{% block extra_head %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'css/account-pages.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="dash profile-page profile-edit-page">
+  <section class="page-intro account-profile-intro" aria-labelledby="profile-edit-title">
+    <span class="eyebrow"><i class="fas fa-pen" aria-hidden="true"></i> CONFIGURACIÓN DE CUENTA</span>
+    <h1 id="profile-edit-title">Editar perfil</h1>
+    <p>Actualiza tus datos personales y académicos. El cambio de contraseña se realiza en una pantalla independiente.</p>
+  </section>
+
+  <form method="post" class="profile-edit-form" novalidate>
+    {% csrf_token %}
+
+    {% if user_form.non_field_errors %}
+      <div class="auth-alert" role="alert">
+        <i class="fas fa-circle-exclamation" aria-hidden="true"></i>
+        <span>{% for error in user_form.non_field_errors %}{{ error }}{% endfor %}</span>
+      </div>
+    {% endif %}
+
+    <div class="profile-edit-grid">
+      <section class="ui-card account-card profile-edit-card" aria-labelledby="profile-account-title">
+        <div class="widget-title">
+          <h2 id="profile-account-title"><i class="fas fa-user-gear" aria-hidden="true"></i> Datos de cuenta</h2>
+        </div>
+        <p class="auth-description">Estos datos identifican tu acceso a Pre-ICFES.</p>
+        <div class="auth-form">
+          {% for field in user_form %}
+            <div class="auth-field">
+              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+              <div class="auth-control">
+                <i class="fas fa-pen-to-square" aria-hidden="true"></i>
+                {{ field }}
+              </div>
+              {% for error in field.errors %}
+                <p class="auth-field-error">{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endfor %}
+        </div>
+      </section>
+
+      {% if persona_form %}
+        <section class="ui-card account-card profile-edit-card" aria-labelledby="profile-personal-title">
+          <div class="widget-title">
+            <h2 id="profile-personal-title"><i class="far fa-id-card" aria-hidden="true"></i> Datos personales</h2>
+          </div>
+          <p class="auth-description">La información que aparece asociada a tu perfil.</p>
+          <div class="auth-form">
+            {% for field in persona_form %}
+              <div class="auth-field">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                <div class="auth-control">
+                  <i class="fas fa-address-card" aria-hidden="true"></i>
+                  {{ field }}
+                </div>
+                {% for error in field.errors %}
+                  <p class="auth-field-error">{{ error }}</p>
+                {% endfor %}
+              </div>
+            {% endfor %}
+          </div>
+        </section>
+      {% endif %}
+
+      {% if estudiante_form %}
+        <section class="ui-card account-card profile-edit-card profile-edit-card-wide" aria-labelledby="profile-study-title">
+          <div class="widget-title">
+            <h2 id="profile-study-title"><i class="fas fa-graduation-cap" aria-hidden="true"></i> Información académica</h2>
+          </div>
+          <p class="auth-description">Puedes actualizar únicamente tus necesidades o apoyos académicos.</p>
+          <div class="auth-form">
+            {% for field in estudiante_form %}
+              <div class="auth-field">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                <div class="auth-control">
+                  <i class="fas fa-book-open" aria-hidden="true"></i>
+                  {{ field }}
+                </div>
+                {% for error in field.errors %}
+                  <p class="auth-field-error">{{ error }}</p>
+                {% endfor %}
+              </div>
+            {% endfor %}
+          </div>
+        </section>
+      {% endif %}
+    </div>
+
+    <div class="profile-edit-actions">
+      <a class="pill-button outline" href="{% url 'perfil' %}"><i class="fas fa-arrow-left" aria-hidden="true"></i> Cancelar</a>
+      <a class="pill-button outline" href="{% url 'password_change' %}"><i class="fas fa-key" aria-hidden="true"></i> Cambiar contraseña</a>
+      <button class="pill-button solid" type="submit"><i class="fas fa-check" aria-hidden="true"></i> Guardar cambios</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

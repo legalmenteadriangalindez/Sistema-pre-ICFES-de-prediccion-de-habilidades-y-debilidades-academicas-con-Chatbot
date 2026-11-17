@@ -62,6 +62,7 @@ urlpatterns = [
   path('compararCarreras/',portal_academico.comparador_carreras,name="comparadorDeCarreras"), # url comparar carreras
   path('configuraciones/',views.configuraciones,name="configuraciones"), # configuraciones
   path('perfil/',views.perfil,name="perfil"), # url perfil de usuario
+  path('perfil/editar/', views.editarPerfil, name='perfil_editar'), # edición del perfil propio
   path('registro/',views.registro,name="registro"),
   path('verificar-correo/<str:token>/', views.verificar_correo, name="verificar_correo"), # url registro 
   path('gestion_acudientes_estudiantes/',views.gestion_acudientes_estudiantes,name="gestion_acudientes_estudiantes"), # url gestion acudientes y docentes
