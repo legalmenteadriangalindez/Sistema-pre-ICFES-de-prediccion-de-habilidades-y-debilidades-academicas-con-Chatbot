@@ -1,5 +1,7 @@
 """Autenticación, registro y confirmación de correo electrónico."""
 import logging
+from smtplib import SMTPException
+from urllib.error import HTTPError, URLError
 
 from django.contrib.auth import logout
 from django.contrib.auth.models import User
@@ -50,8 +52,7 @@ def registro(request, *, enviar_verificacion_func=enviar_verificacion):
                 estudiante.save()
             try:
                 enviar_verificacion_func(user, request)
-            except Exception:
-                import logging
+            except (HTTPError, URLError, OSError, SMTPException, RuntimeError):
                 logging.getLogger(__name__).exception("Error al enviar verificación a través de Brevo")
                 return render(request, "verificacion_correo.html", {"estado": "error_envio"})
             return render(request, "verificacion_correo.html", {"estado": "enviado"})  
